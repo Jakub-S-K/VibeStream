@@ -13,4 +13,4 @@ app.use(cors());
 
 require('./routes/routers.js')(app); //populate routes from ./routers/
 
-app.listen(process.env.BACKEND_PORT || 3000, () => console.log("Server is running on PORT " + process.env.PORT))
+app.listen(process.env.BACKEND_PORT || 3000, () => console.log("Server is running on PORT " + process.env.BACKEND_PORT))
