@@ -7,6 +7,12 @@ services:
       MARIADB_PASSWORD: ${DB_USER_PASSWORD}
     ports:
       - "3306:3306"
+        
+  backend:
+    build:
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "3000:3000"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
