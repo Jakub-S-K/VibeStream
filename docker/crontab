@@ -1,0 +1,4 @@
+# Ta /15 to co ile minut backup tutaj co 15 minut
+# 0 2 * * * - Kazdego dnia o 2:00
+# MM HH DD YY
+*/1 * * * * /docker/do_db_backup.sh
