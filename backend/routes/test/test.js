@@ -1,6 +1,26 @@
+const User = require('../../schema.js').User;
+  
 module.exports.get = function (req, res) {
     console.log("Welcome welcome from vibestream API");
     res.send("Vibestream API test")
+}
+
+
+module.exports.artists = function (req, res) {
+    console.log("Trending artists");
+    res.json(artistsJSON);
+}
+
+
+module.exports.albums = function (req, res) {
+    console.log("Trending Albums");
+    res.json(albumsJSON);
+}
+
+module.exports.test_db = async function (req, res) {
+    const user = await User.findAll();
+    console.log(user);
+    res.json(user);
 }
 
 const artistsJSON = [
@@ -33,11 +53,6 @@ const artistsJSON = [
         "username": "JakeJam"
     }
 ]
-
-module.exports.artists = function (req, res) {
-    console.log("Trending artists");
-    res.json(artistsJSON);
-}
 
 const albumsJSON = [
     {
@@ -76,8 +91,3 @@ const albumsJSON = [
         "username": "Artist 7"
     }
 ]
-
-module.exports.albums = function (req, res) {
-    console.log("Trending Albums");
-    res.json(albumsJSON);
-}

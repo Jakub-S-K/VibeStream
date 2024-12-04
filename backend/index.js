@@ -14,4 +14,11 @@ app.use(cors());
 
 require('./routes/routers.js')(app); //populate routes from ./routers/
 
-app.listen(process.env.BACKEND_PORT || 3000, () => console.log("Server is running on PORT " + process.env.BACKEND_PORT))
+const db_rdy = require('./db_conn.js').conn_rdy().then(good => {
+    if (good) {
+        app.listen(process.env.BACKEND_PORT || 3000, () => console.log("Server is running on PORT " + process.env.BACKEND_PORT))
+    } else {
+        console.error("Failed to connect to database");
+        process.exit(-1);
+    }
+})
