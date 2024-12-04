@@ -13,7 +13,7 @@ function TrendingSlider() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:3001/test/trending');
+      const response = await fetch('http://localhost:3001/test/albums');
       if (!response.ok) {
         throw new Error('Error!');
       }
@@ -59,10 +59,11 @@ function TrendingSlider() {
               <div key={index} className='slider__card trending-card'>
                 <div className='slider__card-top'>
                   <img
-                    src={`http://localhost:3001/assets/img/albums/${item.albumName}.jpg`}
+                    src={`http://localhost:3001/assets/img/albums/${item.albumImage}.jpg`}
                     alt={item.albumName}
                     className='slider__image trending-image'
                   />
+                  {console.log(item.albumName)}
                 </div>
                 <div className='slider__card-bottom'>
                   <span className='slider__username trending-username'>
