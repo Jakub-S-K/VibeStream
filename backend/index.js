@@ -7,6 +7,7 @@ require('dotenv').config({ path: `../.env`}); //Use global env
 const app = express();
 
 app.set('trust proxy', 1);
+app.use('/assets', express.static('assets'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());

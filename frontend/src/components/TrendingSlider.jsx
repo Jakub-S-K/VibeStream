@@ -1,11 +1,38 @@
+import { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-import albumImage from '../assets/img/albumImage.jpg';
-import trendingData from '../assets/json/trending.json';
+// import albumImage from '../assets/img/albumImage.jpg';
+// import trendingData from '../assets/json/trending.json';
 
 function TrendingSlider() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/test/trending');
+      if (!response.ok) {
+        throw new Error('Error!');
+      }
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
   var settings = {
     // dots: true,
     infinite: true,
@@ -27,13 +54,13 @@ function TrendingSlider() {
     <>
       <div className='slider'>
         <Slider {...settings}>
-          {trendingData.map((item, index) => {
+          {data.map((item, index) => {
             return (
               <div key={index} className='slider__card trending-card'>
                 <div className='slider__card-top'>
                   <img
-                    src={albumImage}
-                    alt={item.username}
+                    src={`http://localhost:3001/assets/img/albums/${item.albumName}.jpg`}
+                    alt={item.albumName}
                     className='slider__image trending-image'
                   />
                 </div>
