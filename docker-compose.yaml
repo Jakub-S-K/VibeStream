@@ -8,6 +8,18 @@ services:
     ports:
       - "3306:3306"
         
+  frontend:    
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1 
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development
+    build:
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:5173"    
+
+
   backend:
     environment:
       BACKEND_PORT: ${BACKEND_PORT}
