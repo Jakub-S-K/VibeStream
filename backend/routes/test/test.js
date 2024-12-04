@@ -5,32 +5,32 @@ module.exports.get = function (req, res) {
 
 const trendingJSON = [
     {
-        "image": "avatar",
-        "username": "Artist 1"
+        "image": "avatar1",
+        "username": "PodwojnaLipa"
     },
     {
-        "image": "avatar",
-        "username": "Artist 2"
+        "image": "avatar2",
+        "username": "DJKaprysnaDrukarkaHP"
     },
     {
-        "image": "avatar",
-        "username": "Artist 3"
+        "image": "avatar3",
+        "username": "patrycjaaaaaa"
     },
     {
-        "image": "avatar",
-        "username": "meeGAS"
+        "image": "avatar4",
+        "username": "kierowcaSolarisa"
     },
     {
-        "image": "avatar",
-        "username": "Artist 5"
+        "image": "avatar5",
+        "username": "DJPaprykarzSzczecinski"
     },
     {
-        "image": "avatar",
-        "username": "Artist 6"
+        "image": "avatar6",
+        "username": "LeoLoud"
     },
     {
-        "image": "avatar",
-        "username": "Artist 7"
+        "image": "avatar7",
+        "username": "JakeJam"
     }
 ]
 
