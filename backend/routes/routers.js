@@ -7,7 +7,7 @@ module.exports = function (app) {
     
     test.get('/hello', testApi.get); //Local path in this case /test/hello
 
-    test.get('/trending', testApi.trending)
+    test.get('/albums', testApi.albums)
 
     test.get('/artists', testApi.artists)
 

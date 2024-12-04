@@ -3,7 +3,7 @@ module.exports.get = function (req, res) {
     res.send("Vibestream API test")
 }
 
-const trendingJSON = [
+const artistsJSON = [
     {
         "image": "avatar1",
         "username": "PodwojnaLipa"
@@ -34,12 +34,12 @@ const trendingJSON = [
     }
 ]
 
-module.exports.trending = function (req, res) {
-    console.log("Trending");
-    res.json(trendingJSON);
+module.exports.artists = function (req, res) {
+    console.log("Artists");
+    res.json(artistsJSON);
 }
 
-const artistsJSON = [
+const albumsJSON = [
     {
         "albumName": "Album",
         "albumImage": "album1",
@@ -77,7 +77,7 @@ const artistsJSON = [
     }
 ]
 
-module.exports.artists = function (req, res) {
-    console.log("Artists");
-    res.json(artistsJSON);
+module.exports.albums = function (req, res) {
+    console.log("Albums");
+    res.json(albums);
 }
