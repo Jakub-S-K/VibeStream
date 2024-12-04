@@ -35,7 +35,7 @@ const artistsJSON = [
 ]
 
 module.exports.artists = function (req, res) {
-    console.log("Artists");
+    console.log("Trending artists");
     res.json(artistsJSON);
 }
 
@@ -78,6 +78,6 @@ const albumsJSON = [
 ]
 
 module.exports.albums = function (req, res) {
-    console.log("Albums");
+    console.log("Trending Albums");
     res.json(albumsJSON);
 }
