@@ -7,5 +7,9 @@ module.exports = function (app) {
     
     test.get('/hello', testApi.get); //Local path in this case /test/hello
 
+    test.get('/trending', testApi.trending)
+
+    test.get('/artists', testApi.artists)
+
     app.use('/test', test); //Add all 'test' local paths to global /test/<PATH> routes
 }
