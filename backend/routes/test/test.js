@@ -79,5 +79,5 @@ const albumsJSON = [
 
 module.exports.albums = function (req, res) {
     console.log("Albums");
-    res.json(albums);
+    res.json(albumsJSON);
 }
