@@ -42,37 +42,37 @@ module.exports.trending = function (req, res) {
 const artistsJSON = [
     {
         "albumName": "Album",
-        "albumImage": "",
+        "albumImage": "album1",
         "username": "Artist 1"
     },
     {
         "albumName": "Album",
-        "albumImage": "",
+        "albumImage": "album2",
         "username": "Artist 2"
     },
     {
         "albumName": "Album",
-        "albumImage": "",
+        "albumImage": "album3",
         "username": "Artist 3"
     },
     {
         "albumName": "Albummmmmmmmm",
-        "albumImage": "",
+        "albumImage": "album4",
         "username": "meeGAS"
     },
     {
         "albumName": "Album aa bbcc ccc",
-        "albumImage": "",
+        "albumImage": "album5",
         "username": "Artist 5"
     },
     {
         "albumName": "Album",
-        "albumImage": "",
+        "albumImage": "album6",
         "username": "Artist 6"
     },
     {
         "albumName": "Album",
-        "albumImage": "",
+        "albumImage": "album7",
         "username": "Artist 7"
     }
 ]
