@@ -1,8 +1,11 @@
 .env
+
 .vs/ProjectSettings.json
 .vs/slnx.sqlite
 .vs/vibestream/FileContentIndex/
+
 .vs/VSWorkspaceState.json
 .vs/vibestream/v17/DocumentLayout.json
 .vs/vibestream/v17/DocumentLayout.backup.json
 .vs/vibestream/v17/.wsuo
+
