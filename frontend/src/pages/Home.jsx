@@ -1,8 +1,6 @@
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import artist from '../assets/img/artist2.png';
-import avatar from '../assets/img/avatars/avatar1.jpg';
+import ArtistsSlider from '../components/ArtistsSlider';
+import TrendingSlider from '../components/TrendingSlider';
 
 function Home() {
   return (
@@ -31,7 +29,7 @@ function Home() {
 
           <div className='artists__container container'>
             {/* <p className='artists__text'>Artists avatars here</p> */}
-            {ArtistsSlider()}
+            <ArtistsSlider />
           </div>
         </section>
 
@@ -65,101 +63,11 @@ function Home() {
 
           <div class='trending__container container'>
             {/* <p class='trending__text'>Trending albums here</p> */}
-            {ArtistsSlider()}
-            {ArtistsSlider()}
+            <TrendingSlider />
+            <TrendingSlider />
           </div>
         </section>
       </main>
-    </>
-  );
-}
-
-const data = [
-  {
-    image: avatar,
-    username: 'Artists 1',
-  },
-  {
-    image: avatar,
-    username: 'Artist 2',
-  },
-  {
-    image: avatar,
-    username: 'Artist 3',
-  },
-  {
-    image: avatar,
-    username: 'meeGAS',
-  },
-  {
-    image: avatar,
-    username: 'Artist 5',
-  },
-  {
-    image: avatar,
-    username: 'Artist 6',
-  },
-  {
-    image: avatar,
-    username: 'Artist 7',
-  },
-];
-
-function ArtistsSlider() {
-  var settings = {
-    // dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    cssEase: 'ease',
-    pauseOnHover: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 4,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-    ],
-  };
-
-  return (
-    <>
-      <div className='artists__slider'>
-        <Slider {...settings}>
-          {data.map((item, index) => {
-            return (
-              <div key={index} className='artists__card'>
-                <div className='artists__card-top'>
-                  <img
-                    src={item.image}
-                    alt={item.username}
-                    className='artists__image'
-                  />
-                </div>
-                <div className='artists__card-bottom'>
-                  <span className='artists__username'>{item.username}</span>
-                </div>
-              </div>
-            );
-          })}
-        </Slider>
-      </div>
     </>
   );
 }
