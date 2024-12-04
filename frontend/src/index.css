@@ -334,53 +334,82 @@ img {
   transition: all 0.5s ease;
 } */
 
-/*===== ARTISTS SECTION =====*/
-.artists {
-  background-color: var(--body-color-alt);
-}
-
-.artists__text {
-  font-size: var(--medium-font-size);
-}
-
-.artists__slider {
+/*===== CAROUSEL SLIDER =====*/
+.slider {
   margin-top: 2rem;
-  /* margin-bottom: 25px; */
+  /* margin-bottom: 25px; */ 
   padding: 0 25px;
   cursor: grab;
 }
 
-.artists__card {
-  padding: 1rem;
+.slider__card {
+  padding: 1rem 1.2rem;
   border-radius: 0.7rem;
 }
 
-.artists__card:hover {
-  background-color: rgba(255, 255, 255, 0.025)
+.slick-slider .slick-slide {
+  padding: 0 0.5rem;
 }
-
-/* .slick-slider .slick-slide {
-  padding: 0 1rem;
-} */
 
 .slick-arrow::before {
   color: var(--first-color);
 }
 
-.artists__image {
+.slider__image {
   border-radius: 50%;
   cursor: pointer;
 }
 
-.artists__card-bottom {
+.slider__card-bottom {
   text-align: center;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
 }
 
-.artists__username {
-  font-size: var(--normal-font-size);
+.slider__username {
+  display: block;
+  font-size: var(--regular-font-size);
   font-weight: var(--font-regular);
+  cursor: pointer;
+
+}
+
+.slider__play {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.7rem;
+}
+
+.slider__play i {
+  display: block;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.slider__album-name {
+  display: block;
+  font-size: var(--tiny-font-size);
+  font-weight: var(--font-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/*===== ARTISTS SECTION =====*/
+.artists {
+  background-color: var(--body-color-alt);
+}
+
+/* .artists__text {
+  font-size: var(--medium-font-size);
+} */
+
+/*===== ARTISTS SLIDER =====*/
+.artists-card:hover {
+  background-color: rgba(255, 255, 255, 0.025);
 }
 
 /*===== ABOUT SECTION =====*/
@@ -422,9 +451,26 @@ img {
   text-align: center;
 }
 
-.trending__text {
+/* .trending__text {
   font-size: var(--medium-font-size);
+} */
+
+/*===== TRENDING SLIDER =====*/
+.trending-card {
+  background-color: rgba(0, 0, 0, 0.2);
 }
+
+.trending-card:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.trending-image {
+  border-radius: 0.8rem;
+}
+
+.trending-username {
+  font-size: var(--tiny-font-size); 
+ }
 
 /* ===== FOOTER=====*/
 .footer1__container {
