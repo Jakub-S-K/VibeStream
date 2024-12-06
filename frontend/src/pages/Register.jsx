@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/img/logo.png';
 
-function Login() {
+function Register() {
   const initialValues = {
     username: '',
+    email: '',
     password: '',
+    confirmPassword: '',
   };
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
@@ -35,10 +37,20 @@ function Login() {
     if (!values.username) {
       errors.username = 'Username is required!';
     }
+    if (!values.email) {
+      errors.email = 'Email is required!';
+    } else if (!regex.test(values.email)) {
+      errors.email = 'This is not a valid email format!';
+    }
     if (!values.password) {
       errors.password = 'Password is required';
     } else if (values.password.length < 4) {
       errors.password = 'Password must be more than 4 characters';
+    } else if (values.password.length > 10) {
+      errors.password = 'Password cannot exceed more than 10 characters';
+    }
+    if (values.password !== values.confirmPassword) {
+      errors.confirmPassword = 'Those passwords didn’t match. Try again.';
     }
     return errors;
   };
@@ -46,9 +58,9 @@ function Login() {
   return (
     <>
       <div className='body-bg'>
-        <div className='l-form login'>
+        <div className='l-form'>
           {/* {Object.keys(formErrors).length === 0 && isSubmit ? (
-            <div className='form__message--success'>Logged in successfully</div>
+            <div className='form__message--success'>Signed in successfully</div>
           ) : (
             console.log('Entered Details', formValues)
           )} */}
@@ -62,7 +74,7 @@ function Login() {
               </Link>
 
               <form class='form' onSubmit={handleSubmit}>
-                <span class='form__title'>Log in to VibeStream</span>
+                <span class='form__title'>Create your Free Account</span>
 
                 {/* FULLNAME */}
                 <div class='form__group'>
@@ -79,6 +91,23 @@ function Login() {
                     />
                   </div>
                   <p className='form__error'>{formErrors.username}</p>
+                </div>
+
+                {/* EMAIL */}
+                <div class='form__group'>
+                  <span class='form__label'>Email</span>
+                  <div className='form__field'>
+                    <i class='bx bx-envelope'></i>
+                    <input
+                      className='form__input'
+                      type='text'
+                      name='email'
+                      placeholder='Enter your Email here'
+                      value={formValues.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <p className='form__error'>{formErrors.email}</p>
                 </div>
 
                 {/* PASSWORD */}
@@ -98,19 +127,38 @@ function Login() {
                   <p className='form__error'>{formErrors.password}</p>
                 </div>
 
-                <button class='form__button'>Log In</button>
+                {/* CONFIRM PASSWORD */}
+                <div class='form__group'>
+                  <span class='form__label'>Confirm Password</span>
+                  <div className='form__field'>
+                    <i class='bx bx-lock-alt'></i>
+                    <input
+                      className='form__input'
+                      type='password'
+                      name='confirmPassword'
+                      placeholder='Confirm your Password here'
+                      value={formValues.confirmPasswordpassword}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <p className='form__error'>{formErrors.confirmPassword}</p>
+                </div>
 
-                <div class='form__policy-info form__policy-info--underline'>
+                <button class='form__button'>Create Account</button>
+
+                <div class='form__policy-info'>
+                  <span>By signing up, you agree to our </span>
                   <Link to='/privacy' className='form_link'>
-                    Forgot your password?
+                    Privacy Policy
                   </Link>
+                  <span>.</span>
                 </div>
               </form>
 
               <div class='form__have-account-text'>
-                <span>Don't have an account? </span>
-                <Link to='/register' className='form_link'>
-                  Sign Up
+                <span>Already have an account? </span>
+                <Link to='/login' className='form_link'>
+                  Log in
                 </Link>
               </div>
             </div>
@@ -121,4 +169,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

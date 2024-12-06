@@ -1,3 +1,14 @@
+/*=============== CONVENTIONS ===============*/
+/* 
+  Main naming convention: BEM (Block Element Modifier).
+  - Block: The main component (e.g., .form).
+  - Element: A part of the block (e.g., .form__input).
+  - Modifier: A variant or style (e.g., .form__input--error). 
+
+  Mobile First: A design approach where styles are optimized for mobile devices first, 
+  and then adapted for larger screens using media queries. 
+*/
+
 /*=============== GOOGLE FONTS ===============*/
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Roboto:wght@100&display=swap');
 
@@ -24,6 +35,7 @@
   --h1-font-size: 1.8rem;
   --medium-font-size: 1.125rem;
   --normal-font-size: 0.938rem;
+  --small-font-size: 0.8rem;
   --tiny-font-size: 0.625rem;
 
   /*========= Font weight =========*/
@@ -44,12 +56,13 @@
   --z-fixed: 100;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 576px) {
   :root {
     --large-font-size: 4.5rem;
     --h1-font-size: 3rem;
     --medium-font-size: 1.3rem;
     --normal-font-size: 1rem;
+    --small-font-size: 0.9rem;
     --tiny-font-size: 0.813rem;
   }
 }
@@ -66,12 +79,15 @@ html {
 }
 
 body {
-  margin: var(--header-height) 0 0 0;
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   font-weight: var(--font-light);
   background-color: var(--body-color);
   color: var(--text-color);
+}
+
+main {
+  margin: var(--header-height) 0 0 0;
 }
 
 ul {
@@ -518,6 +534,172 @@ img {
   width: 36px;
 }
 
+/*=============== LOGIN & REGISTER ===============*/
+.body-bg {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--body-color);
+}
+
+/*===============*/
+
+.l-form {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.image-container {
+  flex: 2;
+  background: url('./assets/img/form-image.jpg');
+  background-position: center;
+  background-size: cover;
+  transform: scale(2);
+  -webkit-mask-image: linear-gradient(to top, transparent 25%, black 75%);
+  mask-image: linear-gradient(to top, transparent 25%, black 75%);
+}
+
+.form-container {
+  /* border-radius: 1.5rem 0 0 1.5rem; */
+  flex: 6;
+  background-color: var(--body-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  font-weight: var(--font-extra-light);
+  z-index: var(--z-fixed);
+}
+
+.form-wrapper {
+  width: 75%;
+  padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.form {
+  width: 100%;
+}
+
+/*===============*/
+
+.logo-image {
+  width: 5rem;
+}
+
+.form__title {
+  display: block;
+  margin-top: 2rem;
+  font-weight: var(--font-regular);
+  font-size: var(--medium-font-size);
+}
+
+.form__group {
+  margin-top: 1.5rem;
+  width: 100%;
+  position: relative;
+}
+
+.form__field {
+  display: flex;
+  align-items: center;
+  background: rgb(30, 30, 30);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  padding: 0 1.25rem;
+}
+
+.form__field i {
+  font-size: var(--medium-font-size);
+  margin-right: 1rem;
+}
+
+.form__label {
+  display: block;
+  text-align: left;
+  margin-bottom: 0.1rem;
+  font-size: var(--small-font-size);
+  font-weight: var(--font-light);
+}
+
+.form__input {
+  width: 100%;
+  height: 2.5rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--white-color);
+  font-size: var(--regular-font-size);
+  font-weight: var(--font-light);
+}
+
+.form__input::placeholder {
+  font-size: var(--tiny-font-size);
+}
+
+.form__error {
+  font-size: var(--tiny-font-size);
+  position: absolute;
+  bottom: -1.2rem;
+  right: 0;
+}
+
+.form__button {
+  margin-top: 2.25rem;
+  width: 70%;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: none;
+  background-color: var(--first-color);
+  color: var(--white-color);
+  font-size: var(--medium-font-size);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form__button:hover {
+  background-color: var(--first-color-alt-light);
+}
+
+.form_link {
+  color: var(--white-color);
+}
+
+.form__policy-info {
+  margin-top: 0.5rem;
+  font-size: var(--tiny-font-size);
+}
+
+.form__policy-info .form_link {
+  font-weight: var(--font-regular);
+}
+
+.form__have-account-text {
+  margin-top: 1rem;
+  font-size: var(--regular-font-size);
+}
+
+.form__policy-info--underline {
+  text-decoration: underline;
+}
+
+.form__have-account-text .form_link {
+  color: var(--first-color);
+  font-weight: var(--font-light);
+}
+
 /*=============== SCROLL UP ===============*/
 .scrollup {
   position: fixed;
@@ -541,6 +723,47 @@ img {
 
 .show-scroll {
   bottom: 6rem;
+}
+
+/*=============== LOADING ANIMATION ===============*/
+.loading {
+  width: min-content;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.5rem auto;
+  animation: dots 2s infinite ease-in-out;
+}
+
+.loading div {
+  width: 0.8rem;
+  height: 0.8rem;
+  background-color: var(--first-color);
+  border-radius: 50%;
+  box-shadow: 0 -0.2rem rgba(0, 0, 0, 0.2) inset;
+  animation: dots 0.9s ease-in-out infinite;
+}
+
+.loading div:nth-child(1) {
+  animation-delay: 0;
+}
+.loading div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loading div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dots {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.4rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 /*=============== SCROLL BAR ===============*/
@@ -572,6 +795,16 @@ img {
   .nav__list {
     justify-content: center;
     column-gap: 3rem;
+  }
+  /*===== LOGIN & REGISTER =====*/
+  .image-container {
+    flex: 0;
+  }
+  .form-container {
+    flex: 1;
+  }
+  .form-wrapper {
+    width: 55%;
   }
 }
 
@@ -628,6 +861,55 @@ img {
     width: 350px;
     right: 0;
     top: 0;
+  }
+  /*===== LOGIN & REGISTER =====*/
+  .body-bg {
+    background: var(--first-color);
+    background: -webkit-linear-gradient(
+      135deg,
+      var(--first-color),
+      var(--first-color-alt-dark)
+    );
+    background: -o-linear-gradient(
+      135deg,
+      var(--first-color),
+      var(--first-color-alt-dark)
+    );
+    background: -moz-linear-gradient(
+      135deg,
+      var(--first-color),
+      var(--first-color-alt-dark)
+    );
+    background: linear-gradient(
+      135deg,
+      var(--first-color),
+      var(--first-color-alt-dark)
+    );
+  }
+  .l-form {
+    width: 968px;
+    max-height: 720px;
+    margin: 0 2rem;
+    flex-direction: row;
+    border-radius: 1.5rem;
+    box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.25);
+    position: relative;
+  }
+  .image-container {
+    flex: 2;
+    -webkit-mask-image: none;
+    mask-image: none;
+    transform: scale(1);
+  }
+  .form-container {
+    flex: 3;
+    box-shadow: 0px -0.25rem 0.75rem rgba(0, 0, 0, 0.25);
+  }
+  .form-wrapper {
+    width: 65%;
+    position: relative;
+    top: 0;
+    transform: translateY(0);
   }
 }
 
