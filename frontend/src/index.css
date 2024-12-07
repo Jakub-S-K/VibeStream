@@ -100,6 +100,7 @@ a {
 
 button {
   border: none;
+  font-family: var(--body-font);
 }
 
 img {
@@ -532,6 +533,85 @@ img {
 
 .footer2__logo {
   width: 36px;
+}
+
+/*=============== UPLOAD ===============*/
+.upload {
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* .upload__wrapper {
+  border-radius: 1rem;
+  border: 2px solid var(--body-color-alt);
+  padding: 2rem;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+}
+
+.upload__wrapper-top {
+  display: flex;
+  gap: 2rem;
+}
+
+.upload__icon-circle {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 2px solid var(--first-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+.upload__drag-and-drop {
+  border-radius: 1rem;
+  border: 2px dashed var(--first-color);
+  background-color: var(--body-color-alt);
+  padding: 4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.upload__drag-and-drop--dragging {
+  opacity: 0.65;
+}
+
+.upload__drag-and-drop i {
+  font-size: var(--large-font-size);
+}
+
+.upload__drag-and-drop p:nth-of-type(1) {
+  font-size: var(--medium-font-size);
+}
+
+.upload__drag-and-drop p:nth-of-type(2) {
+  font-size: var(--regular-font-size);
+  opacity: 0.5;
+  margin-top: 0.5rem;
+}
+
+.upload__browse-button {
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem;
+  background-color: var(--first-color);
+  color: var(--white-color);
+  font-size: var(--normal-font-size);
+  margin-top: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload__browse-button:hover {
+  background-color: var(--first-color-alt-light);
+}
+
+.upload__file {
+  border-radius: 1rem;
+  border: 1px solid var(--first-color);
+  background-color: var(--body-color-alt);
+  padding: 1rem 2rem;
+  margin-bottom: 1rem;
 }
 
 /*=============== LOGIN & REGISTER ===============*/
