@@ -3,9 +3,6 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-// import avatar from '../assets/img/avatars/avatar1.jpg';
-// import artistsData from '../assets/json/artists.json';
-
 function ArtistsSlider() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +27,14 @@ function ArtistsSlider() {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className='loading'>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    );
   if (error) return <p>Error: {error.message}</p>;
 
   var settings = {
