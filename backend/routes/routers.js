@@ -9,6 +9,7 @@ module.exports = function (app) {
     test.get('/albums', testApi.albums);
     test.get('/artists', testApi.artists);
     test.get('/user', testApi.test_db);
+    test.get('/user/:id/comments', testApi.get_comments);
 
     app.use('/test', test); //Add all 'test' local paths to global /test/<PATH> routes
 }
