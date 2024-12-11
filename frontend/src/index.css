@@ -96,6 +96,7 @@ ul {
 
 a {
   text-decoration: none;
+  outline: none;
 }
 
 input,
@@ -105,12 +106,13 @@ button {
   border: none;
   outline: none;
   font-family: var(--body-font);
+  background-color: transparent;
 }
 
 img {
+  display: block;
   max-width: 100%;
   height: auto;
-  display: block;
 }
 
 /*=============== REUSABLE CSS CLASSES ===============*/
@@ -537,157 +539,6 @@ img {
 
 .footer2__logo {
   width: 36px;
-}
-
-/*=============== UPLOAD ===============*/
-.upload {
-  min-height: calc(100vh - var(--header-height));
-}
-
-.upload__drag-and-drop {
-  border-radius: 1rem;
-  border: 2px dashed var(--first-color);
-  background-color: var(--body-color-alt);
-  padding: 4rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.upload__drag-and-drop--dragging {
-  opacity: 0.65;
-}
-
-.upload__drag-and-drop i {
-  font-size: var(--large-font-size);
-}
-
-.upload__drag-and-drop p:nth-of-type(1) {
-  font-size: var(--medium-font-size);
-}
-
-.upload__drag-and-drop p:nth-of-type(2) {
-  font-size: var(--regular-font-size);
-  opacity: 0.5;
-  margin-top: 0.5rem;
-}
-
-.upload__browse-button {
-  border-radius: 0.5rem;
-  padding: 0.5rem 2rem;
-  background-color: var(--first-color);
-  color: var(--white-color);
-  font-size: var(--normal-font-size);
-  margin-top: 1.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.upload__browse-button:hover {
-  background-color: var(--first-color-alt-light);
-}
-
-.upload__file {
-  border-radius: 1rem;
-  border: 1px solid var(--first-color);
-  background-color: var(--body-color-alt);
-  padding: 1rem 2rem;
-  margin-bottom: 1rem;
-}
-
-.album__form {
-  background-color: var(--body-color-alt);
-  border-radius: 1rem;
-  margin-bottom: 1rem;
-  padding: 4rem;
-  display: grid;
-  gap: 4rem;
-}
-
-.album_form-top {
-  display: flex;
-  gap: 4rem;
-}
-
-.album__form-bottom {
-  text-align: center;
-}
-
-.album_form-top-inputs {
-  flex: 2;
-}
-
-.album_form-bottom {
-  display: block;
-  width: 100%;
-}
-
-.album__image {
-  width: 300px;
-  height: 300px;
-  border: 2px solid var(--third-color);
-  border-radius: 1rem;
-}
-
-.album__group {
-  width: 100%;
-}
-
-.album__label {
-  display: block;
-  text-align: left;
-  margin-bottom: 0.5rem;
-  font-size: var(--small-font-size);
-  font-weight: var(--font-semi-bold);
-}
-
-.album__input {
-  width: 100%;
-  outline: 1px solid var(--third-color);
-  background-color: transparent;
-  border-radius: 0.25rem;
-  margin-bottom: 1.5rem;
-  padding: 0.5rem 1rem;
-  color: var(--white-color);
-}
-
-.album__select {
-  width: 60%;
-  cursor: pointer;
-}
-
-.album__select option {
-  background-color: var(--body-color);
-  border: none;
-}
-
-.album__select option:focus {
-  background-color: var(--body-color-alt);
-}
-
-.album__textarea {
-  resize: none;
-  overflow: hidden;
-}
-
-.album__input:focus,
-.album__select:focus,
-.album__select:focus {
-  outline: 2px solid var(--first-color);
-}
-
-.album__button {
-  background-color: var(--first-color);
-  color: var(--white-color);
-  border-radius: 1rem;
-  padding: 0.6rem 3rem;
-  cursor: pointer;
-  font-size: var(--normal-font-size);
-}
-
-.album__button:hover {
-  background-color: var(--first-color-alt-light);
 }
 
 /*=============== LOGIN & REGISTER ===============*/
