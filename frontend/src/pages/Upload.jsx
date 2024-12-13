@@ -1,6 +1,7 @@
 import './Upload.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Reorder } from 'framer-motion';
+import ErrorMessage from '../components/ErrorMessage';
 import genresData from '../assets/json/genres.json';
 
 const Upload = () => {
@@ -8,21 +9,22 @@ const Upload = () => {
   const [dragging, setDragging] = useState(false);
   const [albumCover, setAlbumCover] = useState(null);
   const [albumCoverPreview, setAlbumCoverPreview] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
+  const [currentPlaying, setCurrentPlaying] = useState(null);
+  const audioRefs = useRef([]);
   const [albumData, setAlbumData] = useState({
     title: '',
     genre: '',
     description: '',
   });
-  const [currentPlaying, setCurrentPlaying] = useState(null);
-  const audioRefs = useRef([]);
   // const MAX_TOTAL_SIZE = 300 * 1024 * 1024;
 
   //==========BROWSE FILES BUTTON==========//
   const handleFileSelect = (e) => {
     const selectedFiles = Array.from(e.target.files);
     validateFiles(selectedFiles);
+    e.target.value = null;
   };
 
   //==========DRAG & DROP==========//
@@ -45,27 +47,40 @@ const Upload = () => {
 
   //==========VALIDATE FILES==========//
   const validateFiles = (newFiles) => {
-    const validFiles = newFiles.filter((file) =>
+    // Filter files to include only audio files.
+    const audioFiles = newFiles.filter((file) =>
       file.type.startsWith('audio/')
     );
-
     // const currentTotalSize = files.reduce((sum, file) => sum + file.size, 0);
-    // const newFilesSize = validFiles.reduce((sum, file) => sum + file.size, 0);
+    // const newFilesSize = audioFiles.reduce((sum, file) => sum + file.size, 0);
 
     // if (currentTotalSize + newFilesSize > MAX_TOTAL_SIZE) {
     //   setError('Total file size cannot exceed 300 MB!');
     //   return;
     // }
 
-    if (validFiles.length > 0) {
-      const filesWithNames = validFiles.map((file) => ({
-        id: crypto.randomUUID(),
+    // Check if any new audio files are empty.
+    const emptyFiles = audioFiles.filter((file) => file.size === 0);
+    if (emptyFiles.length > 0) {
+      setError('One or more files are empty and cannot be added!');
+    }
+
+    if (audioFiles.length > 0) {
+      const validAudioFiles = audioFiles.filter((file) => file.size > 0);
+
+      // Map audio files to objects with metadata and a unique ID.
+      const audioFileObjects = validAudioFiles.map((file, index) => ({
+        id: (Date.now().toString(32) + Math.random().toString(16)).replace(
+          /\./g,
+          ''
+        ),
         file,
         name: file.name.split('.').slice(0, -1).join('.'),
         src: URL.createObjectURL(file),
       }));
 
-      const filesAlreadyAdded = filesWithNames.filter((newFile) =>
+      // Check if any new audio files are already in the list.
+      const filesAlreadyAdded = audioFileObjects.filter((newFile) =>
         files.some(
           (existingFile) => existingFile.file.name === newFile.file.name
         )
@@ -76,8 +91,8 @@ const Upload = () => {
         return;
       }
 
-      setFiles((prevFiles) => [...prevFiles, ...filesWithNames]);
-
+      // Add new audio files to the list and move to the next step.
+      setFiles((prevFiles) => [...prevFiles, ...audioFileObjects]);
       setStep(2);
     } else {
       setError('At least one music file must be added!');
@@ -92,10 +107,10 @@ const Upload = () => {
       return;
     }
 
-    const maxSize = 1 * 1024 * 1024;
+    const maxSize = 16 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      alert('File size exceeds the maximum limit of 1 MB.');
+      alert('File size exceeds the maximum limit of 16 MB.');
       return;
     }
 
@@ -156,48 +171,59 @@ const Upload = () => {
     }
   };
 
+  //==========CLOSE ERROR MESSAGE==========//
+  const closeError = () => {
+    setError(null);
+  };
+
   //==========ALBUM SUBMIT==========//
   const handleSubmitAlbum = async (e) => {
     e.preventDefault();
-    // if (files.length === 0) {
-    //   setError('At least one music file must be added!');
-    //   return;
-    // }
-    // if (!albumData.title || !albumData.genre || !albumData.description) {
-    //   setError('All album fields must be filled out!');
-    //   return;
-    // }
-    // const formData = new FormData();
-    // files.forEach((file, index) => {
-    //   formData.append('file_' + index, file);
-    // });
-    // formData.append('title', albumData.title);
-    // formData.append('genre', albumData.genre);
-    // formData.append('description', albumData.description);
-    // if (albumCover) {
-    //   formData.append('cover', albumCover);
-    // }
-    // try {
-    //   const response = await fetch('', {
-    //     method: 'POST',
-    //     body: formData,
-    //   });
-    //   if (response.ok) {
-    //     alert('The album has been successfully created!');
-    //     setStep(1);
-    //     setFiles([]);
-    //     setAlbumCover(null);
-    //     setAlbumData({
-    //       nazwa: '',
-    //       artysta: '',
-    //       rok_wydania: '',
-    //     });
-    //   } else {
-    //     setError('An error occurred while creating the album.');
-    //   }
-    // } catch (error) {
-    //   setError('Server error. Please try again later.');
-    // }
+
+    if (files.length === 0) {
+      setError('At least one music file must be added!');
+      return;
+    }
+    if (!albumData.title || !albumData.genre) {
+      setError('Title and Genre fields must be filled out!');
+      return;
+    }
+
+    const formData = new FormData();
+
+    files.forEach((fileObj, index) => {
+      formData.append('file_' + index, fileObj.file);
+    });
+    formData.append('title', albumData.title);
+    formData.append('genre', albumData.genre);
+    formData.append('description', albumData.description);
+
+    if (albumCover) {
+      formData.append('cover', albumCover);
+    }
+
+    try {
+      const response = await fetch('', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        // alert('The album has been successfully created!');
+        setStep(1);
+        setFiles([]);
+        setAlbumCover(null);
+        setAlbumData({
+          title: '',
+          genre: '',
+          description: '',
+        });
+      } else {
+        setError('An error occurred while creating the album.');
+      }
+    } catch (error) {
+      setError('Server error. Please try again later.');
+    }
   };
 
   return (
@@ -205,9 +231,12 @@ const Upload = () => {
       {/*=============== STEP 1. FILES UPLOADING - DRAG & DROP, SELECT ===============*/}
       <section className='upload section' id='upload'>
         <div className='upload__container container'>
+          {/*==========ERROR==========*/}
+          {error && <ErrorMessage message={error} onClose={closeError} />}
+          <div className='upload__error'></div>
           {step === 1 && (
             <>
-              <h2 className='section__title'>Add your tracks</h2>
+              <h2 className='section__title'>Upload your songs</h2>
               <div
                 className={`upload__drag-and-drop ${
                   dragging ? 'upload__drag-and-drop--dragging' : ''
@@ -215,10 +244,13 @@ const Upload = () => {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
+                onClick={() =>
+                  document.getElementById('song-file-input').click()
+                }
               >
                 <i class='bx bx-cloud-upload'></i>
-                <p>Drag and drop your tracks here</p>
-                <p>MP3 and WAV formats, up to 300 MB</p>
+                <p>Drag and drop your songs to get started</p>
+                <p>MP3 and WAV formats, up to X MB</p>
                 <input
                   type='file'
                   multiple
@@ -229,9 +261,9 @@ const Upload = () => {
                 />
                 <button
                   className='upload__browse-button'
-                  onClick={() =>
-                    document.getElementById('song-file-input').click()
-                  }
+                  // onClick={() =>
+                  //   document.getElementById('song-file-input').click()
+                  // }
                 >
                   Browse Files
                 </button>
@@ -263,7 +295,9 @@ const Upload = () => {
                         : 'none',
                     }}
                   >
-                    {!albumCoverPreview && <i class='bx bx-image-add'></i>}
+                    {!albumCoverPreview && (
+                      <i class='bx bx-image-add album__cover-icon'></i>
+                    )}
                   </div>
 
                   <div className='album_form-top-inputs'>
@@ -315,77 +349,92 @@ const Upload = () => {
 
                 <div className='album__form-bottom'>
                   {/*=====SUBMIT BUTTON=====*/}
-                  <button type='submit' className='album__button'>
+                  <button
+                    type='submit'
+                    disabled={files.length === 0}
+                    className={`album__button ${
+                      files.length === 0 ? 'album__button--blocked' : ''
+                    }`}
+                  >
                     Create Album
                   </button>
                 </div>
               </form>
 
               {/*=============== SONG LIST - DRAG TO REORDER===============*/}
-              <Reorder.Group
-                axis='y'
-                values={files}
-                onReorder={(newOrder) => {
-                  setFiles(newOrder);
-                  // setCurrentPlaying(null);
-                }}
-                className='files__list'
-                layoutScroll
-                style={{ overflowY: 'hidden' }}
-              >
-                {files.map((fileObj, index) => {
-                  return (
-                    <Reorder.Item
-                      key={fileObj.id}
-                      value={fileObj}
-                      className='files__item'
-                    >
-                      <div className='files__data-l'>
-                        {/* =====PLAY-PAUSE BUTTON===== */}
-                        <button
-                          className='files__button files__button--toogle-play'
-                          onClick={() => handlePlayToggle(fileObj.id)}
-                        >
-                          <i
-                            className={`bx ${
-                              currentPlaying === fileObj.id
-                                ? 'bx-pause'
-                                : 'bx-play'
-                            }`}
-                          ></i>
-                        </button>
-                        {/*=====NUMBER=====*/}
-                        <span className='files__number'>{index + 1}</span>
-                        {/*=====SONG NAME INPUT=====*/}
-                        <input
-                          className='files__song-name'
-                          type='text'
-                          value={fileObj.name}
-                          onChange={(e) =>
-                            handleSongNameChange(fileObj.id, e.target.value)
-                          }
-                        />
-                        {/*=====FILE NAME=====*/}
-                        <p className='files__file-name'>{fileObj.file.name}</p>
-                      </div>
-
-                      {/*=====REMOVE BUTTON=====*/}
-                      <button
-                        className='files__button files__button--delete'
-                        onClick={() => removeSong(fileObj.id)}
+              {files.length === 0 ? (
+                <p className='files__info-text'>
+                  At least one file must be added to the album...
+                </p>
+              ) : (
+                <Reorder.Group
+                  axis='y'
+                  values={files}
+                  onReorder={(newOrder) => {
+                    setFiles(newOrder);
+                    // setCurrentPlaying(null);
+                  }}
+                  className='files__list'
+                  layoutScroll
+                  style={{ overflowY: 'hidden' }}
+                >
+                  {files.map((fileObj, index) => {
+                    return (
+                      <Reorder.Item
+                        key={fileObj.id}
+                        value={fileObj}
+                        className='files__item'
                       >
-                        <i class='bx bx-x'></i>
-                      </button>
-                      {/*=====AUDIO ELEMENT=====*/}
-                      <audio
-                        ref={(el) => (audioRefs.current[fileObj.id] = el)}
-                        src={fileObj.src}
-                        onEnded={() => handleAudioEnd(fileObj.id)}
-                      />
-                    </Reorder.Item>
-                  );
-                })}
-              </Reorder.Group>
+                        <div className='files__data-l'>
+                          {/* =====PLAY-PAUSE BUTTON===== */}
+                          <button
+                            className='files__button files__button--toogle-play'
+                            onClick={() => handlePlayToggle(fileObj.id)}
+                          >
+                            <i
+                              className={`bx ${
+                                currentPlaying === fileObj.id
+                                  ? 'bx-pause'
+                                  : 'bx-play'
+                              }`}
+                            ></i>
+                          </button>
+                          {/*=====NUMBER=====*/}
+                          <span className='files__number'>{index + 1}</span>
+
+                          {/*=====SONG NAME INPUT=====*/}
+                          <input
+                            className='files__song-name'
+                            type='text'
+                            value={fileObj.name}
+                            onChange={(e) =>
+                              handleSongNameChange(fileObj.id, e.target.value)
+                            }
+                          />
+                          {/*=====FILE NAME=====*/}
+                          <p className='files__file-name'>
+                            {fileObj.file.name}
+                          </p>
+                        </div>
+
+                        {/*=====REMOVE BUTTON=====*/}
+                        <button
+                          className='files__button files__button--delete'
+                          onClick={() => removeSong(fileObj.id)}
+                        >
+                          <i class='bx bx-x'></i>
+                        </button>
+                        {/*=====AUDIO ELEMENT=====*/}
+                        <audio
+                          ref={(el) => (audioRefs.current[fileObj.id] = el)}
+                          src={fileObj.src}
+                          onEnded={() => handleAudioEnd(fileObj.id)}
+                        />
+                      </Reorder.Item>
+                    );
+                  })}
+                </Reorder.Group>
+              )}
 
               <div className='files__add-button-l'>
                 <input
