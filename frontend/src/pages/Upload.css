@@ -1,0 +1,352 @@
+/*=============== UPLOAD ===============*/
+.upload {
+  min-height: calc(100vh - var(--header-height));
+}
+
+.upload__drag-and-drop {
+  border-radius: 1rem;
+  border: 2px dashed var(--first-color);
+  background-color: var(--body-color-alt);
+  padding: 5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+.upload__drag-and-drop--dragging {
+  opacity: 0.65;
+}
+
+.upload__drag-and-drop i {
+  font-size: var(--large-font-size);
+}
+
+.upload__drag-and-drop p:nth-of-type(1) {
+  font-size: var(--medium-font-size);
+}
+
+.upload__drag-and-drop p:nth-of-type(2) {
+  font-size: var(--regular-font-size);
+  opacity: 0.5;
+  margin-top: 0.5rem;
+}
+
+.upload__browse-button {
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem;
+  background-color: var(--first-color);
+  color: var(--white-color);
+  font-size: var(--normal-font-size);
+  margin-top: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload__browse-button:hover {
+  background-color: var(--first-color-alt-light);
+}
+
+/*===============ALBUM CREATING===============*/
+
+/*===============ALBUM FORM===============*/
+.album__form {
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  display: grid;
+  gap: 2rem;
+  border-bottom: 1px solid var(--third-color);
+}
+
+.album_form-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.album_form-top-inputs {
+  width: 100%;
+}
+
+.album__form-bottom {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.album__cover {
+  width: 220px;
+  height: 220px;
+  border-radius: 1rem;
+  background-position: center;
+  background-size: cover;
+  background-color: var(--first-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: var(--first-color-alt-light);
+  box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  /* transition: background-color 0.2s ease, color 0.2s ease; */
+  overflow: hidden;
+}
+
+.album__cover:hover {
+  background-color: rgb(255, 137, 78);
+  color: rgb(236, 116, 56);
+  /* opacity: 0.5; */
+}
+
+.album__cover:hover i {
+  /* line-height: 6rem; */
+  /* font-size: 4.5rem; */
+}
+
+.album__group {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.album__label {
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  font-size: var(--small-font-size);
+  font-weight: var(--font-semi-bold);
+}
+
+.album__input {
+  width: 100%;
+  outline: 1px solid var(--third-color);
+  background-color: var(--body-color-alt);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  color: var(--white-color);
+  /* font-size: var(--normal-font-size); */
+  font-weight: var(--font-light);
+}
+
+.album__input::placeholder {
+  /* font-size: var(--small-font-size); */
+  color: var(--third-color);
+}
+
+.album__select {
+  cursor: pointer;
+}
+
+.album__select option {
+  background-color: var(--body-color);
+  font-weight: var(--font-light);
+  border: none;
+}
+
+.album__select option:focus {
+  background-color: var(--body-color-alt);
+}
+
+.album__textarea {
+  resize: none;
+  overflow: hidden;
+}
+
+.album__input:focus,
+.album__select:focus,
+.album__select:focus {
+  outline: 2px solid var(--first-color);
+}
+
+.album__button {
+  background-color: var(--first-color);
+  color: var(--white-color);
+  border-radius: 1rem;
+  padding: 0.6rem 3rem;
+  cursor: pointer;
+  font-size: var(--normal-font-size);
+  transition: 0.2s all ease-out;
+}
+
+.album__button:hover {
+  background-color: var(--first-color-alt-light);
+}
+
+.album__button--blocked {
+  background-color: var(--third-color);
+  color: rgb(73, 66, 64);
+  cursor: default;
+}
+
+.album__button--blocked:hover {
+  background-color: var(--third-color);
+}
+
+/*===============SONG LIST===============*/
+.files__info-text {
+  text-align: center;
+  font-size: var(--small-font-size);
+}
+
+.files__list {
+  margin-top: 2rem;
+}
+
+.files__item {
+  min-width: fit-content;
+  border-radius: 0.25rem;
+  border-bottom: 1px solid var(--first-color);
+  background-color: var(--body-color-alt);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 0.1rem 0.25rem rgba(0, 0, 0, 0.1);
+  cursor: grab;
+}
+
+.files__item:last-of-type {
+  margin: 0;
+}
+
+.files__button {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: transparent;
+  outline: 2px solid var(--first-color);
+  color: var(--first-color);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.1s all ease-out;
+}
+
+.files__button:hover {
+  color: var(--first-color-alt-dark);
+  outline-color: var(--first-color-alt-dark);
+}
+
+.files__button--delete:hover {
+  color: rgb(200, 35, 0);
+  outline-color: rgb(200, 35, 0);
+}
+
+.files__data-l {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-grow: 2;
+}
+
+.files__number {
+  display: none;
+}
+
+.files__song-name {
+  background-color: transparent;
+  color: var(--white-color);
+  font-size: var(--normal-font-size);
+  font-weight: var(--font-light);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  outline: 1px solid var(--third-color);
+  width: 100%;
+  max-width: 300px;
+}
+
+.files__file-name {
+  display: none;
+  font-size: var(--tiny-font-size);
+  font-weight: var(--font-extra-light);
+}
+
+.files__add-button-l {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.files__add-button {
+  background-color: var(--first-color);
+  color: var(--white-color);
+  border-radius: 1rem;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  font-size: var(--normal-font-size);
+  transition: 0.2s all ease-out;
+}
+
+.files__add-button:hover {
+  background-color: var(--first-color-alt-light);
+}
+
+/* ERROR */
+.upload__error-message {
+  z-index: var(--z-fixed);
+  pad: 0.5rem 1rem;
+}
+
+/*=============== MEDIA QUERIES ===============*/
+/* For small devices */
+@media screen and (max-width: 320px) {
+}
+
+/* For medium devices */
+@media screen and (min-width: 576px) {
+  .album__cover {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media screen and (min-width: 767px) {
+  .album__form {
+    padding: 2rem 4rem;
+  }
+  .album_form-top {
+    flex-direction: row;
+    align-items: start;
+    gap: 4rem;
+  }
+  .album_form-top-inputs {
+    flex: 2;
+  }
+  .files__item {
+    padding: 1rem 2rem;
+  }
+  .files__number {
+    display: block;
+  }
+  .files__file-name {
+    display: block;
+    max-width: 180px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+/* For large devices */
+@media screen and (min-width: 1024px) {
+  .album__form {
+    gap: 4rem;
+  }
+  .album__select {
+    width: 60%;
+  }
+  .files__button {
+    min-width: 2rem;
+    min-height: 2rem;
+  }
+  .files__song-name {
+    max-width: 400px;
+  }
+  .files__file-name {
+    max-width: 300px;
+  }
+}

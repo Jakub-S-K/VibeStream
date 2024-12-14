@@ -96,17 +96,23 @@ ul {
 
 a {
   text-decoration: none;
+  outline: none;
 }
 
+input,
+select,
+textarea,
 button {
   border: none;
+  outline: none;
   font-family: var(--body-font);
+  background-color: transparent;
 }
 
 img {
+  display: block;
   max-width: 100%;
   height: auto;
-  display: block;
 }
 
 /*=============== REUSABLE CSS CLASSES ===============*/
@@ -126,6 +132,37 @@ img {
 .container {
   max-width: 968px;
   padding: 0 2rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*=============== ERROR MESSAGE ===============*/
+.error-message {
+  position: fixed;
+  top: 8rem;
+  right: 3rem;
+  background-color: var(--body-color-alt);
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+  outline: 1px solid rgb(196, 29, 0);
+  font-size: var(--tiny-font-size);
+  z-index: var(--z-tooltip);
+  padding: 0.75rem 2rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 1;
+  transition: opacity 2s ease-out;
+  /* transition: all 0.25s ease-out; */
+}
+
+.error-message i {
+  font-size: 1.75rem;
+}
+
+.error-message:hover {
+  box-shadow: 0 0 0.7rem rgb(221, 33, 0);
 }
 
 /*=============== HEADER ===============*/
@@ -535,85 +572,6 @@ img {
   width: 36px;
 }
 
-/*=============== UPLOAD ===============*/
-.upload {
-  min-height: calc(100vh - var(--header-height));
-}
-
-/* .upload__wrapper {
-  border-radius: 1rem;
-  border: 2px solid var(--body-color-alt);
-  padding: 2rem;
-  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
-}
-
-.upload__wrapper-top {
-  display: flex;
-  gap: 2rem;
-}
-
-.upload__icon-circle {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: 2px solid var(--first-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
-
-.upload__drag-and-drop {
-  border-radius: 1rem;
-  border: 2px dashed var(--first-color);
-  background-color: var(--body-color-alt);
-  padding: 4rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.upload__drag-and-drop--dragging {
-  opacity: 0.65;
-}
-
-.upload__drag-and-drop i {
-  font-size: var(--large-font-size);
-}
-
-.upload__drag-and-drop p:nth-of-type(1) {
-  font-size: var(--medium-font-size);
-}
-
-.upload__drag-and-drop p:nth-of-type(2) {
-  font-size: var(--regular-font-size);
-  opacity: 0.5;
-  margin-top: 0.5rem;
-}
-
-.upload__browse-button {
-  border-radius: 0.5rem;
-  padding: 0.5rem 2rem;
-  background-color: var(--first-color);
-  color: var(--white-color);
-  font-size: var(--normal-font-size);
-  margin-top: 1.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.upload__browse-button:hover {
-  background-color: var(--first-color-alt-light);
-}
-
-.upload__file {
-  border-radius: 1rem;
-  border: 1px solid var(--first-color);
-  background-color: var(--body-color-alt);
-  padding: 1rem 2rem;
-  margin-bottom: 1rem;
-}
-
 /*=============== LOGIN & REGISTER ===============*/
 .body-bg {
   width: 100%;
@@ -721,7 +679,7 @@ img {
   border: none;
   outline: none;
   color: var(--white-color);
-  font-size: var(--regular-font-size);
+  font-size: var(--normal-font-size);
   font-weight: var(--font-light);
 }
 
@@ -768,7 +726,7 @@ img {
 
 .form__have-account-text {
   margin-top: 1rem;
-  font-size: var(--regular-font-size);
+  font-size: var(--normal-font-size);
 }
 
 .form__policy-info--underline {
@@ -918,8 +876,8 @@ img {
 /* For large devices */
 @media screen and (min-width: 1024px) {
   .container {
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
     padding: 0;
   }
   .home__container {
