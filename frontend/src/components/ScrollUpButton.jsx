@@ -4,13 +4,9 @@ function ScrollUpButton() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    window.addEventListener('scroll', () => {
-      if (window.scrollY >= 350) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    });
+    window.addEventListener('scroll', () => window.scrollY >= 350)
+      ? setIsVisible(true)
+      : setIsVisible(false);
   }, []);
 
   const scrollToTop = () => {
@@ -25,7 +21,7 @@ function ScrollUpButton() {
       className={`scrollup ${isVisible ? 'show-scroll' : ''}`}
       onClick={scrollToTop}
     >
-      <i class="bx bx-up-arrow-alt"></i>
+      <i class='bx bx-up-arrow-alt'></i>
     </button>
   );
 }
