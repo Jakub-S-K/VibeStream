@@ -1,7 +1,7 @@
 const express = require('express')
 
-const userApi = require('./api/users.js');
-const songApi = require('./api/songs.js');
+const userApi = require('./api/user.js');
+const albumApi = require('./api/album.js');
 const testApi = require('./test/test.js');
 
 module.exports = function (app) {
@@ -9,6 +9,7 @@ module.exports = function (app) {
     const api = express.Router();
 
     api.get('/trending/users/:n', userApi.trending);
+    api.get('/trending/albums/:n', albumApi.trending);
 
 
 
