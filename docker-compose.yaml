@@ -5,8 +5,15 @@ services:
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_USER_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
         
   frontend:    
     environment:
@@ -19,19 +26,23 @@ services:
     ports:
       - "${FRONTEND_PORT}:5173"    
 
-
   backend:
     environment:
       BACKEND_PORT: ${BACKEND_PORT}
+      DOCKER_RUNNING: 1
     build:
       dockerfile: docker/backend.Dockerfile
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
+    depends_on:
+      db:
+        condition: service_healthy
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8080:80"
 
@@ -42,6 +53,7 @@ services:
     build: 
       dockerfile: docker/backup.Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - ./db_backup:/tmp/db_backup
