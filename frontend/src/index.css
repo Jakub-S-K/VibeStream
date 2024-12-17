@@ -74,10 +74,6 @@
   padding: 0px;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
@@ -134,6 +130,44 @@ img {
   padding: 0 2rem;
   margin-left: auto;
   margin-right: auto;
+}
+
+/*=============== PAGE NOT FOUND ===============*/
+.no-match__wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.no-match__logo {
+  width: 5rem;
+}
+
+.no-match__text {
+  margin: 0;
+}
+
+.no-match__button {
+  background-color: var(--first-color);
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  color: var(--white-color);
+  font-size: var(--small-font-size);
+  font-weight: var(--font-regular);
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+}
+
+.no-match__button:hover {
+  background-color: var(--first-color-alt-light);
+  scale: 1.025;
 }
 
 /*=============== ERROR MESSAGE ===============*/
@@ -223,6 +257,11 @@ img {
   row-gap: 4px;
   color: var(--title-color);
   font-weight: var(--font-light);
+  transition: all 0.1s ease-out;
+}
+
+.nav__link:hover {
+  color: var(--first-color);
 }
 
 .nav__button {
@@ -856,9 +895,6 @@ img {
   }
   .nav__name {
     font-size: var(--normal-font-size);
-  }
-  .nav__link:hover {
-    color: var(--first-color);
   }
   .footer2 {
     padding: 1.5rem 0;
