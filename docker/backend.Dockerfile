@@ -3,7 +3,7 @@ FROM node:slim
 WORKDIR /app
 
 COPY backend .
-COPY .env .
+COPY .env /
 
 RUN npm install
 

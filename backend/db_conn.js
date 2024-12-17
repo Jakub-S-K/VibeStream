@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 require('dotenv').config({ path: `../.env`});
 
 sequelize = new Sequelize(process.env.DB_NAME, 'root', process.env.DB_ROOT_PASSWORD, {
+    host: process.env.DOCKER_RUNNING ? 'db' : 'localhost',
     dialect: 'mariadb',
     pool: {
       min: 0,
