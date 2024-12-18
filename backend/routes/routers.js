@@ -10,6 +10,7 @@ module.exports = function (app) {
 
     api.get('/trending/users/:n', userApi.trending);
     api.get('/trending/albums/:n', albumApi.trending);
+    api.get('/user/brief/:id', userApi.user_brief);
 
 
 
@@ -22,5 +23,3 @@ module.exports = function (app) {
     app.use('/api', api);
     app.use('/test', test); //Add all 'test' local paths to global /test/<PATH> routes
 }
-
-

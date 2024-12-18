@@ -5,8 +5,7 @@ module.exports.trending = async function (req, res) {
     _n = req.params.n;
     const album = await Album.findAll({
         order: sequelize.random(),
-        limit: 2 //parseInt(_n),
-        //subquery: false
+        limit: parseInt(_n),
     })
     if (!album) {
         console.log('Not found');
