@@ -29,7 +29,7 @@ function Home() {
 
           <div className='artists__container container'>
             {/* <p className='artists__text'>Artists avatars here</p> */}
-            <ArtistsSlider />
+            <ArtistsSlider usersToShow='7' />
           </div>
         </section>
 
@@ -63,8 +63,8 @@ function Home() {
 
           <div class='trending__container container'>
             {/* <p class='trending__text'>Trending albums here</p> */}
-            <TrendingSlider />
-            <TrendingSlider />
+            <TrendingSlider albumsToShow='8' />
+            <TrendingSlider albumsToShow='6' />
           </div>
         </section>
       </main>
