@@ -44,7 +44,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8080:80"
+      - "8081:80"
 
   periodic_backup:
     environment:

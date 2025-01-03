@@ -1,4 +1,7 @@
 const express = require('express')
+const multer  = require('multer')
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 const userApi = require('./api/user.js');
 const albumApi = require('./api/album.js');
@@ -11,9 +14,10 @@ module.exports = function (app) {
 
     api.get('/trending/users/:n', userApi.trending);
     api.get('/trending/albums/:n', albumApi.trending);
+    api.post('/album', upload.any(), albumApi.create);
+
     api.get('/user/brief/:id', userApi.user_brief);
     api.get('/tags', suppApi.tags);
-
 
 
     test.get('/hello', testApi.get); //Local path in this case /test/hello
@@ -21,6 +25,7 @@ module.exports = function (app) {
     test.get('/artists', testApi.artists);
     test.get('/user', testApi.test_db);
     test.get('/user/:id/comments', testApi.get_comments);
+    test.post('/upload', upload.any(), testApi.upload);
 
     app.use('/api', api);
     app.use('/test', test); //Add all 'test' local paths to global /test/<PATH> routes

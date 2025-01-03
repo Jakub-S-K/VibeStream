@@ -27,7 +27,8 @@ module.exports.conn_rdy = function () {
         sequelize.authenticate()
             .then(async () => {
               await sequelize.drop();
-              await sequelize.sync({ force: true });
+              await sequelize.sync({ force: true, alter: true });
+              await require('./schema.js').Init_db_entities();
               resolve(true)
             })
             .catch(error => {

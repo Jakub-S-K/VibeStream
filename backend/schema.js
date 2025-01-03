@@ -1,13 +1,14 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('./db_conn.js').conn;
+const uuid = require('uuid')
 
 const user = sequelize.define(
     'user',
     {
       id: {
-        type: DataTypes.BIGINT(11),
-        autoIncrement: true,
+        type: DataTypes.UUID,
         primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
       },
       nickname: {
         type: DataTypes.STRING,
@@ -20,7 +21,8 @@ const user = sequelize.define(
         type: DataTypes.STRING(512)
       },
       creation_date: {
-        type: DataTypes.DATE(6)
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
       },
       bio: {
         type: DataTypes.STRING(4096),
@@ -36,19 +38,15 @@ const album = sequelize.define(
   'album',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     name: {
       type: DataTypes.STRING,
     },
     user_id: {
-      type: DataTypes.BIGINT(11),
-      allowNull: false,
-    },
-    album_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     }
   },
@@ -62,19 +60,19 @@ const album_like = sequelize.define(
   'album_like',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     name: {
       type: DataTypes.STRING,
     },
     user_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     },
     album_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     }
   },
@@ -87,16 +85,16 @@ const album_tags = sequelize.define(
   'album_tags',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     tag_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     },
     album_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     }
   },
@@ -109,12 +107,12 @@ const comment = sequelize.define(
   'comment',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     user_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     },
     creation_date: {
@@ -134,12 +132,12 @@ const image = sequelize.define(
   'image',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     external_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     },
     image: {
@@ -155,16 +153,16 @@ const song = sequelize.define(
   'song',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     album_id: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     },
     length: {
@@ -174,9 +172,10 @@ const song = sequelize.define(
     play_counter: {
       type: DataTypes.BIGINT(11),
       allowNull: false,
+      defaultValue: 0
     },
     file: {
-      type: DataTypes.BLOB('medium') //medium = max 16MiB
+      type: DataTypes.BLOB('long') //long = max 2GiB
     }
   },
   {
@@ -189,9 +188,9 @@ const tag = sequelize.define(
   'tag',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     tag_name: {
       type: DataTypes.STRING(64),
@@ -207,16 +206,16 @@ const user_follower = sequelize.define(
   'user_follower',
   {
     id: {
-      type: DataTypes.BIGINT(11),
-      autoIncrement: true,
+      type: DataTypes.UUID,
       primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     user_id_follower: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     },
     user_id_followed: {
-      type: DataTypes.BIGINT(11),
+      type: DataTypes.UUID,
       allowNull: false,
     },
   },
@@ -261,4 +260,18 @@ module.exports.Init_relations = function() {
   album_like.belongsTo(album, {foreignKey: 'album_id'});
   
   console.log('Relations initialized!');
+}
+
+module.exports.Init_db_entities = async function () {
+  const _user = await user.create({
+    id: '37692021-37ea-41f1-b95f-3e8a2750c072',
+    nickname: 'Andrzej',
+    email: 'andrzej@gmail.com',
+    password: 'andrzej1234',
+    bio: 'Andrzej lorem ipsum dolor sit amet'
+  })
+  if (!_user) {
+    console.error('Could not create base user');
+  }
+  console.log(_user.id);
 }

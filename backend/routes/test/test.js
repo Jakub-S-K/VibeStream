@@ -24,6 +24,11 @@ module.exports.test_db = async function (req, res) {
     res.json(user);
 }
 
+module.exports.upload = function (req, res) {
+    console.log("Uploading:");
+    console.log(req.body);
+}
+
 module.exports.get_comments = async function (req, res) {
     _id = req.params.id //expressJS parsuje automatycznie wszystkie zmienne w adresie czyli /:id/ jest pod req.params.id
     const user = await User.findOne({ //Dla wielu rekordów jest jeszcze findAll. await czeka na zakonczenie requesta z bazy.
