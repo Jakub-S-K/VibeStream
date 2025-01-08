@@ -202,6 +202,24 @@ const tag = sequelize.define(
   }
 );
 
+const genre = sequelize.define(
+    'genre',
+    {
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4,
+        },
+        name: {
+            type: DataTypes.STRING(100),
+            allowNull: false,
+        }
+    },
+    {
+        freezeTableName: true,
+    }
+);
+
 const user_follower = sequelize.define(
   'user_follower',
   {
@@ -234,6 +252,7 @@ module.exports.Image = image;
 module.exports.Song = song;
 module.exports.Tag = tag;
 module.exports.User_follower = user_follower;
+module.exports.Genre = genre;
 
 module.exports.Init_relations = function() {
   user.hasOne(image, {foreignKey: 'id'});

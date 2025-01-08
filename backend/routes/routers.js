@@ -18,6 +18,7 @@ module.exports = function (app) {
 
     api.get('/user/brief/:id', userApi.user_brief);
     api.get('/tags', suppApi.tags);
+    api.get('/genres', suppApi.genres);
 
 
     test.get('/hello', testApi.get); //Local path in this case /test/hello
