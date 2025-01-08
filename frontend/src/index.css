@@ -440,6 +440,7 @@ img {
   border-radius: 0.7rem;
   display: flex;
   align-items: center;
+  transition: all 0.1s ease-out;
 }
 
 .slick-slider .slick-slide {
@@ -451,12 +452,13 @@ img {
 }
 
 .slider__image {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  overflow: hidden;
   border-radius: 50%;
   background-size: cover;
   background-color: var(--first-color);
   cursor: pointer;
-  aspect-ratio: 1 / 1;
-  width: 100%;
 }
 
 .slider__card-bottom {
@@ -469,6 +471,7 @@ img {
   display: block;
   font-size: var(--regular-font-size);
   font-weight: var(--font-regular);
+  color: var(--white-color);
   cursor: pointer;
 }
 

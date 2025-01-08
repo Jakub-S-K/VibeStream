@@ -1,47 +1,27 @@
-import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Loading from './Loading';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import image from '../assets/img/album.png';
+import { useFetch } from '../hooks/useFetch.js';
 
 function TrendingSlider({ albumsToShow }) {
-  const [trendingAlbums, setTrendingAlbums] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
-
-  useEffect(() => {
-    async function fetchAlbums() {
-      setIsLoading(true);
-
-      try {
-        const response = await fetch(
-          // `http://localhost:3001/api/trending/albums/${albumsToShow}`
-          `http://localhost:3001/test/albums`
-        );
-        const resData = await response.json();
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch trending albums');
-        }
-
-        setTrendingAlbums(resData);
-      } catch (error) {
-        setError(error.message || 'Could not fetch trending albums.');
-      }
-
-      setIsLoading(false);
-    }
-
-    fetchAlbums();
-  }, []);
+  const {
+    isLoading,
+    fetchedData: trendingAlbums,
+    error,
+  } = useFetch(
+    // `http://localhost:3001/api/trending/albums/7`
+    `http://localhost:3001/test/albums`,
+    []
+  );
 
   if (error) {
     return <p>Error: {error.message}</p>;
   }
 
   var settings = {
-    // dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 5,
@@ -59,12 +39,10 @@ function TrendingSlider({ albumsToShow }) {
 
   return (
     <>
-      <div className='slider'>
-        {isLoading && <Loading></Loading>}
-        {!isLoading && trendingAlbums.length === 0 && (
-          <p>No albums available</p>
-        )}
-        {!isLoading && trendingAlbums.length > 0 && (
+      {isLoading && <Loading></Loading>}
+      {!isLoading && trendingAlbums.length === 0 && <p>No albums available</p>}
+      {!isLoading && trendingAlbums.length > 0 && (
+        <div className='slider'>
           <Slider {...settings}>
             {trendingAlbums.map((album, index) => {
               return (
@@ -96,8 +74,8 @@ function TrendingSlider({ albumsToShow }) {
               );
             })}
           </Slider>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }
