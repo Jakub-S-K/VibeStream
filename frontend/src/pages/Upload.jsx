@@ -192,10 +192,9 @@ const Upload = () => {
     const formData = new FormData();
 
     files.forEach((fileObj, index) => {
-      formData.append('file', fileObj.file);
+      formData.append('file_' + index, fileObj.file);
     });
     formData.append('title', albumData.title);
-    formData.append('id', '37692021-37ea-41f1-b95f-3e8a2750c072'); //Temp logged user id
     formData.append('genre', albumData.genre);
     formData.append('description', albumData.description);
 
@@ -204,7 +203,7 @@ const Upload = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/album', {
+      const response = await fetch('', {
         method: 'POST',
         body: formData,
       });

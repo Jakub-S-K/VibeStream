@@ -1,0 +1,36 @@
+import { useEffect, useState } from 'react';
+
+export function useFetch(url, initialValue) {
+  const [isLoading, setIsLoading] = useState();
+  const [error, setError] = useState();
+  const [fetchedData, setFetchedData] = useState(initialValue);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch(url);
+        const resData = await response.json();
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch trending users.');
+        }
+
+        setFetchedData(resData);
+      } catch (error) {
+        setError({ message: error.message || 'Failed to fetch data.' });
+      }
+
+      setIsLoading(false);
+    }
+
+    fetchData();
+  }, [url]);
+
+  return {
+    isLoading,
+    fetchedData,
+    error,
+  };
+}
