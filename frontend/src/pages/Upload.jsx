@@ -1,8 +1,8 @@
 import './Upload.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Reorder } from 'framer-motion';
-import ErrorMessage from '../components/ErrorMessage';
-import genresData from '../assets/json/genres.json';
+import Message from '../components/Message';
+// import genresData from '../assets/json/genres.json';
 
 const Upload = () => {
   const [step, setStep] = useState(1);
@@ -10,9 +10,11 @@ const Upload = () => {
   const [albumCover, setAlbumCover] = useState(null);
   const [albumCoverPreview, setAlbumCoverPreview] = useState(null);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [files, setFiles] = useState([]);
   const [currentPlaying, setCurrentPlaying] = useState(null);
   const audioRefs = useRef([]);
+  const [genres, setGenres] = useState([]);
   const [albumData, setAlbumData] = useState({
     title: '',
     genre: '',
@@ -95,7 +97,7 @@ const Upload = () => {
       setFiles((prevFiles) => [...prevFiles, ...audioFileObjects]);
       setStep(2);
     } else {
-      setError('At least one music file must be added!');
+      setError('File format not supported! Please upload a valid music file.');
     }
   };
 
@@ -107,10 +109,10 @@ const Upload = () => {
       return;
     }
 
-    const maxSize = 16 * 1024 * 1024;
+    const maxSize = 1 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      alert('File size exceeds the maximum limit of 16 MB.');
+      setError('File size exceeds the maximum limit of 16 MB.');
       return;
     }
 
@@ -176,6 +178,26 @@ const Upload = () => {
     setError(null);
   };
 
+  //==========CLOSE SUCCESS MESSAGE==========//
+  const closeSuccess = () => {
+    setSuccess(null);
+  };
+
+  //==========GENRES FETCHING==========//
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/genres');
+        const data = await response.json();
+        setGenres(data);
+      } catch (error) {
+        return 'Error fetching genres:', error;
+      }
+    };
+
+    fetchGenres();
+  }, []);
+
   //==========ALBUM SUBMIT==========//
   const handleSubmitAlbum = async (e) => {
     e.preventDefault();
@@ -192,9 +214,10 @@ const Upload = () => {
     const formData = new FormData();
 
     files.forEach((fileObj, index) => {
-      formData.append('file_' + index, fileObj.file);
+      formData.append('file', fileObj.file);
     });
     formData.append('title', albumData.title);
+    formData.append('id', '37692021-37ea-41f1-b95f-3e8a2750c072'); //Temp logged user id
     formData.append('genre', albumData.genre);
     formData.append('description', albumData.description);
 
@@ -203,24 +226,24 @@ const Upload = () => {
     }
 
     try {
-      const response = await fetch('', {
+      const response = await fetch('http://localhost:3001/api/album', {
         method: 'POST',
         body: formData,
       });
 
-      if (response.ok) {
-        // alert('The album has been successfully created!');
-        setStep(1);
-        setFiles([]);
-        setAlbumCover(null);
-        setAlbumData({
-          title: '',
-          genre: '',
-          description: '',
-        });
-      } else {
+      if (!response.ok) {
         setError('An error occurred while creating the album.');
       }
+
+      setSuccess('Album created successfully!');
+      setStep(1);
+      setFiles([]);
+      setAlbumCover(null);
+      setAlbumData({
+        title: '',
+        genre: '',
+        description: '',
+      });
     } catch (error) {
       setError('Server error. Please try again later.');
     }
@@ -228,12 +251,18 @@ const Upload = () => {
 
   return (
     <main>
-      {/*=============== STEP 1. FILES UPLOADING - DRAG & DROP, SELECT ===============*/}
       <section className='upload section' id='upload'>
         <div className='upload__container container'>
           {/*==========ERROR==========*/}
-          {error && <ErrorMessage message={error} onClose={closeError} />}
-          <div className='upload__error'></div>
+          {error && (
+            <Message type='error' message={error} onClose={closeError} />
+          )}
+          {/*==========SUCCESS==========*/}
+          {success && (
+            <Message type='success' message={success} onClose={closeSuccess} />
+          )}
+
+          {/*=============== STEP 1. FILES UPLOADING - DRAG & DROP, SELECT ===============*/}
           {step === 1 && (
             <>
               <h2 className='section__title'>Upload your songs</h2>
@@ -324,10 +353,8 @@ const Upload = () => {
                         onChange={handleAlbumChange}
                       >
                         <option value=''>Select Genre</option>
-                        {genresData.genres.map((genre) => (
-                          <option key={genre.id} value={genre.name}>
-                            {genre.name}
-                          </option>
+                        {genres.map((genre) => (
+                          <option value={genre.name}>{genre.name}</option>
                         ))}
                       </select>
                     </div>

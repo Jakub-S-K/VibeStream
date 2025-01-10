@@ -1,14 +1,32 @@
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../components/AuthContext';
 import vibestreamLogo from '../assets/img/logo.png';
 import perfil from '../assets/img/perfil.png';
 
 function Header() {
+  const { user, logout } = useAuth();
+
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const dropdownRef = useRef(null);
+  console.log(dropdownRef);
 
   const toggleDropdown = () => {
     setIsDropdownVisible((prev) => !prev);
   };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownVisible(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -49,35 +67,65 @@ function Header() {
                 </Link>
               </li>
 
-              {/*=============== ACCOUNT ===============*/}
-              <li className='nav__item' id='account' onClick={toggleDropdown}>
-                <a className='nav__link nav__button'>
-                  <i className='bx bx-user nav__icon'></i>
-                  <span className='nav__name'>Account</span>
-                </a>
+              {user ? (
+                <>
+                  {/*=============== ACCOUNT ===============*/}
+                  <li
+                    className='nav__item'
+                    id='account'
+                    onClick={toggleDropdown}
+                    ref={dropdownRef}
+                  >
+                    <a className='nav__link nav__button'>
+                      <i className='bx bx-user nav__icon'></i>
+                      <span className='nav__name'>Account</span>
+                    </a>
 
-                <div
-                  className={`dropdown__list ${
-                    isDropdownVisible ? 'show-dropdown' : ''
-                  }`}
-                  id='dropdown__list'
-                >
-                  <Link to='/' className='dropdown__link'>
-                    <i className='bx bxs-user-account'></i>
-                    <span>Profile</span>
-                  </Link>
+                    <div
+                      className={`dropdown__list ${
+                        isDropdownVisible ? 'show-dropdown' : ''
+                      }`}
+                      id='dropdown__list'
+                    >
+                      <Link
+                        to={`/user/${user.username}`}
+                        className='dropdown__link'
+                      >
+                        <i className='bx bxs-user-account'></i>
+                        <span>Profile</span>
+                      </Link>
 
-                  <Link to='/' className='dropdown__link'>
-                    <i className='bx bxs-like'></i>
-                    <span>Likes</span>
-                  </Link>
+                      <Link to='/' className='dropdown__link'>
+                        <i className='bx bxs-like'></i>
+                        <span>Likes</span>
+                      </Link>
 
-                  <Link to='/' className='dropdown__link'>
-                    <i className='bx bx-log-out'></i>
-                    <span>Sign out</span>
-                  </Link>
-                </div>
-              </li>
+                      <Link onClick={logout} className='dropdown__link'>
+                        <i className='bx bx-log-out'></i>
+                        <span>Sign out</span>
+                      </Link>
+                    </div>
+                  </li>
+                </>
+              ) : (
+                <>
+                  {/*=============== LOG IN ===============*/}
+                  <li className='nav__item'>
+                    <Link to='/login' className='nav__link'>
+                      <i class='bx bx-user nav__icon'></i>
+                      <span className='nav__name'>Log in</span>
+                    </Link>
+                  </li>
+
+                  {/*=============== SIGN UP ===============*/}
+                  <li className='nav__item'>
+                    <Link to='/register' className='nav__link'>
+                      <i class='bx bxs-user nav__icon'></i>
+                      <span className='nav__name'>Sign up</span>
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
 

@@ -33,6 +33,7 @@
 
   --large-font-size: 3rem;
   --h1-font-size: 1.8rem;
+  --h2-font-size: 1.4rem;
   --medium-font-size: 1.125rem;
   --normal-font-size: 0.938rem;
   --small-font-size: 0.8rem;
@@ -60,6 +61,7 @@
   :root {
     --large-font-size: 4.5rem;
     --h1-font-size: 3rem;
+    --h2-font-size: 2rem;
     --medium-font-size: 1.3rem;
     --normal-font-size: 1rem;
     --small-font-size: 0.9rem;
@@ -109,6 +111,14 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+h1 {
+  font-size: var(--h1-font-size);
+}
+
+h2 {
+  font-size: var(--h2-font-size);
 }
 
 /*=============== REUSABLE CSS CLASSES ===============*/
@@ -171,13 +181,13 @@ img {
 }
 
 /*=============== ERROR MESSAGE ===============*/
-.error-message {
+.message {
   position: fixed;
   top: 8rem;
   right: 3rem;
   background-color: var(--body-color-alt);
+  outline: 1px solid var(--third-color);
   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
-  outline: 1px solid rgb(196, 29, 0);
   font-size: var(--tiny-font-size);
   z-index: var(--z-tooltip);
   padding: 0.75rem 2rem;
@@ -191,12 +201,28 @@ img {
   /* transition: all 0.25s ease-out; */
 }
 
-.error-message i {
+.message i {
   font-size: 1.75rem;
 }
 
-.error-message:hover {
+.message:hover {
+  box-shadow: 0 0 0.7rem var(--third-color);
+}
+
+.message--error {
+  outline: 1px solid rgb(196, 29, 0);
+}
+
+.message--error:hover {
   box-shadow: 0 0 0.7rem rgb(221, 33, 0);
+}
+
+.message--success {
+  outline: 1px solid rgb(37, 221, 0);
+}
+
+.message--success:hover {
+  box-shadow: 0 0 0.7rem rgb(37, 221, 0);
 }
 
 /*=============== HEADER ===============*/
@@ -735,6 +761,11 @@ img {
   font-size: var(--tiny-font-size);
 }
 
+.form__textarea {
+  resize: none;
+  overflow: hidden;
+}
+
 .form__error {
   font-size: var(--tiny-font-size);
   position: absolute;
@@ -743,14 +774,15 @@ img {
 }
 
 .form__button {
-  margin-top: 2.25rem;
+  margin-top: 2rem;
   width: 70%;
-  padding: 0.75rem;
+  padding: 0.6rem;
   border-radius: 0.75rem;
   border: none;
   background-color: var(--first-color);
   color: var(--white-color);
   font-size: var(--medium-font-size);
+  font-weight: var(--font-regular);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -759,7 +791,7 @@ img {
   background-color: var(--first-color-alt-light);
 }
 
-.form_link {
+.form__link {
   color: var(--white-color);
 }
 
@@ -768,7 +800,7 @@ img {
   font-size: var(--tiny-font-size);
 }
 
-.form__policy-info .form_link {
+.form__policy-info .form__link {
   font-weight: var(--font-regular);
 }
 
@@ -781,9 +813,57 @@ img {
   text-decoration: underline;
 }
 
-.form__have-account-text .form_link {
+.form__have-account-text .form__link {
   color: var(--first-color);
   font-weight: var(--font-light);
+}
+
+.register__title {
+  font-size: var(--h2-font-size);
+  margin-bottom: 1rem;
+}
+
+.register__text {
+  font-size: var(--small-font-size);
+}
+
+.register__user-image {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  margin: 1.5rem auto;
+  background-position: center;
+  background-size: cover;
+  background-color: var(--first-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: var(--first-color-alt-light);
+  box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.register__user-image:hover {
+  background-color: rgb(255, 137, 78);
+  color: rgb(236, 116, 56);
+}
+
+.register__textarea {
+  width: 100%;
+  height: 80px;
+  background-color: rgb(30, 30, 30);
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  color: var(--white-color);
+  font-size: var(--small-font-size);
+  font-weight: var(--font-light);
+}
+
+.register__button {
+  margin: 1.5rem 0 0.5rem 0;
 }
 
 /*=============== SCROLL UP ===============*/
@@ -970,8 +1050,8 @@ img {
     );
   }
   .l-form {
-    width: 968px;
-    max-height: 720px;
+    width: 900px;
+    max-height: 620px;
     margin: 0 2rem;
     flex-direction: row;
     border-radius: 1.5rem;
