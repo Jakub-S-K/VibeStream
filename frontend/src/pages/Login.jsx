@@ -1,8 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/img/logo.png';
+import Message from '../components/Message';
+import { useAuth } from '../components/AuthContext';
 
 function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [error, setError] = useState(null);
   const initialValues = {
     username: '',
     password: '',
@@ -23,12 +29,43 @@ function Login() {
   };
 
   useEffect(() => {
-    console.log(formErrors);
     if (Object.keys(formErrors).length === 0 && isSubmit) {
-      console.log(formValues);
+      //=====TESTOWA AUTORYZACJA=====//
+      login(formValues.username, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+
+      // async function sendData() {
+
+      //   const formData = new FormData();
+
+      //   formData.append('nickname', formValues.username);
+      //   formData.append('password', formValues.password);
+
+      //   try {
+      //     const response = await fetch('http://localhost:3001/api/login', {
+      //       method: 'POST',
+      //       body: formData,
+      //     });
+
+      //     if (!response.ok) {
+      //       setError(`Server error: ${response.statusText}`);
+      //       return;
+      //     }
+
+      //     navigate('/');
+      //     setFormValues(initialValues);
+      //   } catch (error) {
+      //     setError('Server error. Please try again later.');
+      //   }
+      // }
+
+      // sendData();
     }
   }, [formErrors, formValues, isSubmit]);
 
+  //==========FORM INPUTS VALIDATION==========//
   const validate = (values) => {
     const errors = {};
     if (!values.username) {
@@ -42,19 +79,23 @@ function Login() {
     return errors;
   };
 
+  //==========CLOSE ERROR MESSAGE==========//
+  const closeError = () => {
+    setError(null);
+  };
+
   return (
     <>
       <div className='body-bg'>
         <div className='l-form login'>
-          {/* {Object.keys(formErrors).length === 0 && isSubmit ? (
-            <div className='form__message--success'>Logged in successfully</div>
-          ) : (
-            console.log('Entered Details', formValues)
-          )} */}
-
           <div class='image-container'></div>
 
           <div class='form-container'>
+            {/*==========ERROR==========*/}
+            {error && (
+              <Message type='error' message={error} onClose={closeError} />
+            )}
+
             <div class='form-wrapper'>
               <Link to='/'>
                 <img src={logo} className='logo-image' alt='VibeStream Logo' />
@@ -100,7 +141,7 @@ function Login() {
                 <button class='form__button'>Log In</button>
 
                 <div class='form__policy-info form__policy-info--underline'>
-                  <Link to='/privacy' className='form_link'>
+                  <Link to='/privacy' className='form__link'>
                     Forgot your password?
                   </Link>
                 </div>
@@ -108,7 +149,7 @@ function Login() {
 
               <div class='form__have-account-text'>
                 <span>Don't have an account? </span>
-                <Link to='/register' className='form_link'>
+                <Link to='/register' className='form__link'>
                   Sign Up
                 </Link>
               </div>

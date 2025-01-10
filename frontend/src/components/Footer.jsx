@@ -39,7 +39,7 @@ function Footer() {
             />
           </Link>
 
-          <p className='footer2__text'>&copy; 2024 VibeStream</p>
+          <p className='footer2__text'>&copy; 2025 VibeStream</p>
         </div>
       </footer>
     </>

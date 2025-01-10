@@ -1,0 +1,27 @@
+{
+  "nickname": "Ksiądz B.Hemot",
+  "image_id": 2137,
+  "bio": "szczęść",
+  "email": "bhemot@ksiadz.pl",
+  "followers": 420,
+  "following": 69,
+  "likes": 1410,
+  "albums": [
+    {
+      "title": "Modlitwa w Dźwiękach",
+      "release_date": "2022-05-10",
+      "image_id": 13,
+      "likes": 51,
+      "comments": 5,
+      "description": "Duchowy spokój"
+    },
+    {
+      "title": "Sakramenty Dźwięku",
+      "release_date": "2017-02-19",
+      "image_id": 37,
+      "likes": 12,
+      "comments": 3,
+      "description": "Wiara w muzyce"
+    }
+  ]
+}

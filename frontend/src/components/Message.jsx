@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-function ErrorMessage({ message, onClose }) {
+function Message({ type, message, onClose }) {
   const [isHovered, setIsHovered] = useState(false);
   const timerRef = useRef(null);
 
@@ -14,17 +14,28 @@ function ErrorMessage({ message, onClose }) {
     return () => clearTimeout(timerRef.current);
   }, [message, onClose, isHovered]);
 
+  const getIcon = () => {
+    switch (type) {
+      case 'error':
+        return <i className='bx bx-error'></i>;
+      case 'success':
+        return <i className='bx bx-check'></i>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div
-      className='error-message'
+      className={`message message--${type}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClose}
     >
-      <i class='bx bx-error'></i>
+      {getIcon()}
       {message}
     </div>
   );
 }
 
-export default ErrorMessage;
+export default Message;
