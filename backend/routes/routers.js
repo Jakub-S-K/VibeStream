@@ -12,11 +12,17 @@ module.exports = function (app) {
     const test = express.Router();
     const api = express.Router();
 
+    //user
     api.get('/trending/users/:n', userApi.trending);
+    api.get('/user/:username', userApi.user_username);
+
+    //album
     api.get('/trending/albums/:n', albumApi.trending);
+    api.get('/album/:name', albumApi.album_name);
+
     api.post('/album', upload.any(), albumApi.create);
 
-    api.get('/user/brief/:id', userApi.user_brief);
+    //other
     api.get('/tags', suppApi.tags);
     api.get('/genres', suppApi.genres);
 

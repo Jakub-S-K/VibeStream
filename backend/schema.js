@@ -3,55 +3,62 @@ const sequelize = require('./db_conn.js').conn;
 const uuid = require('uuid')
 
 const user = sequelize.define(
-    'user',
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
-      },
-      nickname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-      },
-      password: {
-        type: DataTypes.STRING(512)
-      },
-      creation_date: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-      },
-      bio: {
-        type: DataTypes.STRING(4096),
-        allowNull: false
-      }
-    },
-    {
-        freezeTableName: true,
-    }
+	'user',
+	{
+	  id: {
+		type: DataTypes.UUID,
+		primaryKey: true,
+		defaultValue: DataTypes.UUIDV4,
+	  },
+	  nickname: {
+		type: DataTypes.STRING,
+		  allowNull: false,
+		  unique: true,
+	  },
+	  email: {
+		  type: DataTypes.STRING,
+		  unique: true,
+	  },
+	  password: {
+		type: DataTypes.STRING(512)
+	  },
+	  creation_date: {
+		type: DataTypes.DATE,
+		defaultValue: DataTypes.NOW
+	  },
+	  bio: {
+		type: DataTypes.STRING(4096),
+		allowNull: false
+	  }
+	},
+	{
+		freezeTableName: true,
+	}
   );
 
 const album = sequelize.define(
   'album',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    name: {
-      type: DataTypes.STRING,
-    },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    }
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	name: {
+		type: DataTypes.STRING,
+		allowNull: false,
+	},
+	user_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
+	avatar_id: {
+		type: DataTypes.UUID,
+		allowNull: true,
+	}
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
   
@@ -59,127 +66,128 @@ const album = sequelize.define(
 const album_like = sequelize.define(
   'album_like',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    name: {
-      type: DataTypes.STRING,
-    },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    album_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    }
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	user_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
+	album_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	}
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
 
 const album_tags = sequelize.define(
   'album_tags',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    tag_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    album_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    }
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	tag_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
+	album_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	}
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
 
 const comment = sequelize.define(
   'comment',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    creation_date: {
-      type: DataTypes.DATE(6)
-    },
-    content: {
-      type: DataTypes.STRING(4096),
-      allowNull: false
-    }
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	user_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	  },
+	album_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
+	creation_date: {
+	  type: DataTypes.DATE(6)
+	},
+	content: {
+	  type: DataTypes.STRING(4096),
+	  allowNull: false
+	}
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
 
 const image = sequelize.define(
   'image',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    external_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    image: {
-      type: DataTypes.BLOB('medium') //medium = max 16MiB
-    }
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	external_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
+	image: {
+	  type: DataTypes.BLOB('medium') //medium = max 16MiB
+	}
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
 
 const song = sequelize.define(
   'song',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    album_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    length: {
-      type: DataTypes.BIGINT(11),
-      allowNull: false,
-    },
-    play_counter: {
-      type: DataTypes.BIGINT(11),
-      allowNull: false,
-      defaultValue: 0
-    },
-    file: {
-      type: DataTypes.BLOB('long') //long = max 2GiB
-    }
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	title: {
+	  type: DataTypes.STRING,
+	  allowNull: false,
+	},
+	album_id: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
+	length: {
+	  type: DataTypes.BIGINT(11),
+	  allowNull: false,
+	},
+	play_counter: {
+	  type: DataTypes.BIGINT(11),
+	  allowNull: false,
+	  defaultValue: 0
+	},
+	file: {
+	  type: DataTypes.BLOB('long') //long = max 2GiB
+	}
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
 
@@ -187,58 +195,58 @@ const song = sequelize.define(
 const tag = sequelize.define(
   'tag',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    tag_name: {
-      type: DataTypes.STRING(64),
-      allowNull: false,
-    }
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	name: {
+	  type: DataTypes.STRING(64),
+	  allowNull: false,
+	}
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
 
 const genre = sequelize.define(
-    'genre',
-    {
-        id: {
-            type: DataTypes.UUID,
-            primaryKey: true,
-            defaultValue: DataTypes.UUIDV4,
-        },
-        name: {
-            type: DataTypes.STRING(100),
-            allowNull: false,
-        }
-    },
-    {
-        freezeTableName: true,
-    }
+	'genre',
+	{
+		id: {
+			type: DataTypes.UUID,
+			primaryKey: true,
+			defaultValue: DataTypes.UUIDV4,
+		},
+		name: {
+			type: DataTypes.STRING(100),
+			allowNull: false,
+		}
+	},
+	{
+		freezeTableName: true,
+	}
 );
 
 const user_follower = sequelize.define(
   'user_follower',
   {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
-    user_id_follower: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    user_id_followed: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
+	id: {
+	  type: DataTypes.UUID,
+	  primaryKey: true,
+	  defaultValue: DataTypes.UUIDV4,
+	},
+	user_id_follower: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
+	user_id_followed: {
+	  type: DataTypes.UUID,
+	  allowNull: false,
+	},
   },
   {
-      freezeTableName: true,
+	  freezeTableName: true,
   }
 );
 
@@ -261,13 +269,15 @@ module.exports.Init_relations = function() {
   user.hasMany(album, {foreignKey: 'user_id'});
   user.belongsToMany(user, {as: 'other', through: user_follower, foreignKey: 'user_id_follower', otherKey: 'user_id_followed'}); //needs testing
 
-  comment.hasOne(user, {foreignKey: 'id'});
+  comment.hasOne(user, { foreignKey: 'id' });
+  comment.hasOne(album, { foreignKey: 'id' });
 
   album.belongsTo(image, {foreignKey: 'avatar_id'});
   album.hasMany(song, {foreignKey: 'album_id'});
   album.hasMany(album_tags, {foreignKey: 'album_id'});
   album.hasMany(album_like, {foreignKey: 'album_id'});
-  album.belongsTo(user, {foreignKey: 'user_id'});
+  album.belongsTo(user, { foreignKey: 'user_id' });
+  album.hasMany(comment, { foreignKey: 'album_id' });
   
   song.belongsTo(album, {foreignKey: 'album_id'});
 
@@ -283,14 +293,14 @@ module.exports.Init_relations = function() {
 
 module.exports.Init_db_entities = async function () {
   const _user = await user.create({
-    id: '37692021-37ea-41f1-b95f-3e8a2750c072',
-    nickname: 'Andrzej',
-    email: 'andrzej@gmail.com',
-    password: 'andrzej1234',
-    bio: 'Andrzej lorem ipsum dolor sit amet'
+	id: '37692021-37ea-41f1-b95f-3e8a2750c072',
+	nickname: 'Andrzej',
+	email: 'andrzej@gmail.com',
+	password: 'andrzej1234',
+	bio: 'Andrzej lorem ipsum dolor sit amet'
   })
   if (!_user) {
-    console.error('Could not create base user');
+	console.error('Could not create base user');
   }
   console.log(_user.id);
 }
