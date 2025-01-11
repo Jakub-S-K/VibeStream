@@ -51,7 +51,7 @@ services:
       DB_PASSWORD: ${DB_ROOT_PASSWORD}
       DB_NAME: ${DB_NAME}
     build: 
-      dockerfile: docker/backup.Dockerfile
+      dockerfile: ./docker/backup.Dockerfile
     depends_on:
       db:
         condition: service_healthy
