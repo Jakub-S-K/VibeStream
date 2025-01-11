@@ -22,6 +22,10 @@ const user = sequelize.define(
 	  password: {
 		type: DataTypes.STRING(512)
 	  },
+	  avatar_id: {
+		type: DataTypes.UUID,
+		allowNull: true,
+	  },
 	  creation_date: {
 		type: DataTypes.DATE,
 		defaultValue: DataTypes.NOW
@@ -37,31 +41,38 @@ const user = sequelize.define(
   );
 
 const album = sequelize.define(
-  'album',
-  {
-	id: {
-	  type: DataTypes.UUID,
-	  primaryKey: true,
-	  defaultValue: DataTypes.UUIDV4,
-	},
-	name: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
-	user_id: {
-	  type: DataTypes.UUID,
-	  allowNull: false,
-	},
-	avatar_id: {
-		type: DataTypes.UUID,
-		allowNull: true,
-	}
+	'album',
+	{
+		id: {
+			type: DataTypes.UUID,
+			primaryKey: true,
+			defaultValue: DataTypes.UUIDV4,
+		},
+		name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		user_id: {
+			type: DataTypes.UUID,
+			allowNull: false,
+		},
+		avatar_id: {
+			type: DataTypes.UUID,
+			allowNull: true,
+		},
+		description: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		genre_id: {
+			type: DataTypes.UUID,
+			allowNull: false,
+		}
   },
   {
 	  freezeTableName: true,
   }
 );
-  
 
 const album_like = sequelize.define(
   'album_like',
@@ -191,7 +202,6 @@ const song = sequelize.define(
   }
 );
 
-
 const tag = sequelize.define(
   'tag',
   {
@@ -277,13 +287,16 @@ module.exports.Init_relations = function() {
   album.hasMany(album_tags, {foreignKey: 'album_id'});
   album.hasMany(album_like, {foreignKey: 'album_id'});
   album.belongsTo(user, { foreignKey: 'user_id' });
-  album.hasMany(comment, { foreignKey: 'album_id' });
+album.hasMany(comment, { foreignKey: 'album_id' });
+	album.hasOne(genre, { foreignKey: 'genre_id' });
   
   song.belongsTo(album, {foreignKey: 'album_id'});
 
   album_tags.belongsTo(tag, {foreignKey: 'tag_id'});
   
-  tag.hasMany(album_tags, {foreignKey: 'tag_id'});
+	tag.hasMany(album_tags, { foreignKey: 'tag_id' });
+
+	genre.hasMany(album, { foreignKey: 'id' });
 
   album_like.belongsTo(user, {foreignKey: 'user_id'});
   album_like.belongsTo(album, {foreignKey: 'album_id'});

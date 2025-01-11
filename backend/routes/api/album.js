@@ -10,15 +10,21 @@ module.exports.trending = async function (req, res) {
         order: sequelize.random(),
         limit: parseInt(_n),
     })
-    if (!album) {
-        console.log('Not found');
-        res.status(404).send("Not found.");
+    if (Object.keys(album).length === 0) {
+        console.log('Album not found');
+        res.status(404).send("Album not found.");
+        return;
+    }
+    else if (!album){
+        console.log('Internal server error.');
+        res.status(500).send("Internal server error.");
         return;
     }
     console.log('n:', _n);
     console.log(album);
     res.json(album);
 }
+
 module.exports.album_name = async function (req, res) {
     _name = req.params.name;
     const album = await Album.findOne({
@@ -26,9 +32,14 @@ module.exports.album_name = async function (req, res) {
             name: _name,
         }
     })
-    if (!album) {
+    if (Object.keys(album).length === 0) {
         console.log('Album not found');
         res.status(404).send("Album not found.");
+        return;
+    }
+    else if (!album){
+        console.log('Internal server error.');
+        res.status(500).send("Internal server error.");
         return;
     }
     console.log(album);
