@@ -2,7 +2,6 @@ import './Upload.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Reorder } from 'framer-motion';
 import Message from '../components/Message';
-// import genresData from '../assets/json/genres.json';
 
 const Upload = () => {
   const [step, setStep] = useState(1);
@@ -109,7 +108,7 @@ const Upload = () => {
       return;
     }
 
-    const maxSize = 1 * 1024 * 1024;
+    const maxSize = 16 * 1024 * 1024;
 
     if (file.size > maxSize) {
       setError('File size exceeds the maximum limit of 16 MB.');
@@ -185,17 +184,25 @@ const Upload = () => {
 
   //==========GENRES FETCHING==========//
   useEffect(() => {
-    const fetchGenres = async () => {
+    async function fetchGenresList() {
       try {
         const response = await fetch('http://localhost:3001/api/genres');
-        const data = await response.json();
-        setGenres(data);
-      } catch (error) {
-        return 'Error fetching genres:', error;
-      }
-    };
 
-    fetchGenres();
+        if (!response.ok) {
+          throw new Error(
+            (await response.text()) || 'Failed to fetch genres list.'
+          );
+        }
+
+        const resData = await response.json();
+        setGenres(resData);
+      } catch (error) {
+        setError('Failed to fetch genres list.');
+        return;
+      }
+    }
+
+    fetchGenresList();
   }, []);
 
   //==========ALBUM SUBMIT==========//
@@ -230,12 +237,14 @@ const Upload = () => {
         method: 'POST',
         body: formData,
       });
+      const resData = await response.json();
 
       if (!response.ok) {
-        setError('An error occurred while creating the album.');
+        setError(resData.message || 'Failed to create album.');
+        return;
       }
 
-      setSuccess('Album created successfully!');
+      setSuccess(resData.message);
       setStep(1);
       setFiles([]);
       setAlbumCover(null);
@@ -245,7 +254,7 @@ const Upload = () => {
         description: '',
       });
     } catch (error) {
-      setError('Server error. Please try again later.');
+      setError('Failed to create album. Please try again later.');
     }
   };
 

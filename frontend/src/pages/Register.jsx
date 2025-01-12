@@ -2,11 +2,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/img/logo.png';
 import Message from '../components/Message';
+import { useAuth } from '../components/AuthContext';
 
 function Register() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const initialValues = {
     username: '',
     password: '',
@@ -32,6 +35,8 @@ function Register() {
 
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
+      setSuccess('Account created successfully!');
+      login(formValues.username, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
       setStep(2);
       //   async function sendData() {
       //     const formData = new FormData();
@@ -149,6 +154,11 @@ function Register() {
     setError(null);
   };
 
+  //==========CLOSE SUCCESS MESSAGE==========//
+  const closeSuccess = () => {
+    setSuccess(null);
+  };
+
   return (
     <>
       <div className='body-bg'>
@@ -159,6 +169,15 @@ function Register() {
             {/*==========ERROR==========*/}
             {error && (
               <Message type='error' message={error} onClose={closeError} />
+            )}
+
+            {/*==========SUCCESS==========*/}
+            {success && (
+              <Message
+                type='success'
+                message={success}
+                onClose={closeSuccess}
+              />
             )}
 
             <div class='form-wrapper'>
