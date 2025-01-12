@@ -22,10 +22,6 @@ const user = sequelize.define(
 	  password: {
 		type: DataTypes.STRING(512)
 	  },
-	  avatar_id: {
-		type: DataTypes.UUID,
-		allowNull: true,
-	  },
 	  creation_date: {
 		type: DataTypes.DATE,
 		defaultValue: DataTypes.NOW
@@ -55,10 +51,6 @@ const album = sequelize.define(
 		user_id: {
 			type: DataTypes.UUID,
 			allowNull: false,
-		},
-		avatar_id: {
-			type: DataTypes.UUID,
-			allowNull: true,
 		},
 		description: {
 			type: DataTypes.STRING,

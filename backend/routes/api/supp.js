@@ -1,6 +1,5 @@
 const Tag = require('../../schema.js').Tag;
 const Genre = require('../../schema.js').Genre;
-const sequelize = require('../../db_conn.js').conn;
 
 module.exports.tags = async function (req, res) {
     const tags = await Tag.findAll({
