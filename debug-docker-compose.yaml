@@ -33,7 +33,7 @@ services:
     build:
       dockerfile: docker/backend.Dockerfile
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT_DOCKER}"
+      - "3998:${BACKEND_PORT_DOCKER}"
     depends_on:
       db:
         condition: service_healthy

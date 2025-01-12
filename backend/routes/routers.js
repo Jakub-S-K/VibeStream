@@ -16,6 +16,8 @@ module.exports = function (app) {
     api.get('/trending/users/:n', userApi.trending);
     api.get('/user/:username', userApi.user_username);
 
+    api.post('/register', upload.any(), userApi.register);
+
     //album
     api.get('/trending/albums/:n', albumApi.trending);
     api.get('/album/:name', albumApi.album_name);
