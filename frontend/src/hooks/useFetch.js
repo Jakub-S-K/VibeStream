@@ -11,12 +11,12 @@ export function useFetch(url, initialValue) {
 
       try {
         const response = await fetch(url);
-        const resData = await response.json();
 
         if (!response.ok) {
-          throw new Error('Failed to fetch trending users.');
+          throw new Error('Failed to fetch data.');
         }
 
+        const resData = await response.json();
         setFetchedData(resData);
       } catch (error) {
         setError({ message: error.message || 'Failed to fetch data.' });

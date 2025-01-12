@@ -9,7 +9,6 @@ function Header() {
 
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const dropdownRef = useRef(null);
-  console.log(dropdownRef);
 
   const toggleDropdown = () => {
     setIsDropdownVisible((prev) => !prev);
