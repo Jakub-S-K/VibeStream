@@ -32,7 +32,7 @@ const user = sequelize.define(
 	  },
 	  bio: {
 		type: DataTypes.STRING(4096),
-		allowNull: false
+		allowNull: true,
 	  }
 	},
 	{

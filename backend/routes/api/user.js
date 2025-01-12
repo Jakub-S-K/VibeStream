@@ -46,9 +46,10 @@ module.exports.register = async function (req, res) {
 	const transaction = await sequelize.transaction();
 
 	//for now:
-	if(Object.keys(req.body).length === 0) {
+	if (Object.keys(req.body).length === 0) {
 		res.status(400).send("Wrong reqs");
 		console.error('Wrong reqs');
+		console.error(req.body);
 	}
 
 	const userExist = await User.findOne({
@@ -65,6 +66,7 @@ module.exports.register = async function (req, res) {
 		console.error('User already exist');
 	}
 	else {
+		console.debug('User doesnt exist');
 		try {
 			const salt = await bcryptjs.genSalt(10);
 			const pass = await bcryptjs.hash(req.body.password, salt);
@@ -76,22 +78,24 @@ module.exports.register = async function (req, res) {
 				bio: req.body.bio,
 			})
 
-			if(!user) {
+			if (!user) {
 				res.status(501).send(("Internal server error"));
 				console.error('Cannot create user');
 			}
 
-			img = await Image.create({
-				external_id: user.id,
-				image: req.files[0],
-			})
+			if (req.files.length !== 0) {
+				img = await Image.create({
+					external_id: user.id,
+					image: req.files[0],
+				})
+			}
 
 			//add .send(user, token)
-			res.status(201).send();
-		} catch(error) {
+			res.status(201).send(user.id);
+		} catch (error) {
 			await transaction.rollback();
 			console.error(error);
-			res.status(500).send({error: 'Failed to create album'});
+			res.status(500).send({ error: 'Failed to create album' });
 		} finally {
 			await transaction.commit();
 		}

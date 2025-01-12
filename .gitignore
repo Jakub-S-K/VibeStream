@@ -9,5 +9,7 @@
 .vs/vibestream/v17/DocumentLayout.backup.json
 .vs/vibestream/v17/.wsuo
 
+node_modules
+
 .DS_Store
 .vscode/*
