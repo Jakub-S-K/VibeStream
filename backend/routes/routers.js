@@ -26,14 +26,17 @@ module.exports = function (app) {
     api.get('/trending/albums/:n', albumApi.trending);
     api.get('/album/:name', albumApi.album_name);
 
-    api.post('/album', passport.authenticate('jwt', {session: false}), upload.any(), albumApi.create);
+    // api.post('/album', passport.authenticate('jwt', {session: false}), upload.any(), albumApi.create);
+    api.post('/album', upload.any(), albumApi.create);
+    api.get('/stream/:id', albumApi.get_stream_song);
 
     //other
     api.get('/tags', suppApi.tags);
     api.get('/genres', suppApi.genres);
+    api.get('/image/:id', suppApi.get_image);
 
 
-    test.get('/hello', passport.authenticate('jwt', {session: false}), testApi.get); //Local path in this case /test/hello
+    test.get('/hello', testApi.get); //Local path in this case /test/hello
     test.get('/albums', testApi.albums);
     test.get('/artists', testApi.artists);
     test.get('/user', testApi.test_db);

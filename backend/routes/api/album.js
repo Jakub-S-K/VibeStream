@@ -1,6 +1,4 @@
-const Album = require('../../schema.js').Album;
-const Image = require('../../schema.js').Image;
-const Song = require('../../schema.js').Song;
+const { Album, Image, Song, Genre} = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { loadMusicMetadata } = require('music-metadata');
 
@@ -48,19 +46,27 @@ module.exports.album_name = async function (req, res) {
 
 module.exports.create = async function (req, res) {
     const transaction = await sequelize.transaction();
+
+    if (!req.body.title || !req.body.id || !req.body.genre || !req.body.description) {
+        res.status(400).send({ error: 'Bad request: missing id' });
+        return;
+    }
+    const genre = await Genre.findOne({ where: { name: req.body.genre}});
+    if (!genre) {
+        res.status(501).send({ error: 'Internal server error.' });
+    }
     const mm = await loadMusicMetadata();
     try {
-
         album = await Album.create({
             name: req.body.title,
-            user_id: req.body.id
+            user_id: req.body.id,
+            description: req.body.description,
+            genre_id: genre.id
         });
-        
         if (!album) {
             res.status(501).send({message: "Internal Server Error"});
             console.error('Cannot create album');
         }
-
         for (const element of req.files) {
             if (element.fieldname === 'cover') {
                 img = await Image.create({
@@ -77,8 +83,7 @@ module.exports.create = async function (req, res) {
                 file: element.buffer
             })
         }
-
-        res.status(201).send({ message: 'Album created successfully', albumId: 123});
+        res.status(201).send({ message: 'Album created successfully', albumId: album.id});
     } catch (error) {
         await transaction.rollback();
         console.error(error);
@@ -87,4 +92,21 @@ module.exports.create = async function (req, res) {
         await transaction.commit();
     }
 
+}
+
+module.exports.get_stream_song = async function (req, res) {
+    if (!req.params.id) {
+        res.status(400).send({ error: 'Bad request: missing id' });
+        return;
+    }
+    const song = await Song.findOne({
+        where: { id: req.params.id }
+    });
+    if (!song) {
+        res.status(404).send({ error: 'Song not found' });
+        return;
+    }
+    const result = await song.increment('play_counter', { by: 1 });
+    res.status(200).send(song.file);
+    return;
 }

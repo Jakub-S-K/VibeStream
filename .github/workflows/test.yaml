@@ -1,0 +1,33 @@
+name: Run Mocha Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: test123
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Prepare .env
+        run: |
+          echo ${{secrets.JWT_SECRET}} >> .env
+
+      - name: Run Mocha tests
+        run: npm test
+        working-directory: ./backend
