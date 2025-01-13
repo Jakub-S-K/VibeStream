@@ -26,7 +26,9 @@ module.exports = function (app) {
     api.get('/trending/albums/:n', albumApi.trending);
     api.get('/album/:name', albumApi.album_name);
 
-    api.post('/album', passport.authenticate('jwt', {session: false}), upload.any(), albumApi.create);
+    // api.post('/album', passport.authenticate('jwt', {session: false}), upload.any(), albumApi.create);
+    api.post('/album', upload.any(), albumApi.create);
+    api.get('/stream/:id', albumApi.get_stream_song);
 
     //other
     api.get('/tags', suppApi.tags);
