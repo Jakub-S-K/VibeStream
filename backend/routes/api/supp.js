@@ -5,7 +5,7 @@ module.exports.tags = async function (req, res) {
         attributes: ['name']
     })
     if (!tags || Object.keys(tags).length === 0) {
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({message: "Internal Server Error"});
         return;
     }
     console.log(tags);
@@ -17,7 +17,7 @@ module.exports.genres = async function (req, res) {
         attributes: ['name']
     })
     if (!genres || Object.keys(genres).length === 0) {
-        res.status(500).send("Internal Server Error");
+        res.status(500).send({message: "Internal Server Error"});
         return;
     }
     console.log(genres);

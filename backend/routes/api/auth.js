@@ -39,7 +39,7 @@ module.exports.login = async function (req, res) {
     if (!req.body.nickname || !req.body.password) {
         console.log('Bad request');
         console.log(req.body);
-        res.status(400).send("Username and password are required.");
+        res.status(400).send({message: "Username and password are required."});
         return;
     }
     const user = await User.findOne({
@@ -62,7 +62,7 @@ module.exports.login = async function (req, res) {
     }
 
     console.log('Invalid username or password.');
-    res.status(401).send({ error: "Invalid username or password." });
+    res.status(401).send({ message: "Invalid username or password." });
     return;
 }
 
@@ -85,7 +85,7 @@ module.exports.register = async function (req, res) {
         }
     })
     if (userExist.length !== 0) {
-        res.status(409).send("User already exist");
+        res.status(409).send({message: "User already exist"});
         console.error('User already exist');
         console.debug(userExist);
         return;
@@ -105,7 +105,7 @@ module.exports.register = async function (req, res) {
             })
 
             if (!user) {
-                res.status(501).send(("Internal server error"));
+                res.status(501).send({message: "Internal server error"});
                 console.error('Cannot create user');
                 return;
             }
@@ -128,7 +128,7 @@ module.exports.register = async function (req, res) {
         } catch (error) {
             await transaction.rollback();
             console.error(error);
-            res.status(500).send({ error: 'Failed to create album' });
+            res.status(500).send({ message: 'Failed to create album' });
         } finally {
             await transaction.commit();
         }
