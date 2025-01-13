@@ -12,12 +12,12 @@ module.exports.trending = async function (req, res) {
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
-        res.status(404).send("Album not found.");
+        res.status(404).send({message: "Album not found."});
         return;
     }
     else if (!album){
         console.log('Internal server error.');
-        res.status(500).send("Internal server error.");
+        res.status(500).send({message: "Internal server error."});
         return;
     }
     console.log('n:', _n);
@@ -34,12 +34,12 @@ module.exports.album_name = async function (req, res) {
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
-        res.status(404).send("Album not found.");
+        res.status(404).send({message: "Album not found."});
         return;
     }
     else if (!album){
         console.log('Internal server error.');
-        res.status(500).send("Internal server error.");
+        res.status(500).send({message: "Internal server error."});
         return;
     }
     console.log(album);
@@ -57,7 +57,7 @@ module.exports.create = async function (req, res) {
         });
         
         if (!album) {
-            res.status(501).send("Internal Server Error");
+            res.status(501).send({message: "Internal Server Error"});
             console.error('Cannot create album');
         }
 
@@ -82,7 +82,7 @@ module.exports.create = async function (req, res) {
     } catch (error) {
         await transaction.rollback();
         console.error(error);
-        res.status(500).send({ error: 'Failed to create album' });
+        res.status(500).send({ message: 'Failed to create album' });
     } finally {
         await transaction.commit();
     }
