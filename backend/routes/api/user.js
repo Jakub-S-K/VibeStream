@@ -25,16 +25,16 @@ module.exports.user_username = async function (req, res) {
 			nickname: _name,
 		}
 	})
-	if (Object.keys(user).length === 0) {
+	if (!user) {
 		console.log('User not found.');
 		res.status(404).send({message: "User not found."});
 		return;
 	}
-	else if (!user) {
-		console.log('Internal server error.');
-		res.status(500).send({message: "Internal server error."});
-		return;
-	}
+	// else{
+	// 	console.log('Internal server error.');
+	// 	res.status(500).send({message: "Internal server error."});
+	// 	return;
+	// }
 	console.log('nickname:', _name);
 	console.log(user);
 	res.json(user);
