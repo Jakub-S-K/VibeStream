@@ -33,6 +33,7 @@ module.exports = function (app) {
     //other
     api.get('/tags', suppApi.tags);
     api.get('/genres', suppApi.genres);
+    api.get('/image/:id', suppApi.get_image);
 
 
     test.get('/hello', passport.authenticate('jwt', {session: false}), testApi.get); //Local path in this case /test/hello
