@@ -63,7 +63,6 @@ module.exports.login = async function (req, res) {
 
     console.log('Invalid username or password.');
     res.status(401).send({ message: "Invalid username or password." });
-    res.status(401).send({ message: "Invalid username or password." });
     return;
 }
 
