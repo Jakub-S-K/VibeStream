@@ -9,5 +9,9 @@
 .vs/vibestream/v17/DocumentLayout.backup.json
 .vs/vibestream/v17/.wsuo
 
+package-lock.json
+
+node_modules
+
 .DS_Store
 .vscode/*

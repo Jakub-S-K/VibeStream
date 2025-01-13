@@ -1,6 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, QueryTypes } = require('sequelize');
 const sequelize = require('./db_conn.js').conn;
-const uuid = require('uuid')
+const uuid = require('uuid');
+const test_data = require('./init_db_data.js');
 
 const user = sequelize.define(
 	'user',
@@ -22,17 +23,13 @@ const user = sequelize.define(
 	  password: {
 		type: DataTypes.STRING(512)
 	  },
-	  avatar_id: {
-		type: DataTypes.UUID,
-		allowNull: true,
-	  },
 	  creation_date: {
 		type: DataTypes.DATE,
 		defaultValue: DataTypes.NOW
 	  },
 	  bio: {
 		type: DataTypes.STRING(4096),
-		allowNull: false
+		allowNull: true,
 	  }
 	},
 	{
@@ -55,10 +52,6 @@ const album = sequelize.define(
 		user_id: {
 			type: DataTypes.UUID,
 			allowNull: false,
-		},
-		avatar_id: {
-			type: DataTypes.UUID,
-			allowNull: true,
 		},
 		description: {
 			type: DataTypes.STRING,
@@ -312,6 +305,12 @@ module.exports.Init_db_entities = async function () {
 	password: 'andrzej1234',
 	bio: 'Andrzej lorem ipsum dolor sit amet'
   })
+
+  let res = await sequelize.query(test_data.test_genre);
+  res = await sequelize.query(test_data.test_tags);
+  res = await sequelize.query(test_data.test_users);
+
+
   if (!_user) {
 	console.error('Could not create base user');
   }
