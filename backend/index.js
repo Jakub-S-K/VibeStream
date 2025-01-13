@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 var bodyParser = require('body-parser');
 
-require('dotenv').config({ path: `../.env`}); //Use global env
+require('dotenv').config({ path: __dirname + `/../.env`}); //Use global env
 
 const app = express();
 
