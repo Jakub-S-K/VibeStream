@@ -8,6 +8,7 @@ const saltRounds = 10;
 var jwt = require('jsonwebtoken');
 var passport = require("passport");
 var passportJWT = require("passport-jwt");
+const { response } = require('express');
 var ExtractJwt = passportJWT.ExtractJwt;
 var JwtStrategy = passportJWT.Strategy;
 
@@ -16,8 +17,6 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();;
 jwtOptions.secretOrKey = process.env.JWT_SECRET;
 
 module.exports.strategy = new JwtStrategy(jwtOptions, async function (jwt_payload, next) {
-
-    //User.findOne().where('id').in(jwt_payload.id).then(user => {
     const user = await User.findOne({
         where: {
             id: [jwt_payload.id],
@@ -34,12 +33,10 @@ passport.use(this.strategy);
 
 
 module.exports.login = async function (req, res) {
-    const transaction = await sequelize.transaction();
-
     if (!req.body.nickname || !req.body.password) {
         console.log('Bad request');
         console.log(req.body);
-        res.status(400).send({message: "Username and password are required."});
+        res.status(400).send({ message: "Username and password are required." });
         return;
     }
     const user = await User.findOne({
@@ -47,8 +44,11 @@ module.exports.login = async function (req, res) {
             nickname: req.body.nickname
         }
     })
+
     if (user) {
-        if (bcrypt.compare(req.body.password, user.password)) {
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (match) {
+            console.debug('same password');
             var payload = {
                 id: user.id,
                 exp: Math.floor(Date.now() / 1000) + (60 * 60)
@@ -69,13 +69,12 @@ module.exports.login = async function (req, res) {
 module.exports.register = async function (req, res) {
     const transaction = await sequelize.transaction();
 
-    // done in front? fuck it comments don't do shit they can stay
-    // if (Object.keys(req.body).length === 0) {
-    // 	res.status(400).send("Wrong reqs");
-    // 	console.error('Wrong reqs');
-    // 	console.error(req.body);
-    // 	return;
-    // }
+    if (!req.body.nickname || !req.body.password || !req.body.email) {
+        res.status(400).send({ message: "Invbalid input. Please check your data and try again." });
+        console.error('Invalid data');
+        return;
+    }
+
     const userExist = await User.findAll({
         where: {
             [Op.or]: [
@@ -84,8 +83,9 @@ module.exports.register = async function (req, res) {
             ],
         }
     })
+
     if (userExist.length !== 0) {
-        res.status(409).send({message: "User already exist"});
+        res.status(409).send({ message: "User already exist" });
         console.error('User already exist');
         console.debug(userExist);
         return;
@@ -105,7 +105,7 @@ module.exports.register = async function (req, res) {
             })
 
             if (!user) {
-                res.status(501).send({message: "Internal server error"});
+                res.status(500).send({ message: "Internal server error" });
                 console.error('Cannot create user');
                 return;
             }
@@ -128,7 +128,7 @@ module.exports.register = async function (req, res) {
         } catch (error) {
             await transaction.rollback();
             console.error(error);
-            res.status(500).send({ message: 'Failed to create album' });
+            res.status(500).send({ message: 'Failed to register user' });
         } finally {
             await transaction.commit();
         }
