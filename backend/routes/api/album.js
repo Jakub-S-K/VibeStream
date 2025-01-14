@@ -10,12 +10,12 @@ module.exports.trending = async function (req, res) {
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
-        res.status(404).send("Album not found.");
+        res.status(404).send({message: "Album not found."});
         return;
     }
     else if (!album){
         console.log('Internal server error.');
-        res.status(500).send("Internal server error.");
+        res.status(500).send({message: "Internal server error."});
         return;
     }
     console.log('n:', _n);
@@ -32,12 +32,12 @@ module.exports.album_name = async function (req, res) {
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
-        res.status(404).send("Album not found.");
+        res.status(404).send({message: "Album not found."});
         return;
     }
     else if (!album){
         console.log('Internal server error.');
-        res.status(500).send("Internal server error.");
+        res.status(500).send({message: "Internal server error."});
         return;
     }
     console.log(album);
@@ -48,12 +48,12 @@ module.exports.create = async function (req, res) {
     const transaction = await sequelize.transaction();
 
     if (!req.body.title || !req.body.id || !req.body.genre || !req.body.description) {
-        res.status(400).send({ error: 'Bad request: missing id' });
+        res.status(400).send({ message: 'Bad request: missing id' });
         return;
     }
     const genre = await Genre.findOne({ where: { name: req.body.genre}});
     if (!genre) {
-        res.status(501).send({ error: 'Internal server error.' });
+        res.status(501).send({ message: 'Internal server error.' });
     }
     const mm = await loadMusicMetadata();
     try {
@@ -64,7 +64,7 @@ module.exports.create = async function (req, res) {
             genre_id: genre.id
         });
         if (!album) {
-            res.status(501).send("Internal Server Error");
+            res.status(501).send({message: "Internal Server Error"});
             console.error('Cannot create album');
         }
         for (const element of req.files) {
@@ -87,7 +87,7 @@ module.exports.create = async function (req, res) {
     } catch (error) {
         await transaction.rollback();
         console.error(error);
-        res.status(500).send({ error: 'Failed to create album' });
+        res.status(500).send({ message: 'Failed to create album' });
     } finally {
         await transaction.commit();
     }
@@ -96,14 +96,14 @@ module.exports.create = async function (req, res) {
 
 module.exports.get_stream_song = async function (req, res) {
     if (!req.params.id) {
-        res.status(400).send({ error: 'Bad request: missing id' });
+        res.status(400).send({ message: 'Bad request: missing id' });
         return;
     }
     const song = await Song.findOne({
         where: { id: req.params.id }
     });
     if (!song) {
-        res.status(404).send({ error: 'Song not found' });
+        res.status(404).send({ message: 'Song not found' });
         return;
     }
     const result = await song.increment('play_counter', { by: 1 });

@@ -10,7 +10,7 @@ module.exports.trending = async function (req, res) {
 	})
 	if (!user || Object.keys(user).length === 0) {
 		console.log('User not found');
-		res.status(404).send("User not found.");
+		res.status(404).send({message: "User not found."});
 		return;
 	}
 	console.log('n:', _n);
@@ -27,12 +27,12 @@ module.exports.user_username = async function (req, res) {
 	})
 	if (Object.keys(user).length === 0) {
 		console.log('User not found.');
-		res.status(404).send("User not found.");
+		res.status(404).send({message: "User not found."});
 		return;
 	}
 	else if (!user) {
 		console.log('Internal server error.');
-		res.status(500).send("Internal server error.");
+		res.status(500).send({message: "Internal server error."});
 		return;
 	}
 	console.log('nickname:', _name);
