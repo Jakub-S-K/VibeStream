@@ -70,7 +70,7 @@ module.exports.register = async function (req, res) {
     const transaction = await sequelize.transaction();
 
     if (!req.body.nickname || !req.body.password || !req.body.email) {
-        res.status(400).send({ message: "Invbalid input. Please check your data and try again." });
+        res.status(400).send({ message: "Invalid input. Please check your data and try again." });
         console.error('Invalid data');
         return;
     }
@@ -101,20 +101,12 @@ module.exports.register = async function (req, res) {
                 nickname: req.body.nickname,
                 email: req.body.email,
                 password: pass,
-                bio: req.body.bio,
             })
 
             if (!user) {
                 res.status(500).send({ message: "Internal server error" });
                 console.error('Cannot create user');
                 return;
-            }
-
-            if (req.files.length !== 0) {
-                img = await Image.create({
-                    external_id: user.id,
-                    image: req.files[0].buffer,
-                })
             }
 
             var payload = {
@@ -133,5 +125,45 @@ module.exports.register = async function (req, res) {
             await transaction.commit();
         }
     }
+}
+
+module.exports.register_optional = async function (req, res) {
+    const transaction = await sequelize.transaction();
+    var user = null;
+    if (req.body.id) {
+        user = await User.findOne({
+            where: {
+                id: req.body.id,
+            }
+        })
+    }
+    if (user == null) {
+        res.status(400).send({ message: "Bad request" });
+        console.error('Bad request');
+        return;
+    }
+    try {
+        if (req.body.bio) {
+            user.bio = req.body.bio;
+            await user.save();
+        }
+        if (req.files.length !== 0) {
+            img = await Image.create({
+                external_id: user.id,
+                image: req.files[0].buffer,
+            })
+        }
+        res.status(200).send({ message: "Ok" })
+        console.log('Ok');
+    }
+    catch (error) {
+        await transaction.rollback();
+        console.error(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+    finally {
+        await transaction.commit();
+    }
+
 
 }
