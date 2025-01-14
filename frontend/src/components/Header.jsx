@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../components/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import vibestreamLogo from '../assets/img/logo.png';
 import perfil from '../assets/img/perfil.png';
 

@@ -5,7 +5,7 @@ import './UserProfile.css';
 
 function UserProfile() {
   const { username } = useParams();
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [userData, setUserData] = useState();
 

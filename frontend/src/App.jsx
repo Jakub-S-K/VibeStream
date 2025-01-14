@@ -1,7 +1,9 @@
 import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import React, { useEffect } from 'react';
+//=============== CONTEXT ===============//
+import { AuthProvider } from './context/AuthContext';
+import { MessageProvider } from './context/MessageContext';
 //=============== COMPONENTS ===============//
-import { AuthProvider } from './components/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -21,27 +23,29 @@ function App() {
     <>
       <AuthProvider>
         <ScrollToTop>
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path='/' element={<Home />} />
-              <Route path='/search' element={<Search />} />
-              <Route
-                path='/upload'
-                element={
-                  <PrivateRoute>
-                    <Upload />
-                  </PrivateRoute>
-                }
-              />
-              <Route path='/discover' element={<Discover />} />
-              <Route path='/user/:username' element={<UserProfile />} />
-            </Route>
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='*' element={<NoMatch />} />
-          </Routes>
+          <MessageProvider>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path='/' element={<Home />} />
+                <Route path='/search' element={<Search />} />
+                <Route
+                  path='/upload'
+                  element={
+                    <PrivateRoute>
+                      <Upload />
+                    </PrivateRoute>
+                  }
+                />
+                <Route path='/discover' element={<Discover />} />
+                <Route path='/user/:username' element={<UserProfile />} />
+              </Route>
+              <Route path='/login' element={<Login />} />
+              <Route path='/register' element={<Register />} />
+              <Route path='*' element={<NoMatch />} />
+            </Routes>
+            <ScrollUpButton />
+          </MessageProvider>
         </ScrollToTop>
-        <ScrollUpButton />
       </AuthProvider>
     </>
   );

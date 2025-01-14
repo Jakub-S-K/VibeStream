@@ -2,12 +2,13 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/img/logo.png';
 import Message from '../components/Message';
-import { useAuth } from '../components/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
   const [error, setError] = useState(null);
   const initialValues = {
     username: '',
@@ -17,53 +18,11 @@ function Login() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
+  //==========FORM INPUTS CHANGE==========//
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setFormErrors(validate(formValues));
-    setIsSubmit(true);
-  };
-
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      //=====TESTOWA AUTORYZACJA=====//
-      login(formValues.username, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-
-      const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
-
-      // async function sendData() {
-
-      //   const formData = new FormData();
-
-      //   formData.append('nickname', formValues.username);
-      //   formData.append('password', formValues.password);
-
-      //   try {
-      //     const response = await fetch('http://localhost:3001/api/login', {
-      //       method: 'POST',
-      //       body: formData,
-      //     });
-
-      //     if (!response.ok) {
-      //       setError(`Server error: ${response.statusText}`);
-      //       return;
-      //     }
-
-      //     navigate('/');
-      //     setFormValues(initialValues);
-      //   } catch (error) {
-      //     setError('Server error. Please try again later.');
-      //   }
-      // }
-
-      // sendData();
-    }
-  }, [formErrors, formValues, isSubmit]);
 
   //==========FORM INPUTS VALIDATION==========//
   const validate = (values) => {
@@ -78,6 +37,46 @@ function Login() {
     }
     return errors;
   };
+
+  //==========FORM SUBMIT==========//
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setFormErrors(validate(formValues));
+    setIsSubmit(true);
+  };
+
+  useEffect(() => {
+    async function performLogin(credentials) {
+      try {
+        const response = await fetch('http://localhost:3001/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(credentials),
+        });
+        const resData = await response.json();
+
+        if (!response.ok) {
+          setError(resData.message);
+          return;
+        }
+
+        login(resData);
+        navigate(from, { replace: true });
+      } catch (error) {
+        setError('Error');
+      }
+    }
+
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      performLogin({
+        nickname: formValues.username,
+        password: formValues.password,
+      });
+
+      setIsSubmit(false);
+    }
+  }, [isSubmit]);
 
   //==========CLOSE ERROR MESSAGE==========//
   const closeError = () => {

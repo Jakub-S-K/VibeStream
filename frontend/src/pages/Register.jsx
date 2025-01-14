@@ -2,10 +2,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/img/logo.png';
 import Message from '../components/Message';
-import { useAuth } from '../components/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function Register() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [error, setError] = useState(null);
@@ -22,52 +22,13 @@ function Register() {
   const [userImagePreview, setUserImagePreview] = useState(null);
   const [bio, setBio] = useState('');
 
+  //=============== STEP 1. USERNAME & PASSWORD & EMAIL ===============//
+
+  //==========FORM INPUTS CHANGE==========//
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setFormErrors(validate(formValues));
-    setIsSubmit(true);
-  };
-
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-      setSuccess('Account created successfully!');
-      login(formValues.username, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-      setStep(2);
-      //   async function sendData() {
-      //     const formData = new FormData();
-
-      //     formData.append('nickname', formValues.username);
-      //     formData.append('password', formValues.password);
-
-      //     try {
-      //       const response = await fetch('http://localhost:3001/api/register', {
-      //         method: 'POST',
-      //         headers: {
-      //           'Content-Type': 'application/json',
-      //         },
-      //         body: formData,
-      //       });
-
-      //       if (!response.ok) {
-      //         setError(`Server error: ${response.statusText}`);
-      //         return;
-      //       }
-
-      //       setStep(2);
-      //       setFormValues(initialValues);
-      //     } catch (error) {
-      //       setError('Server error. Please try again later.');
-      //     }
-      //   }
-
-      //   sendData();
-    }
-  }, [formErrors, formValues, isSubmit]);
 
   //==========FORM INPUTS VALIDATION==========//
   const validate = (values) => {
@@ -90,7 +51,49 @@ function Register() {
     return errors;
   };
 
-  //==========USER IMAGE==========//
+  //==========FIRST FORM SUBMIT==========//
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormErrors(validate(formValues));
+    setIsSubmit(true);
+  };
+
+  useEffect(() => {
+    async function performRegister(credentials) {
+      try {
+        const response = await fetch('http://localhost:3001/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(credentials),
+        });
+        const resData = await response.json();
+
+        if (!response.ok) {
+          setError(resData.message);
+          return;
+        }
+
+        login(resData);
+        setStep(2);
+      } catch (error) {
+        setError(`Error: ${error}`);
+      }
+    }
+
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+      performRegister({
+        nickname: formValues.username,
+        password: formValues.password,
+        email: `${formValues.username}@test.com`,
+      });
+
+      setIsSubmit(false);
+    }
+  }, [isSubmit]);
+
+  //=============== STEP 2. AVATAR & BIO ===============//
+
+  //==========USER IMAGE CHANGE==========//
   const handleUserImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -109,10 +112,12 @@ function Register() {
     setUserImagePreview(URL.createObjectURL(file));
   };
 
+  //==========USER BIO CHANGE==========//
   const handleBioChange = (e) => {
     setBio(e.target.value);
   };
 
+  //==========SECOND FORM SUBMIT==========//
   const handleAvatarAndBioSubmit = async (e) => {
     e.preventDefault();
 
@@ -123,21 +128,27 @@ function Register() {
 
     const formData = new FormData();
 
+    formData.append('id', user);
+
     if (bio) {
       formData.append('bio', bio);
     }
     if (userImage) {
-      formData.append('userImage', userImage);
+      formData.append('files', userImage);
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/profileUpdate', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        'http://localhost:3001/api/register/optional',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+      const resData = await response.json();
 
       if (!response.ok) {
-        setError(`Server error: ${response.statusText}`);
+        setError(resData.message);
         return;
       }
 
@@ -145,7 +156,7 @@ function Register() {
       setUserImage(null);
       setBio('');
     } catch (error) {
-      setError('Server error. Please try again later.');
+      setError('Error.');
     }
   };
 
@@ -181,7 +192,7 @@ function Register() {
             )}
 
             <div class='form-wrapper'>
-              {/*=============== STEP 1. USERNAME & PASSWORD ===============*/}
+              {/*=============== STEP 1. USERNAME & PASSWORD & EMAIL ===============*/}
               {step === 1 && (
                 <>
                   <Link to='/'>
