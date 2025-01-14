@@ -1,20 +1,132 @@
-module.exports.test_users = "INSERT INTO `user` (`id`, `nickname`, `email`, `password`, `creation_date`, `bio`) VALUES\
-(1, 'MusicLover', 'musiclover@example.com', 'password123', '2024-12-19 10:43:44', 'Passionate about discovering new indie tracks.'),\
-(2, 'BeatMaker99', 'beatmaker99@example.com', 'securePass99', '2024-12-19 10:43:44', 'Aspiring producer sharing my beats with the world.'),\
-(3, 'SoundHunter', 'soundhunter@example.com', 'hunterPass456', '2024-12-19 10:43:44', 'Exploring the depths of new and unique sounds.'),\
-(4, 'VibeMaster', 'vibemaster@example.com', 'vibe2024!', '2024-12-19 10:43:44', 'Sharing vibes and playlists for every mood.'),\
-(5, 'MelodySeeker', 'melodyseeker@example.com', 'melodyPass789', '2024-12-19 10:43:44', 'On a journey to find the perfect melody.'),\
-(6, 'PodwojnaLipa', 'podwojnalipa@gmail.com', 'P@ssw0rd2024', '2024-12-19 10:51:47', 'Lubię relaksować się przy dobrej muzyce i odkrywać nowe brzmienia.'),\
-(7, 'DJKaprysnaDrukarkaHP', 'djkaprysna@outlook.com', 'Druk@rka123', '2024-12-19 10:51:47', 'Tworzę muzykę inspirowaną dźwiękami codziennego życia.'),\
-(8, 'patrycjaaaaaa', 'patrycja123@yahoo.com', 'P@trycja2024!', '2024-12-19 10:51:47', 'Fanka akustycznych brzmień i chilloutowych playlist.'),\
-(9, 'kierowcaSolarisa', 'kierowca.solaris@interia.pl', 'S0laris2024!', '2024-12-19 10:51:47', 'Muzyka to moja codzienna towarzyszka podczas długich tras.'),\
-(10, 'DJPaprykarzSzczecinski', 'djpaprykarz@gmail.com', 'P@pryk@rz1!', '2024-12-19 10:51:47', 'DJ z pasją do miksowania nieoczywistych gatunków.'),\
-(11, 'LeoLoud', 'leoloud@protonmail.com', 'L3oL0ud!2024', '2024-12-19 10:51:47', 'Eksperymentuję z dźwiękiem i szukam nowych muzycznych wyzwań.'),\
-(12, 'JakeJam', 'jakejam@icloud.com', 'J@k3J@ms2024', '2024-12-19 10:51:47', 'Producent muzyczny z zamiłowaniem do groovy bitów.'),\
-(13, 'babanarowerze', 'babanarowerze@gmail.com', 'Bab@N@2024', '2024-12-19 10:54:36', 'Muzyka to mój najlepszy towarzysz podczas rowerowych przejażdżek!'),\
-(14, 'soundwave42', 'soundwave42@gmail.com', 'S0undW@v3!2024', '2024-12-19 10:55:55', 'Pasjonat nowych brzmień i eksperymentów w muzyce elektronicznej.'),\
-(15, 'beatmasterx', 'beatmasterx@yahoo.com', 'B3@tM@st3rX', '2024-12-19 10:55:55', 'Tworzę hip-hopowe bity, zawsze w poszukiwaniu idealnego flow.');\
-"
+// module.exports.test_users = "INSERT INTO `user` (`id`, `nickname`, `email`, `password`, `creation_date`, `bio`) VALUES\
+// (1, 'MusicLover', 'musiclover@example.com', 'password123', '2024-12-19 10:43:44', 'Passionate about discovering new indie tracks.'),\
+// (2, 'BeatMaker99', 'beatmaker99@example.com', 'securePass99', '2024-12-19 10:43:44', 'Aspiring producer sharing my beats with the world.'),\
+// (3, 'SoundHunter', 'soundhunter@example.com', 'hunterPass456', '2024-12-19 10:43:44', 'Exploring the depths of new and unique sounds.'),\
+// (4, 'VibeMaster', 'vibemaster@example.com', 'vibe2024!', '2024-12-19 10:43:44', 'Sharing vibes and playlists for every mood.'),\
+// (5, 'MelodySeeker', 'melodyseeker@example.com', 'melodyPass789', '2024-12-19 10:43:44', 'On a journey to find the perfect melody.'),\
+// (6, 'PodwojnaLipa', 'podwojnalipa@gmail.com', 'P@ssw0rd2024', '2024-12-19 10:51:47', 'Lubię relaksować się przy dobrej muzyce i odkrywać nowe brzmienia.'),\
+// (7, 'DJKaprysnaDrukarkaHP', 'djkaprysna@outlook.com', 'Druk@rka123', '2024-12-19 10:51:47', 'Tworzę muzykę inspirowaną dźwiękami codziennego życia.'),\
+// (8, 'patrycjaaaaaa', 'patrycja123@yahoo.com', 'P@trycja2024!', '2024-12-19 10:51:47', 'Fanka akustycznych brzmień i chilloutowych playlist.'),\
+// (9, 'kierowcaSolarisa', 'kierowca.solaris@interia.pl', 'S0laris2024!', '2024-12-19 10:51:47', 'Muzyka to moja codzienna towarzyszka podczas długich tras.'),\
+// (10, 'DJPaprykarzSzczecinski', 'djpaprykarz@gmail.com', 'P@pryk@rz1!', '2024-12-19 10:51:47', 'DJ z pasją do miksowania nieoczywistych gatunków.'),\
+// (11, 'LeoLoud', 'leoloud@protonmail.com', 'L3oL0ud!2024', '2024-12-19 10:51:47', 'Eksperymentuję z dźwiękiem i szukam nowych muzycznych wyzwań.'),\
+// (12, 'JakeJam', 'jakejam@icloud.com', 'J@k3J@ms2024', '2024-12-19 10:51:47', 'Producent muzyczny z zamiłowaniem do groovy bitów.'),\
+// (13, 'babanarowerze', 'babanarowerze@gmail.com', 'Bab@N@2024', '2024-12-19 10:54:36', 'Muzyka to mój najlepszy towarzysz podczas rowerowych przejażdżek!'),\
+// (14, 'soundwave42', 'soundwave42@gmail.com', 'S0undW@v3!2024', '2024-12-19 10:55:55', 'Pasjonat nowych brzmień i eksperymentów w muzyce elektronicznej.'),\
+// (15, 'beatmasterx', 'beatmasterx@yahoo.com', 'B3@tM@st3rX', '2024-12-19 10:55:55', 'Tworzę hip-hopowe bity, zawsze w poszukiwaniu idealnego flow.');\
+// "
+
+const bcrypt = require('bcryptjs');
+
+const hashPasswords = async (users) => {
+    const saltRounds = 10;
+    return Promise.all(
+        users.map(async (user) => ({
+            ...user,
+            password: await bcrypt.hash(user.password, saltRounds),
+        }))
+    );
+};
+
+const seedUsers = async function () {
+    const users = [
+        {
+            nickname: 'MusicLover',
+            email: 'musiclover@example.com',
+            bio: 'Passionate about discovering new indie tracks.',
+            password: 'password123',
+        },
+        {
+            nickname: 'BeatMaker99',
+            email: 'beatmaker99@example.com',
+            bio: 'Aspiring producer sharing my beats with the world.',
+            password: 'securePass99',
+        },
+        {
+            nickname: 'SoundHunter',
+            email: 'soundhunter@example.com',
+            bio: 'Exploring the depths of new and unique sounds.',
+            password: 'hunterPass456',
+        },
+        {
+            nickname: 'VibeMaster',
+            email: 'vibemaster@example.com',
+            bio: 'Sharing vibes and playlists for every mood.',
+            password: 'vibe2024!',
+        },
+        {
+            nickname: 'MelodySeeker',
+            email: 'melodyseeker@example.com',
+            bio: 'On a journey to find the perfect melody.',
+            password: 'melodyPass789',
+        },
+        {
+            nickname: 'PodwojnaLipa',
+            email: 'podwojnalipa@gmail.com',
+            bio: 'Lubię relaksować się przy dobrej muzyce i odkrywać nowe brzmienia.',
+            password: 'P@ssw0rd2024',
+        },
+        {
+            nickname: 'DJKaprysnaDrukarkaHP',
+            email: 'djkaprysna@outlook.com',
+            bio: 'Tworzę muzykę inspirowaną dźwiękami codziennego życia.',
+            password: 'Druk@rka123',
+        },
+        {
+            nickname: 'patrycjaaaaaa',
+            email: 'patrycja123@yahoo.com',
+            bio: 'Fanka akustycznych brzmień i chilloutowych playlist.',
+            password: 'P@trycja2024!',
+        },
+        {
+            nickname: 'kierowcaSolarisa',
+            email: 'kierowca.solaris@interia.pl',
+            bio: 'Muzyka to moja codzienna towarzyszka podczas długich tras.',
+            password: 'S0laris2024!',
+        },
+        {
+            nickname: 'DJPaprykarzSzczecinski',
+            email: 'djpaprykarz@gmail.com',
+            bio: 'DJ z pasją do miksowania nieoczywistych gatunków.',
+            password: 'P@pryk@rz1!',
+        },
+        {
+            nickname: 'LeoLoud',
+            email: 'leoloud@protonmail.com',
+            bio: 'Eksperymentuję z dźwiękiem i szukam nowych muzycznych wyzwań.',
+            password: 'L3oL0ud!2024',
+        },
+        {
+            nickname: 'JakeJam',
+            email: 'jakejam@icloud.com',
+            bio: 'Producent muzyczny z zamiłowaniem do groovy bitów.',
+            password: 'J@k3J@ms2024',
+        },
+        {
+            nickname: 'babanarowerze',
+            email: 'babanarowerze@gmail.com',
+            bio: 'Muzyka to mój najlepszy towarzysz podczas rowerowych przejażdżek!',
+            password: 'Bab@N@2024',
+        },
+        {
+            nickname: 'soundwave42',
+            email: 'soundwave42@gmail.com',
+            bio: 'Pasjonat nowych brzmień i eksperymentów w muzyce elektronicznej.',
+            password: 'S0undW@v3!2024',
+        },
+        {
+            nickname: 'beatmasterx',
+            email: 'beatmasterx@yahoo.com',
+            bio: 'Tworzę hip-hopowe bity, zawsze w poszukiwaniu idealnego flow.',
+            password: 'B3@tM@st3rX',
+        },
+    ];
+
+    const usersWithHashedPasswords = await hashPasswords(users);
+    return usersWithHashedPasswords;
+};
+
+module.exports.test_users = seedUsers;
 
 module.exports.test_tags = "\
 INSERT INTO `tag` (`id`, `name`) VALUES\

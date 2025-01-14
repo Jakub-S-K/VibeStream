@@ -164,6 +164,4 @@ module.exports.register_optional = async function (req, res) {
     finally {
         await transaction.commit();
     }
-
-
 }
