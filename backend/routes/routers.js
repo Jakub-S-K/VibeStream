@@ -21,6 +21,7 @@ module.exports = function (app) {
     //TODO add token handling
     api.post('/login', upload.any(), authApi.login);
     api.post('/register', upload.any(), authApi.register);
+    api.post('/register/optional', upload.any(), authApi.register_optional);
 
     //album
     api.get('/trending/albums/:n', albumApi.trending);

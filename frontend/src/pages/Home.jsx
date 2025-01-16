@@ -1,10 +1,25 @@
 import artist from '../assets/img/artist2.png';
 import ArtistsSlider from '../components/ArtistsSlider';
 import TrendingSlider from '../components/TrendingSlider';
+import Message from '../components/Message';
+import { useMessage } from '../context/MessageContext';
 
 function Home() {
+  const { message, messageType, setMessage } = useMessage();
+
+  //==========CLOSE MESSAGE==========//
+  const closeMessage = () => {
+    setMessage(null);
+  };
+
   return (
     <>
+      {console.log(message)}
+      {/*==========MESSAGE==========*/}
+      {message && (
+        <Message type={messageType} message={message} onClose={closeMessage} />
+      )}
+
       <main>
         {/*=============== HOME ===============*/}
         <section className='home' id='home'>

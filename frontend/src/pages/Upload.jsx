@@ -2,8 +2,10 @@ import './Upload.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { Reorder } from 'framer-motion';
 import Message from '../components/Message';
+import { useAuth } from '../context/AuthContext';
 
 const Upload = () => {
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [dragging, setDragging] = useState(false);
   const [albumCover, setAlbumCover] = useState(null);
@@ -220,11 +222,11 @@ const Upload = () => {
 
     const formData = new FormData();
 
-    files.forEach((fileObj, index) => {
+    files.forEach((fileObj) => {
       formData.append('file', fileObj.file);
     });
     formData.append('title', albumData.title);
-    formData.append('id', '37692021-37ea-41f1-b95f-3e8a2750c072'); //Temp logged user id
+    formData.append('id', user); //Temp logged user id
     formData.append('genre', albumData.genre);
     formData.append('description', albumData.description);
 
