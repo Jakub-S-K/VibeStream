@@ -3,12 +3,14 @@ import React, { useEffect } from 'react';
 //=============== CONTEXT ===============//
 import { AuthProvider } from './context/AuthContext';
 import { MessageProvider } from './context/MessageContext';
+import { AlertProvider } from './context/AlertContext';
 //=============== COMPONENTS ===============//
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ScrollUpButton from './components/ScrollUpButton';
 import NoMatch from './components/NoMatch';
+import AlertPopup from './components/AlertPopup';
 //=============== PAGES ===============//
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -21,8 +23,10 @@ import UserProfile from './pages/UserProfile';
 function App() {
   return (
     <>
-      <AuthProvider>
-        <ScrollToTop>
+      <AlertProvider>
+        <AuthProvider>
+          <AlertPopup />
+          <ScrollToTop />
           <MessageProvider>
             <Routes>
               <Route element={<Layout />}>
@@ -45,8 +49,8 @@ function App() {
             </Routes>
             <ScrollUpButton />
           </MessageProvider>
-        </ScrollToTop>
-      </AuthProvider>
+        </AuthProvider>
+      </AlertProvider>
     </>
   );
 }

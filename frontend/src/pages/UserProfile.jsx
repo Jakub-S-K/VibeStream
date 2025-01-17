@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
 import './UserProfile.css';
 
 function UserProfile() {
   const { username } = useParams();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [userData, setUserData] = useState();
@@ -15,11 +17,11 @@ function UserProfile() {
 
       try {
         const response = await fetch(
-          `http://localhost:3001/api/user/${username}`
+          `http://localhost:3001/api/user/${username || user.username}`
         );
 
         if (!response.ok) {
-          throw new Error((await response.text()) || 'Failed to fetch user.');
+          throw new Error((await response.message) || 'Failed to fetch user.');
         }
 
         const resData = await response.json();

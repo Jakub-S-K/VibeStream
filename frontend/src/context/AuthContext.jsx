@@ -1,23 +1,24 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import Message from '../components/Message';
+import { useAlert } from '../context/AlertContext';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [success, setSuccess] = useState(null);
+  const { setAlert } = useAlert();
   const [user, setUser] = useState(null);
 
   const login = (userData) => {
-    setUser(userData.user.id);
-    console.log(user);
+    setUser({ id: userData.user.id, username: userData.user.nickname });
     localStorage.setItem('token', userData.token);
-    setSuccess('You have successfully logged in!');
+    localStorage.setItem('user', JSON.stringify(userData.user));
+    setAlert('You have successfully logged in!', 'success');
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
-    setSuccess('You have successfully logged out.');
+    localStorage.removeItem('user');
+    setAlert('You have successfully logged out.', 'success');
   };
 
   const isTokenExpired = (token) => {
@@ -26,33 +27,22 @@ export const AuthProvider = ({ children }) => {
     return decodedToken.exp < currentTime;
   };
 
-  const closeSuccess = () => {
-    setSuccess(null);
-  };
-
   useEffect(() => {
     function checkToken() {
       const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
 
       if (token && !isTokenExpired(token)) {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser(payload.id);
+        // const payload = JSON.parse(atob(token.split('.')[1]));
+        setUser({ id: user.id, username: user.nickname });
       }
     }
 
     checkToken();
-  }, [user]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
-      {success && (
-        <Message
-          type='success'
-          message={success}
-          onClose={closeSuccess}
-        ></Message>
-      )}
-
       {children}
     </AuthContext.Provider>
   );

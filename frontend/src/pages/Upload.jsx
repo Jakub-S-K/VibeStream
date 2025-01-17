@@ -226,7 +226,7 @@ const Upload = () => {
       formData.append('file', fileObj.file);
     });
     formData.append('title', albumData.title);
-    formData.append('id', user); //Temp logged user id
+    formData.append('id', user.id); //Temp logged user id
     formData.append('genre', albumData.genre);
     formData.append('description', albumData.description);
 
