@@ -1,8 +1,8 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import logo from '../assets/img/logo.png';
-import Message from '../components/Message';
 import { useAuth } from '../context/AuthContext';
+import Message from '../components/Message';
 
 function Login() {
   const { login } = useAuth();
@@ -57,14 +57,14 @@ function Login() {
         const resData = await response.json();
 
         if (!response.ok) {
-          setError(resData.message);
+          setError(resData.message, 'error');
           return;
         }
 
         login(resData);
         navigate(from, { replace: true });
       } catch (error) {
-        setError('Error');
+        setError('Error!', 'error');
       }
     }
 

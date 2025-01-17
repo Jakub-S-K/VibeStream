@@ -17,7 +17,7 @@ function Message({ type, message, onClose }) {
   const getIcon = () => {
     switch (type) {
       case 'error':
-        return <i className='bx bx-error'></i>;
+        return <i className='bx bx-error-circle'></i>;
       case 'success':
         return <i className='bx bx-check'></i>;
       default:
@@ -30,10 +30,14 @@ function Message({ type, message, onClose }) {
       className={`message message--${type}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={onClose}
     >
-      {getIcon()}
-      {message}
+      <div className='message__text'>
+        {getIcon()}
+        {message}
+      </div>
+      <div className='message__cross' onClick={onClose}>
+        <i class='bx bx-x'></i>
+      </div>
     </div>
   );
 }

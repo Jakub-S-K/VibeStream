@@ -29,7 +29,7 @@ module.exports.get_image = async function(req, res) {
         res.status(400).send({ message: 'Bad request: missing id' });
         return;
     }
-    const image = await Image.findOne({ where: { id: req.params.id }});
+    const image = await Image.findOne({ where: { external_id: req.params.id }});
     if (!image) {
         res.status(404).send({ message: 'Not found' });
         return;
