@@ -1,39 +1,41 @@
 import './Search.css';
 import React, { useState, useEffect, useRef } from 'react';
-import genresData from '../assets/json/genres.json';
-
-const mockDatabase = genresData.genres;
+import Loading from '../components/Loading';
+import avatar from '../assets/img/user.png';
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [fetchedData, setFetchedData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const DEBOUNCE_DELAY = 700;
 
-  // Funkcja symulująca pobieranie danych z bazy
-  const fetchData = (query) => {
-    setLoading(true);
-    setTimeout(() => {
-      // Filtrowanie danych z "bazy"
-      const filteredData = mockDatabase.filter((item) =>
-        item.name.toLowerCase().includes(query.toLowerCase())
-      );
-      setData(filteredData);
-      setLoading(false);
-    }, 1000); // 1 sekunda opóźnienia (symulacja połączenia z bazą)
-  };
-
-  // Obsługa zmiany pola wyszukiwania
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setData([]); // Jeśli brak frazy, nie pokazuj wyników
-      return;
+    function fetchData(query) {
+      setIsLoading(true);
+
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then((response) => response.json())
+        .then((users) => {
+          const filteredData = users.filter((user) =>
+            user.name.toLowerCase().includes(query.toLowerCase())
+          );
+          setFetchedData(filteredData);
+        })
+        .catch((error) => console.error('Error:', error));
+
+      setIsLoading(false);
     }
 
-    const timeoutId = setTimeout(() => {
-      fetchData(searchTerm);
-    }, 500); // Debouncing: opóźnienie przed wysłaniem zapytania
+    const handleInputChange = setTimeout(() => {
+      if (searchTerm.trim() === '') {
+        setFetchedData([]);
+        return;
+      } else {
+        fetchData(searchTerm);
+      }
+    }, DEBOUNCE_DELAY);
 
-    return () => clearTimeout(timeoutId); // Czyść poprzednie timeouty
+    return () => clearTimeout(handleInputChange);
   }, [searchTerm]);
 
   return (
@@ -55,21 +57,29 @@ function Search() {
             <i class='bx bx-search'></i>
           </div>
 
-          {loading && (
-            <div className='loading'>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          )}
-          <ul>
-            {data.map((item) => (
-              <li key={item.id}>{item.name}</li>
-            ))}
-          </ul>
-          {data.length === 0 && searchTerm && !loading && (
+          {isLoading && <Loading></Loading>}
+
+          {/*=============== USERS ===============*/}
+          <div className='search__list-l'>
+            <ul className='search__list'>
+              {fetchedData &&
+                fetchedData.map((item) => (
+                  <li key={item.id} className='search__item'>
+                    <div className='search__item-top'>
+                      <div
+                        className='search__image'
+                        style={{ backgroundImage: `url("${avatar}")` }}
+                      ></div>
+                    </div>
+                    <div className='search__item-bottom'>{item.name}</div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+
+          {/* {fetchedData.length === 0 && searchTerm && !isLoading && (
             <p>No results found</p>
-          )}
+          )} */}
         </div>
       </section>
     </main>

@@ -189,20 +189,36 @@ h2 {
   outline: 1px solid var(--third-color);
   box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
   font-size: var(--tiny-font-size);
-  z-index: var(--z-tooltip);
-  padding: 0.75rem 2rem;
+  z-index: var(--z-fixed);
+  padding: 0.75rem 1rem;
   border-radius: 0.25rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 2rem;
   opacity: 1;
-  transition: opacity 2s ease-out;
-  /* transition: all 0.25s ease-out; */
+  transition: 0.1s all ease-out;
 }
 
 .message i {
   font-size: 1.75rem;
+}
+
+.message__text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.message__cross {
+  display: flex;
+  align-items: center;
+  color: var(--first-color);
+  cursor: pointer;
+  transition: 0.1s color ease-out;
+}
+
+.message__cross:hover {
+  color: var(--first-color-alt-dark);
 }
 
 .message:hover {
@@ -212,7 +228,9 @@ h2 {
 .message--error {
   outline: 1px solid rgb(196, 29, 0);
 }
-
+.message--error .message__text i {
+  color: rgb(196, 29, 0);
+}
 .message--error:hover {
   box-shadow: 0 0 0.7rem rgb(221, 33, 0);
 }
@@ -220,7 +238,9 @@ h2 {
 .message--success {
   outline: 1px solid rgb(37, 221, 0);
 }
-
+.message--success .message__text i {
+  color: rgb(37, 221, 0);
+}
 .message--success:hover {
   box-shadow: 0 0 0.7rem rgb(37, 221, 0);
 }
@@ -501,6 +521,10 @@ h2 {
   cursor: pointer;
 }
 
+.slider__username:hover {
+  text-decoration: underline;
+}
+
 .slider__play {
   display: flex;
   flex-direction: row;
@@ -512,8 +536,13 @@ h2 {
 
 .slider__play i {
   display: block;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   cursor: pointer;
+  transition: 0.1s color ease-out;
+}
+
+.slider__play i:hover {
+  color: var(--first-color);
 }
 
 .slider__album-name {
@@ -522,6 +551,7 @@ h2 {
   font-weight: var(--font-regular);
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .slider__username,
@@ -664,6 +694,7 @@ h2 {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: var(--z-tooltip);
 }
 
 .image-container {
@@ -713,13 +744,13 @@ h2 {
 
 .form__title {
   display: block;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   font-weight: var(--font-regular);
   font-size: var(--medium-font-size);
 }
 
 .form__group {
-  margin-top: 1.5rem;
+  margin-top: 0.8rem;
   width: 100%;
   position: relative;
 }
@@ -776,7 +807,7 @@ h2 {
 .form__button {
   margin-top: 2rem;
   width: 70%;
-  padding: 0.6rem;
+  padding: 0.5rem;
   border-radius: 0.75rem;
   border: none;
   background-color: var(--first-color);
@@ -805,7 +836,7 @@ h2 {
 }
 
 .form__have-account-text {
-  margin-top: 1rem;
+  margin-top: 0.7rem;
   font-size: var(--normal-font-size);
 }
 
