@@ -7,6 +7,7 @@ import Select from 'react-select';
 
 const Upload = () => {
   const { user } = useAuth();
+
   const [step, setStep] = useState(1);
   const [dragging, setDragging] = useState(false);
 
@@ -313,6 +314,8 @@ const Upload = () => {
 
   //==========GENRES & TAGS FETCHING==========//
   useEffect(() => {
+    if (step !== 2) return;
+
     async function fetchOptions(url, setOptions, errorMessage) {
       try {
         const response = await fetch(url);
@@ -343,7 +346,7 @@ const Upload = () => {
       setTagOptions,
       'Failed to fetch tags list.'
     );
-  }, []);
+  }, [step]);
 
   return (
     <main>

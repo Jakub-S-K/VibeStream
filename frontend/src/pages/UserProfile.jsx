@@ -17,7 +17,7 @@ function UserProfile() {
 
       try {
         const response = await fetch(
-          `http://localhost:3001/api/user/${username || user.username}`
+          `http://localhost:3001/api/user/${username}`
         );
 
         if (!response.ok) {
@@ -34,7 +34,7 @@ function UserProfile() {
     }
 
     fetchUserData();
-  }, []);
+  }, [username]);
 
   return (
     <main>
@@ -45,7 +45,7 @@ function UserProfile() {
 
           {error && <p>Error: {error.message}</p>}
 
-          {userData && (
+          {!isLoading && userData && (
             <>
               <h2 className='section__title'>{userData.nickname}</h2>
               <p>{userData.email}</p>

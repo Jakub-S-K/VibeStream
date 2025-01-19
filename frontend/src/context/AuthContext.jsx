@@ -6,9 +6,40 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const { setAlert } = useAlert();
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    function checkToken() {
+      const token = localStorage.getItem('token');
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+
+      if (token && storedUser && !isTokenExpired(token)) {
+        setUser(storedUser);
+      } else {
+        setUser(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+
+      setIsLoading(false);
+    }
+
+    checkToken();
+  }, []);
+
+  const isTokenExpired = (token) => {
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return decodedToken.exp < currentTime;
+    } catch (error) {
+      setAlert('Invalid token', 'error');
+      return true;
+    }
+  };
 
   const login = (userData) => {
-    setUser({ id: userData.user.id, username: userData.user.nickname });
+    setUser(userData);
     localStorage.setItem('token', userData.token);
     localStorage.setItem('user', JSON.stringify(userData.user));
     setAlert('You have successfully logged in!', 'success');
@@ -21,30 +52,12 @@ export const AuthProvider = ({ children }) => {
     setAlert('You have successfully logged out.', 'success');
   };
 
-  const isTokenExpired = (token) => {
-    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-    const currentTime = Math.floor(Date.now() / 1000);
-    return decodedToken.exp < currentTime;
-  };
-
-  useEffect(() => {
-    function checkToken() {
-      const token = localStorage.getItem('token');
-      const user = JSON.parse(localStorage.getItem('user'));
-
-      if (token && !isTokenExpired(token)) {
-        // const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser({ id: user.id, username: user.nickname });
-      }
-    }
-
-    checkToken();
-  }, []);
-
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    !isLoading && (
+      <AuthContext.Provider value={{ user, login, logout }}>
+        {children}
+      </AuthContext.Provider>
+    )
   );
 };
 

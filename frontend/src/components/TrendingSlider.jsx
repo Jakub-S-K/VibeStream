@@ -38,8 +38,6 @@ function TrendingSlider({ albumsToShow }) {
           })
         );
 
-        console.log(albumsWithCovers);
-
         setAlbumsWithCovers(albumsWithCovers);
       }
     }

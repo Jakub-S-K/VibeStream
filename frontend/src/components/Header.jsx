@@ -87,7 +87,7 @@ function Header() {
                       id='dropdown__list'
                     >
                       <Link
-                        to={`/user/${user.username}`}
+                        to={`/user/${user.nickname}`}
                         className='dropdown__link'
                       >
                         <i className='bx bxs-user-account'></i>
