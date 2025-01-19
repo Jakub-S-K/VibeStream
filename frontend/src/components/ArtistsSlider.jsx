@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useFetch } from '../hooks/useFetch.js';
 import Loading from './Loading';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import defaultAvatar from '../assets/img/user.png';
-import { useFetch } from '../hooks/useFetch.js';
-import { useEffect, useState } from 'react';
 
 function ArtistsSlider({ usersToShow }) {
   const {
@@ -80,7 +80,7 @@ function ArtistsSlider({ usersToShow }) {
                         className='slider__image'
                         style={{
                           backgroundImage: `url("${
-                            user.avatar ? user.avatar : defaultAvatar
+                            user.avatar || defaultAvatar
                           }")`,
                         }}
                       ></div>

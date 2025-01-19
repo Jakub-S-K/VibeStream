@@ -1,27 +1,74 @@
 import './Upload.css';
 import React, { useState, useEffect, useRef } from 'react';
-import { Reorder } from 'framer-motion';
+import { color, Reorder } from 'framer-motion';
 import Message from '../components/Message';
 import { useAuth } from '../context/AuthContext';
+import Select from 'react-select';
 
 const Upload = () => {
   const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [dragging, setDragging] = useState(false);
-  const [albumCover, setAlbumCover] = useState(null);
-  const [albumCoverPreview, setAlbumCoverPreview] = useState(null);
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const [files, setFiles] = useState([]);
-  const [currentPlaying, setCurrentPlaying] = useState(null);
-  const audioRefs = useRef([]);
-  const [genres, setGenres] = useState([]);
+
+  const [albumCover, setAlbumCover] = useState(null);
+  const [albumCoverPreview, setAlbumCoverPreview] = useState(null);
   const [albumData, setAlbumData] = useState({
     title: '',
     genre: '',
+    tags: '',
     description: '',
   });
+
+  const [files, setFiles] = useState([]);
+  const audioRefs = useRef([]);
+  const [currentPlaying, setCurrentPlaying] = useState(null);
+
+  const [genreOptions, setGenreOptions] = useState([]);
+  const [tagOptions, setTagOptions] = useState([]);
   // const MAX_TOTAL_SIZE = 300 * 1024 * 1024;
+
+  const customTheme = (theme) => ({
+    ...theme,
+    borderRadius: '0.25rem',
+    colors: {
+      ...theme.colors,
+      primary: 'var(--first-color)', // Active & Focus
+      primary25: 'var(--first-color-alt-light)', // Hover
+      primary50: 'var(--first-color-alt-dark)', // Select
+      neutral0: 'var(--body-color-alt)', // Background
+      neutral20: 'var(--third-color)', // Border
+      neutral30: 'var(--third-color)', // Border - hover
+      neutral80: 'var(--white-color)', // Text
+    },
+  });
+
+  const customStyles = {
+    placeholder: (provided) => ({
+      ...provided,
+      fontSize: 'var(--tiny-font-size)',
+      color: 'var(--third-color)',
+    }),
+    control: (provided) => ({
+      ...provided,
+      fontSize: 'var(--normal-font-size)',
+      padding: '0 6px',
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: 'var(--first-color)',
+      borderRadius: '0.25rem',
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: 'white',
+      ':hover': {
+        backgroundColor: 'rgb(237, 36, 0)',
+      },
+    }),
+  };
 
   //==========BROWSE FILES BUTTON==========//
   const handleFileSelect = (e) => {
@@ -131,6 +178,24 @@ const Upload = () => {
     }));
   };
 
+  const handleGenreChange = (newGenre) => {
+    setAlbumData((prevData) => ({
+      ...prevData,
+      ['genre']: newGenre.value,
+    }));
+  };
+
+  const handleTagsChange = (newTags) => {
+    newTags = newTags.map((tag) => ({
+      id: tag.value,
+    }));
+
+    setAlbumData((prevData) => ({
+      ...prevData,
+      ['tags']: newTags,
+    }));
+  };
+
   //==========REMOVE SONG==========//
   const removeSong = (id) => {
     setFiles((prevFiles) => prevFiles.filter((fileObj) => fileObj.id !== id));
@@ -184,32 +249,15 @@ const Upload = () => {
     setSuccess(null);
   };
 
-  //==========GENRES FETCHING==========//
-  useEffect(() => {
-    async function fetchGenresList() {
-      try {
-        const response = await fetch('http://localhost:3001/api/genres');
-
-        if (!response.ok) {
-          throw new Error(
-            (await response.text()) || 'Failed to fetch genres list.'
-          );
-        }
-
-        const resData = await response.json();
-        setGenres(resData);
-      } catch (error) {
-        setError('Failed to fetch genres list.');
-        return;
-      }
-    }
-
-    fetchGenresList();
-  }, []);
-
   //==========ALBUM SUBMIT==========//
   const handleSubmitAlbum = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('You must be logged in to create an album!');
+      return;
+    }
 
     if (files.length === 0) {
       setError('At least one music file must be added!');
@@ -226,7 +274,7 @@ const Upload = () => {
       formData.append('file', fileObj.file);
     });
     formData.append('title', albumData.title);
-    formData.append('id', user.id); //Temp logged user id
+    formData.append('id', user.id);
     formData.append('genre', albumData.genre);
     formData.append('description', albumData.description);
 
@@ -237,6 +285,9 @@ const Upload = () => {
     try {
       const response = await fetch('http://localhost:3001/api/album', {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
       const resData = await response.json();
@@ -259,6 +310,40 @@ const Upload = () => {
       setError('Failed to create album. Please try again later.');
     }
   };
+
+  //==========GENRES & TAGS FETCHING==========//
+  useEffect(() => {
+    async function fetchOptions(url, setOptions, errorMessage) {
+      try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error((await response.text()) || errorMessage);
+        }
+
+        const resData = await response.json();
+        const options = resData.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }));
+
+        setOptions(options);
+      } catch (error) {
+        setError(errorMessage);
+      }
+    }
+
+    fetchOptions(
+      'http://localhost:3001/api/genres',
+      setGenreOptions,
+      'Failed to fetch genres list.'
+    );
+    fetchOptions(
+      'http://localhost:3001/api/tags',
+      setTagOptions,
+      'Failed to fetch tags list.'
+    );
+  }, []);
 
   return (
     <main>
@@ -290,7 +375,7 @@ const Upload = () => {
               >
                 <i class='bx bx-cloud-upload'></i>
                 <p>Drag and drop your songs to get started</p>
-                <p>MP3 and WAV formats, up to X MB</p>
+                {/* <p>MP3 and WAV formats, up to X MB</p> */}
                 <input
                   type='file'
                   multiple
@@ -343,7 +428,9 @@ const Upload = () => {
                   <div className='album_form-top-inputs'>
                     {/*=====TITLE INPUT=====*/}
                     <div className='album__group'>
-                      <span class='album__label'>Album title</span>
+                      <span class='album__label'>
+                        Title <span>*</span>
+                      </span>
                       <input
                         className='album__input'
                         type='text'
@@ -356,23 +443,48 @@ const Upload = () => {
 
                     {/*=====GENRE INPUT=====*/}
                     <div className='album__group'>
-                      <span class='album__label'>Genre</span>
-                      <select
+                      <span class='album__label'>
+                        Genre <span>*</span>
+                      </span>
+                      <Select
+                        name='genre'
+                        onChange={handleGenreChange}
+                        options={genreOptions}
+                        theme={customTheme}
+                        styles={customStyles}
+                        placeholder='Genre'
+                      />
+                      {/* <select
                         className='album__input album__select'
                         name='genre'
                         value={albumData.genre}
                         onChange={handleAlbumChange}
+                        side='bottom'
                       >
                         <option value=''>Select Genre</option>
-                        {genres.map((genre) => (
-                          <option value={genre.name}>{genre.name}</option>
+                        {genreData.map((genre) => (
+                          <option value={genre.id}>{genre.name}</option>
                         ))}
-                      </select>
+                      </select> */}
+                    </div>
+
+                    {/*=====TAGS=====*/}
+                    <div className='album__group'>
+                      <span class='album__label'>Tags</span>
+                      <Select
+                        isMulti
+                        name='tags'
+                        onChange={handleTagsChange}
+                        options={tagOptions}
+                        theme={customTheme}
+                        styles={customStyles}
+                        placeholder='Tags'
+                      />
                     </div>
 
                     {/*=====DESCRIPTION INPUT=====*/}
                     <div className='album__group'>
-                      <span class='album__label'>Album description</span>
+                      <span class='album__label'>Description</span>
                       <textarea
                         className='album__input album__textarea'
                         name='description'

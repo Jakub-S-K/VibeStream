@@ -91,19 +91,12 @@
   color: var(--first-color-alt-light);
   box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
-  /* transition: background-color 0.2s ease, color 0.2s ease; */
   overflow: hidden;
 }
 
 .album__cover:hover {
   background-color: rgb(255, 137, 78);
   color: rgb(236, 116, 56);
-  /* opacity: 0.5; */
-}
-
-.album__cover:hover i {
-  /* line-height: 6rem; */
-  /* font-size: 4.5rem; */
 }
 
 .album__group {
@@ -119,6 +112,10 @@
   font-weight: var(--font-semi-bold);
 }
 
+.album__label span {
+  color: rgb(142, 21, 0);
+}
+
 .album__input {
   width: 100%;
   outline: 1px solid var(--third-color);
@@ -126,12 +123,12 @@
   border-radius: 0.25rem;
   padding: 0.5rem 1rem;
   color: var(--white-color);
-  /* font-size: var(--normal-font-size); */
+  font-size: var(--normal-font-size);
   font-weight: var(--font-light);
 }
 
 .album__input::placeholder {
-  /* font-size: var(--small-font-size); */
+  font-size: var(--tiny-font-size);
   color: var(--third-color);
 }
 
@@ -150,6 +147,7 @@
 }
 
 .album__textarea {
+  min-height: 80px;
   resize: none;
   overflow: hidden;
 }

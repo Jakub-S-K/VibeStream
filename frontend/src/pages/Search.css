@@ -89,8 +89,14 @@
   overflow: hidden;
   border-radius: 50%;
   background-size: cover;
+  background-position: center;
   background-color: var(--first-color);
   cursor: pointer;
+  transition: 0.2s all ease-out;
+}
+
+.search__image:hover {
+  scale: 102%;
 }
 
 /*=============== MEDIA QUERIES ===============*/

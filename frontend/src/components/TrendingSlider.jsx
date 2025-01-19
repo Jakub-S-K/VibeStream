@@ -1,21 +1,51 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useFetch } from '../hooks/useFetch.js';
 import Loading from './Loading';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import image from '../assets/img/album.png';
-import { useFetch } from '../hooks/useFetch.js';
+import defaultCover from '../assets/img/album.png';
 
 function TrendingSlider({ albumsToShow }) {
   const {
     isLoading,
-    fetchedData: trendingAlbums,
     error,
-  } = useFetch(
-    // `http://localhost:3001/api/trending/albums/7`
-    `http://localhost:3001/test/albums`,
-    []
-  );
+    fetchedData: trendingAlbums,
+  } = useFetch(`http://localhost:3001/api/trending/albums/${albumsToShow}`, []);
+
+  const [albumsWithCovers, setAlbumsWithCovers] = useState([]);
+
+  useEffect(() => {
+    async function fetchCovers() {
+      if (trendingAlbums && trendingAlbums.length > 0) {
+        const albumsWithCovers = await Promise.all(
+          trendingAlbums.map(async (album) => {
+            try {
+              const response = await fetch(
+                `http://localhost:3001/api/image/${album.id}`
+              );
+
+              if (!response.ok) {
+                throw new Error(`Error fetching avatar for user ${album.id}`);
+              }
+
+              const cover = response.url;
+              return { ...album, cover };
+            } catch (error) {
+              return { ...album, cover: null };
+            }
+          })
+        );
+
+        console.log(albumsWithCovers);
+
+        setAlbumsWithCovers(albumsWithCovers);
+      }
+    }
+
+    fetchCovers();
+  }, [trendingAlbums]);
 
   if (error) {
     return <p>Error: {error.message}</p>;
@@ -40,11 +70,13 @@ function TrendingSlider({ albumsToShow }) {
   return (
     <>
       {isLoading && <Loading></Loading>}
-      {!isLoading && trendingAlbums.length === 0 && <p>No albums available</p>}
-      {!isLoading && trendingAlbums.length > 0 && (
+      {!isLoading && albumsWithCovers.length === 0 && (
+        <p>No albums available</p>
+      )}
+      {!isLoading && albumsWithCovers.length > 0 && (
         <div className='slider'>
           <Slider {...settings}>
-            {trendingAlbums.map((album, index) => {
+            {albumsWithCovers.map((album, index) => {
               return (
                 <div key={index} className='slider__card trending-card'>
                   <div className='slider__card-top'>
@@ -52,22 +84,18 @@ function TrendingSlider({ albumsToShow }) {
                       className='slider__image trending-image'
                       style={{
                         backgroundImage: `url("${
-                          album.albumImage
-                            ? `http://localhost:3001/assets/img/albums/${album.albumImage}.jpg`
-                            : image
+                          album.cover || defaultCover
                         }")`,
                       }}
                     ></div>
                   </div>
                   <div className='slider__card-bottom'>
                     <span className='slider__username trending-username'>
-                      {album.username}
+                      {album.user.nickname}
                     </span>
                     <div className='slider__play'>
                       <i class='bx bx-play-circle'></i>
-                      <span className='slider__album-name'>
-                        {album.albumName}
-                      </span>
+                      <span className='slider__album-name'>{album.name}</span>
                     </div>
                   </div>
                 </div>

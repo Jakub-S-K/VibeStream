@@ -1,4 +1,4 @@
-const { Album, Image, Song, Genre, Album_like } = require('../../schema.js');
+const { Album, Image, Song, Genre, Album_like, User } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { Op } = require('sequelize');
 const { loadMusicMetadata } = require('music-metadata');
@@ -8,6 +8,10 @@ module.exports.trending = async function (req, res) {
     const album = await Album.findAll({
         order: sequelize.random(),
         limit: parseInt(_n),
+        include: {
+            model: User,
+            attributes: ['nickname'],
+          },
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
@@ -50,7 +54,7 @@ module.exports.create = async function (req, res) {
         for (const element of req.files) {
             if (element.fieldname === 'cover') {
                 img = await Image.create({
-                    external_id: req.body.id, //now it's working, but in a wrong way- it adds user.id instead of album.id
+                    external_id: album.id,
                     image: element.buffer
                 });
                 continue;

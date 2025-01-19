@@ -2,7 +2,7 @@ const { Tag, Genre, Image, User, Album, Album_like } = require('../../schema.js'
 
 module.exports.tags = async function (req, res) {
     const tags = await Tag.findAll({
-        attributes: ['name']
+        attributes: ['id', 'name']
     })
     if (!tags || Object.keys(tags).length === 0) {
         res.status(500).send({ message: "Internal Server Error" });
@@ -14,7 +14,8 @@ module.exports.tags = async function (req, res) {
 
 module.exports.genres = async function (req, res) {
     const genres = await Genre.findAll({
-        attributes: ['name']
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']],
     })
     if (!genres || Object.keys(genres).length === 0) {
         res.status(500).send({ message: "Internal Server Error" });
