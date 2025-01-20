@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = (userData) => {
-    setUser(userData);
+    setUser(userData.user);
     localStorage.setItem('token', userData.token);
     localStorage.setItem('user', JSON.stringify(userData.user));
     setAlert('You have successfully logged in!', 'success');

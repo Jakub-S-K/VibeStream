@@ -10,9 +10,15 @@ const Upload = () => {
 
   const [step, setStep] = useState(1);
   const [dragging, setDragging] = useState(false);
+  const [alert, setAlert] = useState(null);
+  const showAlert = (message, type) => setAlert({ message, type });
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [files, setFiles] = useState([]);
+  const audioRefs = useRef([]);
+  const [currentPlaying, setCurrentPlaying] = useState(null);
+
+  const [genreOptions, setGenreOptions] = useState([]);
+  const [tagOptions, setTagOptions] = useState([]);
 
   const [albumCover, setAlbumCover] = useState(null);
   const [albumCoverPreview, setAlbumCoverPreview] = useState(null);
@@ -22,13 +28,6 @@ const Upload = () => {
     tags: '',
     description: '',
   });
-
-  const [files, setFiles] = useState([]);
-  const audioRefs = useRef([]);
-  const [currentPlaying, setCurrentPlaying] = useState(null);
-
-  const [genreOptions, setGenreOptions] = useState([]);
-  const [tagOptions, setTagOptions] = useState([]);
   // const MAX_TOTAL_SIZE = 300 * 1024 * 1024;
 
   const customTheme = (theme) => ({
@@ -106,14 +105,14 @@ const Upload = () => {
     // const newFilesSize = audioFiles.reduce((sum, file) => sum + file.size, 0);
 
     // if (currentTotalSize + newFilesSize > MAX_TOTAL_SIZE) {
-    //   setError('Total file size cannot exceed 300 MB!');
+    //   showAlert('Total file size cannot exceed 300 MB!', 'error');
     //   return;
     // }
 
     // Check if any new audio files are empty.
     const emptyFiles = audioFiles.filter((file) => file.size === 0);
     if (emptyFiles.length > 0) {
-      setError('One or more files are empty and cannot be added!');
+      showAlert('One or more files are empty and cannot be added!', 'error');
     }
 
     if (audioFiles.length > 0) {
@@ -138,7 +137,7 @@ const Upload = () => {
       );
 
       if (filesAlreadyAdded.length > 0) {
-        setError('One or more files are already added!');
+        showAlert('One or more files are already added!', 'error');
         return;
       }
 
@@ -146,7 +145,10 @@ const Upload = () => {
       setFiles((prevFiles) => [...prevFiles, ...audioFileObjects]);
       setStep(2);
     } else {
-      setError('File format not supported! Please upload a valid music file.');
+      showAlert(
+        'File format not supported! Please upload a valid music file.',
+        'error'
+      );
     }
   };
 
@@ -161,7 +163,7 @@ const Upload = () => {
     const maxSize = 16 * 1024 * 1024;
 
     if (file.size > maxSize) {
-      setError('File size exceeds the maximum limit of 16 MB.');
+      showAlert('File size exceeds the maximum limit of 16 MB.', 'error');
       return;
     }
 
@@ -240,47 +242,44 @@ const Upload = () => {
     }
   };
 
-  //==========CLOSE ERROR MESSAGE==========//
-  const closeError = () => {
-    setError(null);
-  };
-
-  //==========CLOSE SUCCESS MESSAGE==========//
-  const closeSuccess = () => {
-    setSuccess(null);
-  };
-
   //==========ALBUM SUBMIT==========//
   const handleSubmitAlbum = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem('token');
     if (!token) {
-      setError('You must be logged in to create an album!');
+      showAlert('You must be logged in to create an album!', 'error');
       return;
     }
 
     if (files.length === 0) {
-      setError('At least one music file must be added!');
+      showAlert('At least one music file must be added!', 'error');
       return;
     }
     if (!albumData.title || !albumData.genre) {
-      setError('Title and Genre fields must be filled out!');
+      showAlert('Title and Genre fields must be filled out!', 'error');
       return;
     }
 
     const formData = new FormData();
 
     files.forEach((fileObj) => {
-      formData.append('file', fileObj.file);
+      formData.append('files', fileObj.file);
+      formData.append('filesNames', fileObj.name);
     });
-    formData.append('title', albumData.title);
+
     formData.append('id', user.id);
+    formData.append('title', albumData.title);
     formData.append('genre', albumData.genre);
-    formData.append('description', albumData.description);
 
     if (albumCover) {
       formData.append('cover', albumCover);
+    }
+    if (albumData.tags && albumData.tags.length > 0) {
+      formData.append('tags', JSON.stringify(albumData.tags));
+    }
+    if (albumData.description && albumData.description.trim() !== '') {
+      formData.append('description', albumData.description);
     }
 
     try {
@@ -294,21 +293,22 @@ const Upload = () => {
       const resData = await response.json();
 
       if (!response.ok) {
-        setError(resData.message || 'Failed to create album.');
+        showAlert(resData.message || 'Failed to create album.');
         return;
       }
 
-      setSuccess(resData.message);
+      showAlert(resData.message, 'success');
       setStep(1);
       setFiles([]);
       setAlbumCover(null);
       setAlbumData({
         title: '',
         genre: '',
+        tags: '',
         description: '',
       });
     } catch (error) {
-      setError('Failed to create album. Please try again later.');
+      showAlert('Failed to create album. Please try again later.', 'error');
     }
   };
 
@@ -332,7 +332,7 @@ const Upload = () => {
 
         setOptions(options);
       } catch (error) {
-        setError(errorMessage);
+        showAlert(errorMessage, 'error');
       }
     }
 
@@ -352,13 +352,13 @@ const Upload = () => {
     <main>
       <section className='upload section' id='upload'>
         <div className='upload__container container'>
-          {/*==========ERROR==========*/}
-          {error && (
-            <Message type='error' message={error} onClose={closeError} />
-          )}
-          {/*==========SUCCESS==========*/}
-          {success && (
-            <Message type='success' message={success} onClose={closeSuccess} />
+          {/*========== ALERT ==========*/}
+          {alert && (
+            <Message
+              type={alert.type}
+              message={alert.message}
+              onClose={() => setAlert(null)}
+            />
           )}
 
           {/*=============== STEP 1. FILES UPLOADING - DRAG & DROP, SELECT ===============*/}

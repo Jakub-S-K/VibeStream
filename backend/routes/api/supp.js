@@ -1,4 +1,4 @@
-const { Tag, Genre, Image, User, Album, Album_like } = require('../../schema.js')
+const { Tag, Genre, Image } = require('../../schema.js')
 
 module.exports.tags = async function (req, res) {
     const tags = await Tag.findAll({
@@ -8,7 +8,6 @@ module.exports.tags = async function (req, res) {
         res.status(500).send({ message: "Internal Server Error" });
         return;
     }
-    //console.log(tags);
     res.json(tags);
 }
 
@@ -21,7 +20,6 @@ module.exports.genres = async function (req, res) {
         res.status(500).send({ message: "Internal Server Error" });
         return;
     }
-    //console.log(genres);
     res.json(genres);
 }
 

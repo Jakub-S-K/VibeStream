@@ -51,7 +51,7 @@ module.exports.create = async function (req, res) {
             res.status(501).send({ message: "Internal Server Error" });
             console.error('Cannot create album');
         }
-        for (const element of req.files) {
+        for (const [index, element] of req.files.entries()) {
             if (element.fieldname === 'cover') {
                 img = await Image.create({
                     external_id: album.id,
@@ -61,7 +61,7 @@ module.exports.create = async function (req, res) {
             }
             const metadata = await mm.parseBuffer(element.buffer);
             song = await Song.create({
-                title: element.originalname,
+                title: req.body.filesNames[index],
                 album_id: album.id,
                 length: metadata.format.duration,
                 file: element.buffer
