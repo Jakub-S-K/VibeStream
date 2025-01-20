@@ -129,17 +129,19 @@ module.exports.register = async function (req, res) {
 
 module.exports.register_optional = async function (req, res) {
     const transaction = await sequelize.transaction();
-    var user = null;
-    if (req.body.id) {
-        user = await User.findOne({
-            where: {
-                id: req.body.id,
-            }
-        })
-    }
-    if (user == null) {
+    if(!req.body.id){
         res.status(400).send({ message: "Bad request" });
         console.error('Bad request');
+        return;
+    }
+    var user = await User.findOne({
+        where: {
+            id: req.body.id,
+        }
+    })
+    if (user == null) {
+        res.status(400).send({ message: "Bad request" });
+        console.error('No user with this id');
         return;
     }
     try {

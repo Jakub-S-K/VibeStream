@@ -266,22 +266,25 @@ module.exports.User_follower = user_follower;
 module.exports.Genre = genre;
 
 module.exports.Init_relations = function () {
-	user.hasOne(image, { foreignKey: 'id' });
+	user.hasOne(image, { foreignKey: 'external_id'}); //, as: 'user_avatar_id' });
 	user.hasMany(comment, { foreignKey: 'user_id' });
-	user.hasMany(album_like, { foreignKey: 'user_id' });
+	user.hasMany(album_like, { foreignKey: 'user_id' }); //user_id
 	user.hasMany(album, { foreignKey: 'user_id' });
 	user.belongsToMany(user, { as: 'other', through: user_follower, foreignKey: 'user_id_follower', otherKey: 'user_id_followed' }); //needs testing
 
 	comment.hasOne(user, { foreignKey: 'id' });
 	comment.hasOne(album, { foreignKey: 'id' });
 
-	album.belongsTo(image, { foreignKey: 'avatar_id' });
+	album.hasOne(image, { foreignKey: 'external_id'}); //, as: 'album_avatar_id' });
 	album.hasMany(song, { foreignKey: 'album_id' });
 	album.hasMany(album_tags, { foreignKey: 'album_id' });
 	album.hasMany(album_like, { foreignKey: 'album_id' });
 	album.belongsTo(user, { foreignKey: 'user_id' });
 	album.hasMany(comment, { foreignKey: 'album_id' });
 	album.hasOne(genre, { foreignKey: 'genre_id' });
+
+	image.belongsTo(user, { foreignKey: 'external_id' });
+	image.belongsTo(album, { foreignKey: 'external_id' });
 
 	song.belongsTo(album, { foreignKey: 'album_id' });
 

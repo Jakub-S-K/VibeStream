@@ -1,5 +1,6 @@
-const { Album, Image, Song, Genre} = require('../../schema.js');
+const { Album, Image, Song, Genre, Album_like } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
+const { Op } = require('sequelize');
 const { loadMusicMetadata } = require('music-metadata');
 
 module.exports.trending = async function (req, res) {
@@ -10,12 +11,12 @@ module.exports.trending = async function (req, res) {
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
-        res.status(404).send({message: "Album not found."});
+        res.status(404).send({ message: "Album not found." });
         return;
     }
-    else if (!album){
+    else if (!album) {
         console.log('Internal server error.');
-        res.status(500).send({message: "Internal server error."});
+        res.status(500).send({ message: "Internal server error." });
         return;
     }
     console.log('n:', _n);
@@ -32,12 +33,12 @@ module.exports.album_name = async function (req, res) {
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
-        res.status(404).send({message: "Album not found."});
+        res.status(404).send({ message: "Album not found." });
         return;
     }
-    else if (!album){
+    else if (!album) {
         console.log('Internal server error.');
-        res.status(500).send({message: "Internal server error."});
+        res.status(500).send({ message: "Internal server error." });
         return;
     }
     console.log(album);
@@ -51,7 +52,7 @@ module.exports.create = async function (req, res) {
         res.status(400).send({ message: 'Bad request: missing id' });
         return;
     }
-    const genre = await Genre.findOne({ where: { name: req.body.genre}});
+    const genre = await Genre.findOne({ where: { name: req.body.genre } });
     if (!genre) {
         res.status(501).send({ message: 'Internal server error.' });
     }
@@ -61,10 +62,10 @@ module.exports.create = async function (req, res) {
             name: req.body.title,
             user_id: req.body.id,
             description: req.body.description,
-            genre_id: genre.id
+            genre_id: genre.dataValues.id
         });
         if (!album) {
-            res.status(501).send({message: "Internal Server Error"});
+            res.status(501).send({ message: "Internal Server Error" });
             console.error('Cannot create album');
         }
         for (const element of req.files) {
@@ -83,7 +84,7 @@ module.exports.create = async function (req, res) {
                 file: element.buffer
             })
         }
-        res.status(201).send({ message: 'Album created successfully', albumId: album.id});
+        res.status(201).send({ message: 'Album created successfully', albumId: album.id });
     } catch (error) {
         await transaction.rollback();
         console.error(error);
@@ -109,4 +110,44 @@ module.exports.get_stream_song = async function (req, res) {
     const result = await song.increment('play_counter', { by: 1 });
     res.status(200).send(song.file);
     return;
+}
+
+module.exports.get_album_likes = async function (req, res) {
+    if (!req.params.id) {
+        console.log('Bad request');
+        res.status(400).send({ message: "Id is required" });
+        return;
+    }
+    _id = req.params.id;
+
+    try {
+        const albumLikes = await Album.findOne({
+            where: {
+                id: _id,
+            },
+            attributes: [
+                'id',
+                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
+            ],
+            include: [
+                {
+                    model: Album_like,
+                    attributes: [],
+                }
+            ],
+            group: ['album.id'],
+            order: [[sequelize.literal('like_count'), 'DESC']],
+        });
+        if(!albumLikes){
+			console.log('No user found');
+			return res.status(400).send({message: "No user found"});
+		}
+		else{
+			console.log(parseInt(albumLikes.dataValues.like_count));
+			return res.status(200).json({like_count: parseInt(albumLikes.dataValues.like_count)});
+		}
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
 }

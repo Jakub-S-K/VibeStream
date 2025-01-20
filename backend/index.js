@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const passport = require("passport");
 var bodyParser = require('body-parser');
+const jwt_strategy = require('./routes/api/auth.js').strategy;
 
 require('dotenv').config({ path: __dirname + `/../.env`}); //Use global env
 
@@ -13,6 +15,8 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors());
 
 require('./routes/routers.js')(app); //populate routes from ./routers/
+
+passport.use(jwt_strategy);
 
 module.exports = app;
 
