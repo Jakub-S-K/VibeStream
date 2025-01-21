@@ -35,9 +35,10 @@ module.exports.create = async function (req, res) {
         res.status(400).send({ message: 'Bad request, fill out all the fields' });
         return;
     }
-    const genre = await Genre.findOne({ where: { name: req.body.genre } });
+    const genre = await Genre.findOne({ where: { id: req.body.genre } });
     if (!genre) {
         res.status(501).send({ message: 'Internal server error.' });
+        return;
     }
     const mm = await loadMusicMetadata();
     try {
@@ -50,11 +51,12 @@ module.exports.create = async function (req, res) {
         if (!album) {
             res.status(501).send({ message: "Internal Server Error" });
             console.error('Cannot create album');
+            return;
         }
         for (const [index, element] of req.files.entries()) {
             if (element.fieldname === 'cover') {
                 img = await Image.create({
-                    external_id: album.id,
+                    external_id: album.dataValues.id,
                     image: element.buffer
                 });
                 continue;
@@ -67,15 +69,13 @@ module.exports.create = async function (req, res) {
                 file: element.buffer
             })
         }
+        await transaction.commit();
         res.status(201).send({ message: 'Album created successfully', albumId: album.id });
     } catch (error) {
         await transaction.rollback();
         console.error(error);
         res.status(500).send({ message: 'Failed to create album' });
-    } finally {
-        await transaction.commit();
     }
-
 }
 
 module.exports.get_stream_song = async function (req, res) {

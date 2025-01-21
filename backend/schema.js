@@ -253,7 +253,6 @@ const user_follower = sequelize.define(
 	}
 );
 
-
 module.exports.User = user;
 module.exports.Album = album;
 module.exports.Album_like = album_like;
@@ -266,7 +265,7 @@ module.exports.User_follower = user_follower;
 module.exports.Genre = genre;
 
 module.exports.Init_relations = function () {
-	user.hasOne(image, { foreignKey: 'external_id'}); //, as: 'user_avatar_id' });
+	user.hasOne(image, { foreignKey: 'external_id', constraints: false,}); //, as: 'user_avatar_id' });
 	user.hasMany(comment, { foreignKey: 'user_id' });
 	user.hasMany(album_like, { foreignKey: 'user_id' }); //user_id
 	user.hasMany(album, { foreignKey: 'user_id' });
@@ -275,16 +274,16 @@ module.exports.Init_relations = function () {
 	comment.hasOne(user, { foreignKey: 'id' });
 	comment.hasOne(album, { foreignKey: 'id' });
 
-	album.hasOne(image, { foreignKey: 'external_id'}); //, as: 'album_avatar_id' });
+	album.hasOne(image, { foreignKey: 'external_id', constraints: false,}); //, as: 'album_avatar_id' });
 	album.hasMany(song, { foreignKey: 'album_id' });
 	album.hasMany(album_tags, { foreignKey: 'album_id' });
 	album.hasMany(album_like, { foreignKey: 'album_id' });
 	album.belongsTo(user, { foreignKey: 'user_id' });
 	album.hasMany(comment, { foreignKey: 'album_id' });
-	album.hasOne(genre, { foreignKey: 'genre_id' });
+	album.hasOne(genre, { foreignKey: 'id' });
 
-	image.belongsTo(user, { foreignKey: 'external_id' });
-	image.belongsTo(album, { foreignKey: 'external_id' });
+	image.belongsTo(user, { foreignKey: 'id' });
+	image.belongsTo(album, { foreignKey: 'id' });
 
 	song.belongsTo(album, { foreignKey: 'album_id' });
 
@@ -292,7 +291,7 @@ module.exports.Init_relations = function () {
 
 	tag.hasMany(album_tags, { foreignKey: 'tag_id' });
 
-	genre.hasMany(album, { foreignKey: 'id' });
+	genre.hasMany(album, { foreignKey: 'genre_id' });
 
 	album_like.belongsTo(user, { foreignKey: 'user_id' });
 	album_like.belongsTo(album, { foreignKey: 'album_id' });
