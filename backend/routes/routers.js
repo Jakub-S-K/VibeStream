@@ -19,7 +19,6 @@ module.exports = function (app) {
     //user
     api.get('/trending/users/:n', userApi.trending);
     api.get('/user/:username', userApi.get_user_username);
-    //api.get('/likes/user/:nickname', userApi.get_user_likes);
     api.get('/search/user/:search_string', userApi.get_search);
 
     //TODO add token handling
@@ -30,8 +29,7 @@ module.exports = function (app) {
     //album
     api.get('/trending/albums/:n', albumApi.trending);
     api.get('/album/:id', albumApi.get_album_id);
-    //api.get('/search/album/:search_string', albumApi.get_search_album);
-    //api.get('/likes/album/:id', albumApi.get_album_likes);
+    api.get('/search/album/:search_string', albumApi.get_search);
 
     //api.post('/album', passport.('jwt', {session: false}), upload.any(), albumApi.create);
     api.post('/album', upload.any(), albumApi.create);

@@ -18,28 +18,6 @@ module.exports.trending = async function (req, res) {
 	res.json(user);
 }
 
-module.exports.user_username = async function (req, res) {
-	_name = req.params.username;
-	const user = await User.findOne({
-		where: {
-			nickname: _name,
-		}
-	})
-	if (!user) {
-		console.log('User not found.');
-		res.status(404).send({message: "User not found."});
-		return;
-	}
-	// else{
-	// 	console.log('Internal server error.');
-	// 	res.status(500).send({message: "Internal server error."});
-	// 	return;
-	// }
-	console.log('nickname:', _name);
-	console.log(user);
-	res.json(user);
-}
-
 module.exports.get_user_username = async function(req, res) {
 	if(!req.params.nickname){
 		console.log('Bad request');

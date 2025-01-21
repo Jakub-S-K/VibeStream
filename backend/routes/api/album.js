@@ -24,27 +24,6 @@ module.exports.trending = async function (req, res) {
     res.json(album);
 }
 
-module.exports.album_name = async function (req, res) {
-    _name = req.params.name;
-    const album = await Album.findOne({
-        where: {
-            name: _name,
-        }
-    })
-    if (Object.keys(album).length === 0) {
-        console.log('Album not found');
-        res.status(404).send({ message: "Album not found." });
-        return;
-    }
-    else if (!album) {
-        console.log('Internal server error.');
-        res.status(500).send({ message: "Internal server error." });
-        return;
-    }
-    console.log(album);
-    res.json(album);
-}
-
 module.exports.create = async function (req, res) {
     const transaction = await sequelize.transaction();
 
@@ -115,7 +94,7 @@ module.exports.get_stream_song = async function (req, res) {
 module.exports.get_album_id = async function (req, res) {
     if (!req.params.id) {
         console.log('Bad request');
-        res.status(400).send({ message: "Name is required" });
+        res.status(400).send({ message: "Id is required" });
         return;
     }
     _id = req.params.id;
@@ -138,16 +117,53 @@ module.exports.get_album_id = async function (req, res) {
             group: ['album.id'],
             order: [[sequelize.literal('like_count'), 'DESC']],
         });
-        if(!albumLikes){
-			console.log('No album found');
-			return res.status(400).send({message: "No album found"});
-		}
-		else{
-			console.log(parseInt(albumLikes.dataValues.like_count));
-			return res.status(200).json(albumLikes);
-		}
+        if (!albumLikes) {
+            console.log('No album found');
+            return res.status(400).send({ message: "No album found" });
+        }
+        else {
+            console.log(parseInt(albumLikes.dataValues.like_count));
+            return res.status(200).json(albumLikes);
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Internal server error" });
     }
+}
+
+module.exports.get_search = async function (req, res) {
+    _s = req.params.search_string;
+    console.debug(_s);
+
+    try {
+        const albumsWithLikes = await Album.findAll({
+            where: {
+                name: { [Op.like]: '%' + _s + '%' }
+            },
+            attributes: [
+                'id',
+                'name',
+                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
+            ],
+            include: [
+                {
+
+                    model: Album_like,
+                    attributes: [],
+                },
+                {
+                    model: Image,
+                    attributes: [['id', 'avatar_id']],
+                }
+            ],
+            group: ['album.id', 'image.id'],
+            order: [[sequelize.literal('like_count'), 'DESC']],
+        });
+
+        res.json(albumsWithLikes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+
 }
