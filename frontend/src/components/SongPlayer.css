@@ -1,0 +1,12 @@
+media-play-button, media-mute-button {min-width: 2rem}
+media-controller {position: sticky; bottom: 3.33rem; width: 100vw; margin-bottom: 3rem;}
+media-control-bar * {opacity: 1 !important; padding-top: 1rem; padding-bottom: 1rem;}
+media-control-bar {opacity: 1 !important;}
+media-play-button {border-radius: 0; padding: 1rem;}
+media-text-display {border-radius: 0; font-family: "Lexend"; padding: 1rem; padding-right: 2rem;}
+media-time-range::part(track) {height: 1rem; border-radius: 1rem;}
+media-time-range::part(thumb) {display: none}
+
+@media screen and (max-width: 767px) {
+	media-controller {bottom: 6.66rem;}
+}

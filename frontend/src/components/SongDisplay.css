@@ -1,0 +1,19 @@
+div.song {
+  border-radius: 1rem;
+  font-size: larger;
+  border: 2px solid var(--first-color);
+  margin: 1rem auto;
+  display: block;
+  width: fit-content;
+  padding: 0.3rem;
+  cursor: pointer;
+}
+
+div.song.playing {
+  color: black;
+  background-color: var(--white-color);
+  transition: background-color 50ms linear;
+  scale: 1.1;
+  font-size: larger;
+}
+
