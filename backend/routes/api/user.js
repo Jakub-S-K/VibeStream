@@ -40,20 +40,20 @@ module.exports.user_username = async function (req, res) {
 	res.json(user);
 }
 
-module.exports.get_user_likes = async function(req, res) {
-	if(!req.params.id){
+module.exports.get_user_username = async function(req, res) {
+	if(!req.params.nickname){
 		console.log('Bad request');
-        return res.status(400).send({ message: "Id is required" });
+        return res.status(400).send({ message: "Name is required" });
 	}
-	_id = req.params.id;
+	_name = req.params.nickname;
 
 	try {
         const userLikes = await User.findOne({
             where: {
-                id: _id,
+                nickname: _name,
             },
             attributes: [
-                'id',
+                'id', 'nickname', 'email', 'password', 'creation_date', 'bio',
                 [sequelize.fn('COUNT', sequelize.col('albums.album_likes.id')), 'like_count'],
             ],
             include: [
@@ -77,7 +77,8 @@ module.exports.get_user_likes = async function(req, res) {
 		}
 		else{
 			console.log(parseInt(userLikes.dataValues.like_count));
-			return res.status(200).send(parseInt(userLikes.dataValues.like_count));
+			//return res.status(200).json({like_count: parseInt(userLikes.dataValues.like_count)});
+            return res.status(200).json(userLikes);
 		}
         
     } catch (error) {

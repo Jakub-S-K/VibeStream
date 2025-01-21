@@ -112,10 +112,10 @@ module.exports.get_stream_song = async function (req, res) {
     return;
 }
 
-module.exports.get_album_likes = async function (req, res) {
+module.exports.get_album_id = async function (req, res) {
     if (!req.params.id) {
         console.log('Bad request');
-        res.status(400).send({ message: "Id is required" });
+        res.status(400).send({ message: "Name is required" });
         return;
     }
     _id = req.params.id;
@@ -126,7 +126,7 @@ module.exports.get_album_likes = async function (req, res) {
                 id: _id,
             },
             attributes: [
-                'id',
+                'id', 'name', 'user_id', 'description', 'genre_id',
                 [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
             ],
             include: [
@@ -139,12 +139,12 @@ module.exports.get_album_likes = async function (req, res) {
             order: [[sequelize.literal('like_count'), 'DESC']],
         });
         if(!albumLikes){
-			console.log('No user found');
-			return res.status(400).send({message: "No user found"});
+			console.log('No album found');
+			return res.status(400).send({message: "No album found"});
 		}
 		else{
 			console.log(parseInt(albumLikes.dataValues.like_count));
-			return res.status(200).json({like_count: parseInt(albumLikes.dataValues.like_count)});
+			return res.status(200).json(albumLikes);
 		}
     } catch (error) {
         console.error(error);
