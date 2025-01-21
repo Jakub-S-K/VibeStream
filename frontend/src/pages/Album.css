@@ -1,0 +1,21 @@
+main {text-align: center; min-height: calc(100vh - 4rem - var(--header-height));}
+
+img.album-banner {
+	max-height: 60vh;
+	width: auto;
+	object-fit: cover;
+	margin: auto;
+	display: block;
+
+	border-radius: 4rem;
+}
+
+h2.album-author > a {
+	color: var(--first-color);
+}
+h2.album-author {
+	margin-top: 1rem;
+	margin-bottom: 2rem;
+}
+
+body {overflow-x: hidden;}

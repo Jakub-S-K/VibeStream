@@ -1,4 +1,4 @@
-const { Album, Image, Song, Genre} = require('../../schema.js');
+const { Album, User, Image, Song, Genre} = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { loadMusicMetadata } = require('music-metadata');
 
@@ -39,6 +39,49 @@ module.exports.album_name = async function (req, res) {
         console.log('Internal server error.');
         res.status(500).send({message: "Internal server error."});
         return;
+    }
+    console.log(album);
+    res.json(album);
+}
+
+module.exports.albumpage_info = async function (req, res) {
+    _name = req.params.name;
+    const album = await Album.findOne({
+        where: {
+            name: _name,
+        }
+    })
+    if (!album) {
+        console.log('Album not found');
+        res.status(404).send({message: "Album not found."});
+        return;
+    }
+    else {
+        const songs = await Song.findAll({
+            raw: true,
+            order: sequelize.literal('title ASC'),
+            attributes: ['title', 'id', 'length', 'play_counter'],
+            where: {
+                album_id: album.id,
+            }
+        })
+        album.dataValues.songs = songs;
+
+        const author = await User.findOne({
+            raw: true,
+            where: {
+                id: album.user_id,
+            }
+        })
+        album.dataValues.author = author.nickname;
+
+        const image = await Image.findOne({
+            raw: true,
+            where: {
+                id: album.avatar_id,
+            }
+        })
+        album.dataValues.image = image.external_id;
     }
     console.log(album);
     res.json(album);

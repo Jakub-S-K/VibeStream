@@ -26,6 +26,7 @@ module.exports = function (app) {
     //album
     api.get('/trending/albums/:n', albumApi.trending);
     api.get('/album/:name', albumApi.album_name);
+    api.get('/albumpage/:name', albumApi.albumpage_info);
 
     // api.post('/album', passport.authenticate('jwt', {session: false}), upload.any(), albumApi.create);
     api.post('/album', upload.any(), albumApi.create);

@@ -19,6 +19,7 @@ import Search from './pages/Search';
 import Upload from './pages/Upload';
 import Discover from './pages/Discover';
 import UserProfile from './pages/UserProfile';
+import Album from './pages/Album';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
                 />
                 <Route path='/discover' element={<Discover />} />
                 <Route path='/user/:username' element={<UserProfile />} />
+                <Route path='/album/:name' element={<Album />} />
               </Route>
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
