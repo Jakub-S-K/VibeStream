@@ -29,7 +29,8 @@ module.exports = function (app) {
     //album
     api.get('/trending/albums/:n', albumApi.trending);
     api.get('/album/:id', albumApi.get_album_id);
-    api.get('/search/album/:search_string', albumApi.get_search);
+    api.get('/search/album/:search_string', albumApi.get_search_album);
+    api.get('/search/song/:search_string', albumApi.get_search_song);
 
     //api.post('/album', passport.('jwt', {session: false}), upload.any(), albumApi.create);
     api.post('/album', upload.any(), albumApi.create);

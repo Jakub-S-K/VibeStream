@@ -19,8 +19,8 @@ module.exports.trending = async function (req, res) {
         res.status(500).send({ message: "Internal server error." });
         return;
     }
-    console.log('n:', _n);
-    console.log(album);
+    //console.log('n:', _n);
+    //console.log(album);
     res.json(album);
 }
 
@@ -28,7 +28,7 @@ module.exports.create = async function (req, res) {
     const transaction = await sequelize.transaction();
 
     if (!req.body.title || !req.body.id || !req.body.genre || !req.body.description) {
-        res.status(400).send({ message: 'Bad request: missing id' });
+        res.status(400).send({ message: 'Bad request, fill out all the fields' });
         return;
     }
     const genre = await Genre.findOne({ where: { name: req.body.genre } });
@@ -50,7 +50,7 @@ module.exports.create = async function (req, res) {
         for (const element of req.files) {
             if (element.fieldname === 'cover') {
                 img = await Image.create({
-                    external_id: req.body.id,
+                    external_id: req.body.id, //now it's working, but in a wrong way- it adds user.id instead of album.id
                     image: element.buffer
                 });
                 continue;
@@ -131,7 +131,7 @@ module.exports.get_album_id = async function (req, res) {
     }
 }
 
-module.exports.get_search = async function (req, res) {
+module.exports.get_search_album = async function (req, res) {
     _s = req.params.search_string;
     console.debug(_s);
 
@@ -147,7 +147,6 @@ module.exports.get_search = async function (req, res) {
             ],
             include: [
                 {
-
                     model: Album_like,
                     attributes: [],
                 },
@@ -167,3 +166,85 @@ module.exports.get_search = async function (req, res) {
     }
 
 }
+
+// module.exports.get_search_song = async function (req, res) {
+//     _s = req.params.search_string;
+//     console.debug(_s);
+
+//     const songs = await Song.findAll({
+//         where: {
+//             title: { [Op.like]: '%' + _s + '%' }
+//         },
+//         attributes: {
+//             exclude: ['file']
+//         },
+//         // include: [
+//         //     {
+//         //         model: Album,
+//         //         attributes: ['id'],
+//         //         include: [
+//         //             {
+//         //                 model: Image,
+//         //                 attributes: [['id', 'avatar_id']],
+//         //             }
+//         //         ]
+//         //     }
+//         // ],
+//         // group: ['album.id', 'image.id'],
+//         order: [['play_counter', 'DESC']],
+//     })
+
+//     if (!songs) {
+//         console.log("Failed to search songs");
+//         return res.status(500).send({ message: 'Internal server error' });
+//     }
+
+//     res.json(songs);
+
+// }
+
+module.exports.get_search_song = async function (req, res) {
+    const _s = req.params.search_string;
+    console.debug(_s);
+
+    try {
+        const songs = await Song.findAll({
+            where: {
+                title: { [Op.like]: '%' + _s + '%' }
+            },
+            attributes: {
+                exclude: ['file']
+            },
+            include: [
+                {
+                    model: Album,
+                    attributes: [],
+                    include: [
+                        {
+                            model: Image,
+                            attributes: ['id'],
+                            required: false,
+                        }
+                    ]
+                }
+            ],
+            order: [['play_counter', 'DESC']],
+        });
+
+        if (!songs) {
+            console.log("Failed to search songs");
+            return res.status(500).send({ message: 'Internal server error' });
+        }
+
+        const result = songs.map(song => ({
+            ...song.get(),
+            album_avatar_id: song.Album?.Image?.id || null
+        }));
+
+        res.json(result);
+
+    } catch (error) {
+        console.error("Error in get_search_song:", error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+};

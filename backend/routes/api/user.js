@@ -13,8 +13,8 @@ module.exports.trending = async function (req, res) {
 		res.status(404).send({message: "User not found."});
 		return;
 	}
-	console.log('n:', _n);
-	console.log(user);
+	//console.log('n:', _n);
+	//console.log(user);
 	res.json(user);
 }
 
