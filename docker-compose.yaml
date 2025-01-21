@@ -28,7 +28,7 @@ services:
 
   backend:
     environment:
-      BACKEND_PORT: ${BACKEND_PORT}
+      BACKEND_PORT: ${BACKEND_PORT_DOCKER}
       DOCKER_RUNNING: 1
     build:
       dockerfile: docker/backend.Dockerfile
