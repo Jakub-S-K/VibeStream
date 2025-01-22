@@ -1,4 +1,4 @@
-const { Album, User, Image, Album_like } = require('../../schema.js');
+const { Album, User, Image, Album_like, Album_tags } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { Op } = require('sequelize');
 
@@ -158,4 +158,60 @@ module.exports.remove_album_like = async function (req, res) {
 
     like_exist.destroy();
     res.status(201).send({ message: 'Album unliked successfully' });
+}
+
+module.exports.get_user_albums = async function (req, res) {
+    if (!req.params.id) {
+        console.log('No id in params');
+        return res.status(500).send({ message: 'Internal server error' });
+    }
+    _id = req.params.id;
+    try {
+        const albumsWithLikes = await Album.findAll({
+            where: {
+                user_id: _id
+            },
+            attributes: [
+                'id',
+                'name',
+                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
+            ],
+            include: [
+                {
+                    model: Album_like,
+                    attributes: [],
+                },
+            ],
+            group: ['album.id'],
+            order: [[sequelize.literal('like_count'), 'DESC']],
+        });
+
+        res.json(albumsWithLikes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+}
+
+module.exports.get_user_likes = async function (req, res) {
+    if (!req.params.id) {
+        console.log('No id in params');
+        return res.status(500).send({ message: 'Internal server error' });
+    }
+    _id = req.params.id;
+
+    const userLikes = await Album_like.findAll({
+        where: {
+            user_id: _id,
+        },
+        include: [
+            {
+                model: Album
+            }
+        ],
+    })
+    const likedAlbums = userLikes.map(
+        (albumEntry) => albumEntry.album);
+
+    res.json(likedAlbums);
 }
