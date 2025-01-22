@@ -638,6 +638,10 @@ h2 {
 }
 
 /* ===== FOOTER=====*/
+.footer1 {
+  background-color: var(--body-color-alt);
+}
+
 .footer1__container {
   display: flex;
   align-items: center;

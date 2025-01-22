@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Loading from '../components/Loading';
 import defaultAvatar from '../assets/img/user.png';
+import defaultCover from '../assets/img/album.png';
 
 function Search() {
   const [results, setResults] = useState({ user: [], album: [], song: [] });
@@ -109,19 +110,25 @@ function Search() {
 
           <div className='search__list-l'>
             <ul className='search__list'>
+              {/*========== USER ==========*/}
               {searchType === 'user' &&
                 results.user &&
                 results.user.map((user) => (
                   <li key={user.id} className='search__item-l'>
                     <div className='search__item'>
                       <div className='search__item-top'>
+                        {console.log(
+                          `url(http://localhost:3001/api/image/${user.id})`
+                        )}
                         <Link to={`/user/${user.nickname}`}>
                           <div
                             className='search__image'
                             style={{
-                              backgroundImage: `url("${
-                                user.avatar_url || defaultAvatar
-                              }")`,
+                              backgroundImage: `url(${
+                                user.id
+                                  ? `http://localhost:3001/api/image/${user.id}`
+                                  : defaultAvatar
+                              })`,
                             }}
                           ></div>
                         </Link>
@@ -132,6 +139,64 @@ function Search() {
                         className='search__item-bottom'
                       >
                         {user.nickname}
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+
+              {/*========== ALBUM ==========*/}
+              {searchType === 'album' &&
+                results.user &&
+                results.album.map((album, index) => (
+                  <li key={index} className='search__item-l'>
+                    <div className='search__item'>
+                      <div className='search__item-top'>
+                        <Link to={`/album/${album.id}`}>
+                          <div
+                            className='search__image trending-image'
+                            style={{
+                              backgroundImage:
+                                `url(http://localhost:3001/api/image/${album.id})` ||
+                                defaultCover,
+                            }}
+                          ></div>
+                        </Link>
+                      </div>
+
+                      <Link
+                        to={`/album/${album.id}`}
+                        className='search__item-bottom'
+                      >
+                        {album.name}
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+
+              {/*========== SONG ==========*/}
+              {searchType === 'song' &&
+                results.song &&
+                results.song.map((song, index) => (
+                  <li key={index} className='search__item-l'>
+                    <div className='search__item'>
+                      <div className='search__item-top'>
+                        <Link to={`/album/${song.album_id}`}>
+                          <div
+                            className='search__image trending-image'
+                            style={{
+                              backgroundImage:
+                                `url(http://localhost:3001/api/image/${song.album_id})` ||
+                                defaultCover,
+                            }}
+                          ></div>
+                        </Link>
+                      </div>
+
+                      <Link
+                        to={`/album/${song.album_id}`}
+                        className='search__item-bottom'
+                      >
+                        {song.title}
                       </Link>
                     </div>
                   </li>
