@@ -31,7 +31,7 @@ function UserProfile() {
 
         const resData = await response.json();
         setUserData(resData);
-
+        console.log(resData);
         const response2 = await fetch(`http://localhost:3001/api/useralbums/${resData.id}`);
         const resData2 = await response2.json();
         setUserAlbums(resData2);
@@ -81,6 +81,7 @@ function UserProfile() {
               
             </>
           )}
+        </div>
       </section>
     </main>
   );
