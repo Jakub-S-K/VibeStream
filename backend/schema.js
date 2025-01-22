@@ -308,9 +308,10 @@ module.exports.Init_db_entities = async function () {
 		bio: 'Andrzej lorem ipsum dolor sit amet'
 	})
 
-	let res = await sequelize.query(test_data.test_genre);
-	res = await sequelize.query(test_data.test_tags);
-	res = await user.bulkCreate(await test_data.test_users());
+	await sequelize.query(test_data.test_genre);
+	await sequelize.query(test_data.test_tags);
+	await user.bulkCreate(await test_data.test_users());
+	await test_data.test_images(this.Image);
 
 	if (!_user) {
 		console.error('Could not create base user');
