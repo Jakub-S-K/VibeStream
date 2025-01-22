@@ -75,7 +75,7 @@ module.exports.register = async function (req, res) {
         return;
     }
 
-    const userExist = await User.findAll({
+    const userExist = await User.findOne({
         where: {
             [Op.or]: [
                 { email: req.body.email },
@@ -84,7 +84,7 @@ module.exports.register = async function (req, res) {
         }
     })
 
-    if (userExist.length !== 0) {
+    if (userExist) {
         res.status(409).send({ message: "User already exist" });
         console.error('User already exist');
         console.debug(userExist);
