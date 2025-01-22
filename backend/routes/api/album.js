@@ -65,7 +65,7 @@ module.exports.albumpage_info = async function (req, res) {
             order: sequelize.literal('title ASC'),
             attributes: ['title', 'id', 'length', 'play_counter'],
             where: {
-                album_id: album.id,
+                album_id: album.dataValues.id,
             }
         })
         album.dataValues.songs = songs;
@@ -73,7 +73,7 @@ module.exports.albumpage_info = async function (req, res) {
         const author = await User.findOne({
             raw: true,
             where: {
-                id: album.user_id,
+                id: album.dataValues.user_id,
             }
         })
         album.dataValues.author = author.nickname;
@@ -81,7 +81,7 @@ module.exports.albumpage_info = async function (req, res) {
         const image = await Image.findOne({
             raw: true,
             where: {
-                id: album.avatar_id,
+                external_id: album.dataValues.id,
             }
         })
         album.dataValues.image = image.external_id;
@@ -125,7 +125,7 @@ module.exports.create = async function (req, res) {
             }
             const metadata = await mm.parseBuffer(element.buffer);
             song = await Song.create({
-                title: req.body.filesNames[index],
+                title: Array.isArray(req.body.filesNames) ? req.body.filesNames[index].trim() : req.body.filesNames.trim(),
                 album_id: album.id,
                 length: metadata.format.duration,
                 file: element.buffer
