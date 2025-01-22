@@ -67,6 +67,8 @@ function Album() {
                           </span>
                         ))}
                     </div>
+
+                    {/*========== LIKE ==========*/}
                   </div>
                 </div>
 

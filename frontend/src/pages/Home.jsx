@@ -72,7 +72,7 @@ function Home() {
           <h2 class='section__title'></h2>
 
           <div class='additional__container container'>
-            <p>Take the First Step Towards Your Music Career!</p>
+            {/* <p>Take the First Step Towards Your Music Career!</p> */}
             {/* <p class='trending__text'>Trending albums here</p> */}
           </div>
         </section>
