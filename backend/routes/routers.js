@@ -1,5 +1,5 @@
 const express = require('express')
-const multer  = require('multer')
+const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
@@ -21,6 +21,7 @@ module.exports = function (app) {
     api.get('/user/:username', userApi.get_user_username);
     api.get('/search/user/:search_string', userApi.get_search);
     api.post('/addlike', upload.any(), userApi.add_album_like);
+    api.post('/removelike', upload.any(), userApi.remove_album_like);
 
     //TODO add token handling
     api.post('/login', upload.any(), authApi.login);
@@ -43,7 +44,7 @@ module.exports = function (app) {
     api.get('/tags', suppApi.tags);
     api.get('/genres', suppApi.genres);
     api.get('/image/:id', suppApi.get_image);
-    
+
 
 
     test.get('/hello', testApi.get); //Local path in this case /test/hello

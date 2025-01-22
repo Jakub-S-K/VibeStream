@@ -59,7 +59,7 @@ module.exports.albumpage_info = async function (req, res) {
                 include: [
                     {
                         model: Tag,
-                        attributes: ['name'], 
+                        attributes: ['name'],
                     }
                 ],
             },
