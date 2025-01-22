@@ -20,6 +20,7 @@ module.exports = function (app) {
     api.get('/trending/users/:n', userApi.trending);
     api.get('/user/:username', userApi.get_user_username);
     api.get('/search/user/:search_string', userApi.get_search);
+    api.get('/useralbums/:id', userApi.get_user_albums);
     api.post('/addlike', upload.any(), userApi.add_album_like);
     api.post('/removelike', upload.any(), userApi.remove_album_like);
 
