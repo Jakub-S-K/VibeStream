@@ -8,7 +8,7 @@ function AlbumDisplay({ album }) {
   return (
     <>
       <div className='AlbumDisplay'>
-	<a href={"/album/"+album.name}>
+	<a href={"/album/"+album.id}>
 	  <h2>{album.name}</h2>
 	  <img src={"http://localhost:3001/api/image/"+album.id}/>
 	</a>

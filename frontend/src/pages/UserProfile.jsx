@@ -11,7 +11,8 @@ function UserProfile() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const [userData, setUserData] = useState();
-
+  const [userAlbums, setUserAlbums] = useState();
+  
   console.log(username);
 
   useEffect(() => {
