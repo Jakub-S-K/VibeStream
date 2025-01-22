@@ -5,6 +5,9 @@ const { Op } = require('sequelize');
 module.exports.trending = async function (req, res) {
 	_n = req.params.n;
 	const user = await User.findAll({
+        attributes: {
+            exclude: ['password', 'email'],
+        },
 		order: sequelize.random(),
 		limit: parseInt(_n),
 	})
@@ -13,8 +16,6 @@ module.exports.trending = async function (req, res) {
 		res.status(404).send({message: "User not found."});
 		return;
 	}
-	//console.log('n:', _n);
-	//console.log(user);
 	res.json(user);
 }
 
@@ -31,7 +32,7 @@ module.exports.get_user_username = async function(req, res) {
                 nickname: _name,
             },
             attributes: [
-                'id', 'nickname', 'email', 'password', 'creation_date', 'bio',
+                'id', 'nickname', 'email', 'creation_date', 'bio',
                 [sequelize.fn('COUNT', sequelize.col('albums.album_likes.id')), 'like_count'],
             ],
             include: [
@@ -55,7 +56,6 @@ module.exports.get_user_username = async function(req, res) {
 		}
 		else{
 			console.log(parseInt(userLikes.dataValues.like_count));
-			//return res.status(200).json({like_count: parseInt(userLikes.dataValues.like_count)});
             return res.status(200).json(userLikes);
 		}
         
