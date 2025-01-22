@@ -1,21 +1,22 @@
-const { Album, User, Image, Album_like } = require('../../schema.js');
+const { Album, User, Image, Album_like, Album_tags } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { Op } = require('sequelize');
 
 module.exports.trending = async function (req, res) {
-	_n = req.params.n;
-	const user = await User.findAll({
-		order: sequelize.random(),
-		limit: parseInt(_n),
-	})
-	if (!user || Object.keys(user).length === 0) {
-		console.log('User not found');
-		res.status(404).send({message: "User not found."});
-		return;
-	}
-	//console.log('n:', _n);
-	//console.log(user);
-	res.json(user);
+    _n = req.params.n;
+    const user = await User.findAll({
+        attributes: {
+            exclude: ['password', 'email'],
+        },
+        order: sequelize.random(),
+        limit: parseInt(_n),
+    })
+    if (!user || Object.keys(user).length === 0) {
+        console.log('User not found');
+        res.status(404).send({ message: "User not found." });
+        return;
+    }
+    res.json(user);
 }
 
 module.exports.get_user_username = async function(req, res) {
@@ -25,7 +26,7 @@ module.exports.get_user_username = async function(req, res) {
 	}
 	_name = req.params.username;
 
-	try {
+    try {
         const userLikes = await User.findOne({
             where: {
                 nickname: _name,
@@ -49,16 +50,15 @@ module.exports.get_user_username = async function(req, res) {
             group: ['user.id'],
             order: [[sequelize.literal('like_count'), 'DESC']],
         });
-		if(!userLikes){
-			console.log('No user found');
-			return res.status(400).send({message: "No user found"});
-		}
-		else{
-			console.log(parseInt(userLikes.dataValues.like_count));
-			//return res.status(200).json({like_count: parseInt(userLikes.dataValues.like_count)});
+        if (!userLikes) {
+            console.log('No user found');
+            return res.status(400).send({ message: "No user found" });
+        }
+        else {
+            console.log(parseInt(userLikes.dataValues.like_count));
             return res.status(200).json(userLikes);
-		}
-        
+        }
+
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Internal server error" });
@@ -104,7 +104,115 @@ module.exports.get_search = async function (req, res) {
         console.error(error);
         res.status(500).send({ message: 'Internal server error' });
     }
+}
 
+module.exports.add_album_like = async function (req, res) {
+    if (!req.body.album_id || !req.body.user_id) {
+        console.log('Wrong params');
+        return res.status(500).send({ message: 'Internal server error' });
+    }
+    const like_exist = await Album_like.findOne({
+        where: {
+            user_id: req.body.user_id,
+            album_id: req.body.album_id
+        }
+    })
+    if (like_exist) {
+        console.log('Like already exists');
+        return res.status(400).send({ message: 'You already like this album' });
+    }
+
+    const transaction = await sequelize.transaction();
+    try {
+        like = await Album_like.create({
+            user_id: req.body.user_id,
+            album_id: req.body.album_id,
+        })
+        if (!like) {
+            return res.status(501).send({ message: 'Internal Server Error' });
+        }
+        await transaction.commit();
+        res.status(201).send({ message: 'Album liked successfully' });
+    } catch (error) {
+        await transaction.rollback();
+        console.error(error);
+        res.status(500).send({ message: 'Failed to add album like' });
+    }
+}
+
+module.exports.remove_album_like = async function (req, res) {
+    if (!req.body.album_id || !req.body.user_id) {
+        console.log('Wrong params');
+        return res.status(500).send({ message: 'Internal server error' });
+    }
+    const like_exist = await Album_like.findOne({
+        where: {
+            user_id: req.body.user_id,
+            album_id: req.body.album_id
+        }
+    })
+    if (!like_exist) {
+        console.log('Like doesnt exists');
+        return res.status(400).send({ message: 'You can\'t unlike this album' });
+    }
+
+    like_exist.destroy();
+    res.status(201).send({ message: 'Album unliked successfully' });
+}
+
+module.exports.get_user_albums = async function (req, res) {
+    if (!req.params.id) {
+        console.log('No id in params');
+        return res.status(500).send({ message: 'Internal server error' });
+    }
+    _id = req.params.id;
+    try {
+        const albumsWithLikes = await Album.findAll({
+            where: {
+                user_id: _id
+            },
+            attributes: [
+                'id',
+                'name',
+                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
+            ],
+            include: [
+                {
+                    model: Album_like,
+                    attributes: [],
+                },
+            ],
+            group: ['album.id'],
+            order: [[sequelize.literal('like_count'), 'DESC']],
+        });
+
+        res.json(albumsWithLikes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+}
+
+module.exports.get_user_likes = async function (req, res) {
+    if (!req.params.id) {
+        console.log('No id in params');
+        return res.status(500).send({ message: 'Internal server error' });
+    }
+    _id = req.params.id;
+
+    const userLikes = await Album_like.findAll({
+        where: {
+            user_id: _id,
+        },
+        include: [
+            {
+                model: Album
+            }
+        ],
+    })
+    const likedAlbums = userLikes.map(
+        (albumEntry) => albumEntry.album);
+  
 }
 
 module.exports.get_user_albums = async function (req, res) {
@@ -139,3 +247,7 @@ module.exports.get_user_albums = async function (req, res) {
 				        res.status(500).send({ message: 'Internal server error' });
 				    }
 }
+
+    res.json(likedAlbums);
+}
+

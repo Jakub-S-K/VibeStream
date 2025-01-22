@@ -1,5 +1,5 @@
 const express = require('express')
-const multer  = require('multer')
+const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
@@ -18,13 +18,17 @@ module.exports = function (app) {
 
     //user
     api.get('/trending/users/:n', userApi.trending);
-    api.get('/user/:username', userApi.get_user_username);
+    api.get('/user/:nickname', userApi.get_user_username);
     api.get('/search/user/:search_string', userApi.get_search);
     api.get('/useralbums/:id', userApi.get_user_albums);
 
+    api.get('/userlikes/:id', userApi.get_user_likes);
+    api.post('/addlike', userApi.add_album_like);
+    api.post('/removelike', userApi.remove_album_like);
+
     //TODO add token handling
-    api.post('/login', upload.any(), authApi.login);
-    api.post('/register', upload.any(), authApi.register);
+    api.post('/login', authApi.login);
+    api.post('/register', authApi.register);
     api.post('/register/optional', upload.any(), authApi.register_optional);
 
     //album
@@ -32,8 +36,7 @@ module.exports = function (app) {
     // api.get('/album/:id', albumApi.get_album_id); //Temporary comment as Endpoint are duplicated. TODO: use only one endpoint
     api.get('/search/album/:search_string', albumApi.get_search_album);
     api.get('/search/song/:search_string', albumApi.get_search_song);
-    api.get('/album/:name', albumApi.album_name);
-    api.get('/albumpage/:name', albumApi.albumpage_info);
+    api.get('/albumpage/:id', albumApi.albumpage_info);
 
     //api.post('/album', passport.('jwt', {session: false}), upload.any(), albumApi.create);
     api.post('/album', upload.any(), albumApi.create);
@@ -43,7 +46,7 @@ module.exports = function (app) {
     api.get('/tags', suppApi.tags);
     api.get('/genres', suppApi.genres);
     api.get('/image/:id', suppApi.get_image);
-    
+
 
 
     test.get('/hello', testApi.get); //Local path in this case /test/hello

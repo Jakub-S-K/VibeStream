@@ -265,7 +265,7 @@ module.exports.User_follower = user_follower;
 module.exports.Genre = genre;
 
 module.exports.Init_relations = function () {
-	user.hasOne(image, { foreignKey: 'external_id', constraints: false,}); //, as: 'user_avatar_id' });
+	user.hasOne(image, { foreignKey: 'external_id', constraints: false, }); //, as: 'user_avatar_id' });
 	user.hasMany(comment, { foreignKey: 'user_id' });
 	user.hasMany(album_like, { foreignKey: 'user_id' }); //user_id
 	user.hasMany(album, { foreignKey: 'user_id' });
@@ -274,7 +274,7 @@ module.exports.Init_relations = function () {
 	comment.hasOne(user, { foreignKey: 'id' });
 	comment.hasOne(album, { foreignKey: 'id' });
 
-	album.hasOne(image, { foreignKey: 'external_id', constraints: false,}); //, as: 'album_avatar_id' });
+	album.hasOne(image, { foreignKey: 'external_id', constraints: false, }); //, as: 'album_avatar_id' });
 	album.hasMany(song, { foreignKey: 'album_id' });
 	album.hasMany(album_tags, { foreignKey: 'album_id' });
 	album.hasMany(album_like, { foreignKey: 'album_id' });
@@ -308,9 +308,10 @@ module.exports.Init_db_entities = async function () {
 		bio: 'Andrzej lorem ipsum dolor sit amet'
 	})
 
-	let res = await sequelize.query(test_data.test_genre);
-	res = await sequelize.query(test_data.test_tags);
-	res = await user.bulkCreate(await test_data.test_users());
+	await sequelize.query(test_data.test_genre);
+	await sequelize.query(test_data.test_tags);
+	await user.bulkCreate(await test_data.test_users());
+	await test_data.test_images(this.Image);
 
 	if (!_user) {
 		console.error('Could not create base user');

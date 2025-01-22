@@ -1,4 +1,4 @@
-const { Album, Image, Song, Genre, Album_like, User, Album_tags } = require('../../schema.js');
+const { Album, Image, Song, Genre, Album_like, User, Album_tags, Tag } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { Op } = require('sequelize');
 const { loadMusicMetadata } = require('music-metadata');
@@ -11,7 +11,7 @@ module.exports.trending = async function (req, res) {
         include: {
             model: User,
             attributes: ['nickname'],
-          },
+        },
     })
     if (Object.keys(album).length === 0) {
         console.log('Album not found');
@@ -26,40 +26,36 @@ module.exports.trending = async function (req, res) {
     res.json(album);
 }
 
-module.exports.album_name = async function (req, res) {
-    _name = req.params.name;
-    const album = await Album.findOne({
-        where: {
-            name: _name,
-        }
-    })
-    if (Object.keys(album).length === 0) {
-        console.log('Album not found');
-        res.status(404).send({message: "Album not found."});
-        return;
-    }
-    else if (!album){
-        console.log('Internal server error.');
-        res.status(500).send({message: "Internal server error."});
-        return;
-    }
-    console.log(album);
-    res.json(album);
-}
-
 module.exports.albumpage_info = async function (req, res) {
-    _name = req.params.name;
+    _id = req.params.id;
     const album = await Album.findOne({
         where: {
-            name: _name,
-        }
+            id: _id,
+        },
+        include: [
+            {
+                model: Album_tags,
+                include: [
+                    {
+                        model: Tag,
+                        attributes: ['name'],
+                    }
+                ],
+            },
+        ],
     })
     if (!album) {
         console.log('Album not found');
-        res.status(404).send({message: "Album not found."});
+        res.status(404).send({ message: "Album not found." });
         return;
     }
     else {
+        const tags = album.album_tags.map(
+            (tagEntry) => tagEntry.tag.name);
+        album.dataValues.tags = tags;
+        delete album.dataValues.album_tags;
+        delete album.album_tags;
+
         const songs = await Song.findAll({
             raw: true,
             order: sequelize.literal('title ASC'),
@@ -84,15 +80,22 @@ module.exports.albumpage_info = async function (req, res) {
                 external_id: album.dataValues.id,
             }
         })
-        album.dataValues.image = image.external_id;
+        album.dataValues.image = image?.id || null;
+
+        const genre_name = await Genre.findOne({
+            where: {
+                id: album.genre_id,
+            },
+            attributes: ['name'],
+        })
+        album.dataValues.genre = genre_name.name;
+        delete album.dataValues.genre_id;
     }
     console.log(album);
     res.json(album);
 }
 
 module.exports.create = async function (req, res) {
-    const transaction = await sequelize.transaction();
-
     if (!req.body.title || !req.body.id || !req.body.genre) {
         res.status(400).send({ message: 'Bad request, fill out all the fields' });
         return;
@@ -102,7 +105,9 @@ module.exports.create = async function (req, res) {
         res.status(501).send({ message: 'Internal server error.' });
         return;
     }
+
     const mm = await loadMusicMetadata();
+    const transaction = await sequelize.transaction();
     try {
         album = await Album.create({
             name: req.body.title,
@@ -327,4 +332,4 @@ module.exports.get_search_song = async function (req, res) {
         console.error("Error in get_search_song:", error);
         res.status(500).send({ message: 'Internal server error' });
     }
-};
+}

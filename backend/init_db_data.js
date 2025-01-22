@@ -17,6 +17,7 @@
 // "
 
 const bcrypt = require('bcryptjs');
+const fs = require('node:fs');
 
 const hashPasswords = async (users) => {
     const saltRounds = 10;
@@ -28,105 +29,138 @@ const hashPasswords = async (users) => {
     );
 };
 
-const seedUsers = async function () {
-    const users = [
-        {
-            nickname: 'MusicLover',
-            email: 'musiclover@example.com',
-            bio: 'Passionate about discovering new indie tracks.',
-            password: 'password123',
-        },
-        {
-            nickname: 'BeatMaker99',
-            email: 'beatmaker99@example.com',
-            bio: 'Aspiring producer sharing my beats with the world.',
-            password: 'securePass99',
-        },
-        {
-            nickname: 'SoundHunter',
-            email: 'soundhunter@example.com',
-            bio: 'Exploring the depths of new and unique sounds.',
-            password: 'hunterPass456',
-        },
-        {
-            nickname: 'VibeMaster',
-            email: 'vibemaster@example.com',
-            bio: 'Sharing vibes and playlists for every mood.',
-            password: 'vibe2024!',
-        },
-        {
-            nickname: 'MelodySeeker',
-            email: 'melodyseeker@example.com',
-            bio: 'On a journey to find the perfect melody.',
-            password: 'melodyPass789',
-        },
-        {
-            nickname: 'PodwojnaLipa',
-            email: 'podwojnalipa@gmail.com',
-            bio: 'Lubię relaksować się przy dobrej muzyce i odkrywać nowe brzmienia.',
-            password: 'P@ssw0rd2024',
-        },
-        {
-            nickname: 'DJKaprysnaDrukarkaHP',
-            email: 'djkaprysna@outlook.com',
-            bio: 'Tworzę muzykę inspirowaną dźwiękami codziennego życia.',
-            password: 'Druk@rka123',
-        },
-        {
-            nickname: 'patrycjaaaaaa',
-            email: 'patrycja123@yahoo.com',
-            bio: 'Fanka akustycznych brzmień i chilloutowych playlist.',
-            password: 'P@trycja2024!',
-        },
-        {
-            nickname: 'kierowcaSolarisa',
-            email: 'kierowca.solaris@interia.pl',
-            bio: 'Muzyka to moja codzienna towarzyszka podczas długich tras.',
-            password: 'S0laris2024!',
-        },
-        {
-            nickname: 'DJPaprykarzSzczecinski',
-            email: 'djpaprykarz@gmail.com',
-            bio: 'DJ z pasją do miksowania nieoczywistych gatunków.',
-            password: 'P@pryk@rz1!',
-        },
-        {
-            nickname: 'LeoLoud',
-            email: 'leoloud@protonmail.com',
-            bio: 'Eksperymentuję z dźwiękiem i szukam nowych muzycznych wyzwań.',
-            password: 'L3oL0ud!2024',
-        },
-        {
-            nickname: 'JakeJam',
-            email: 'jakejam@icloud.com',
-            bio: 'Producent muzyczny z zamiłowaniem do groovy bitów.',
-            password: 'J@k3J@ms2024',
-        },
-        {
-            nickname: 'babanarowerze',
-            email: 'babanarowerze@gmail.com',
-            bio: 'Muzyka to mój najlepszy towarzysz podczas rowerowych przejażdżek!',
-            password: 'Bab@N@2024',
-        },
-        {
-            nickname: 'soundwave42',
-            email: 'soundwave42@gmail.com',
-            bio: 'Pasjonat nowych brzmień i eksperymentów w muzyce elektronicznej.',
-            password: 'S0undW@v3!2024',
-        },
-        {
-            nickname: 'beatmasterx',
-            email: 'beatmasterx@yahoo.com',
-            bio: 'Tworzę hip-hopowe bity, zawsze w poszukiwaniu idealnego flow.',
-            password: 'B3@tM@st3rX',
-        },
-    ];
+const init_users = [
+    {
+        id: '05eac24a-b1e9-4ef8-9e58-645f2209c901',
+        nickname: 'MusicLover',
+        email: 'musiclover@example.com',
+        bio: 'Passionate about discovering new indie tracks.',
+        password: 'password123',
+    },
+    {
+        id: '14d565da-c28b-4c7e-b0d2-7ed68c1895b0',
+        nickname: 'BeatMaker99',
+        email: 'beatmaker99@example.com',
+        bio: 'Aspiring producer sharing my beats with the world.',
+        password: 'securePass99',
+    },
+    {
+        id: '1a9e63e2-243c-4d48-82d8-07c14cbf3396',
+        nickname: 'SoundHunter',
+        email: 'soundhunter@example.com',
+        bio: 'Exploring the depths of new and unique sounds.',
+        password: 'hunterPass456',
+    },
+    {
+        id: '1f561881-a4f5-4d37-9acc-36c735f0a6c0',
+        nickname: 'VibeMaster',
+        email: 'vibemaster@example.com',
+        bio: 'Sharing vibes and playlists for every mood.',
+        password: 'vibe2024!',
+    },
+    {
+        id: '2a6ba5cf-fbb6-431f-8b09-d861aba7b9fb',
+        nickname: 'MelodySeeker',
+        email: 'melodyseeker@example.com',
+        bio: 'On a journey to find the perfect melody.',
+        password: 'melodyPass789',
+    },
+    {
+        id: '4fcda79c-d243-438b-809b-fd1804205a75',
+        nickname: 'PodwojnaLipa',
+        email: 'podwojnalipa@gmail.com',
+        bio: 'Lubię relaksować się przy dobrej muzyce i odkrywać nowe brzmienia.',
+        password: 'P@ssw0rd2024',
+    },
+    {
+        id: '5e68a897-b92c-492e-9486-8c8078712684',
+        nickname: 'DJKaprysnaDrukarkaHP',
+        email: 'djkaprysna@outlook.com',
+        bio: 'Tworzę muzykę inspirowaną dźwiękami codziennego życia.',
+        password: 'Druk@rka123',
+    },
+    {
+        id: '6f956d0a-64ad-43ad-bb49-93c26266695c',
+        nickname: 'patrycjaaaaaa',
+        email: 'patrycja123@yahoo.com',
+        bio: 'Fanka akustycznych brzmień i chilloutowych playlist.',
+        password: 'P@trycja2024!',
+    },
+    {
+        id: '752cbe13-36c3-4e19-80e3-4b09879fcfa5',
+        nickname: 'kierowcaSolarisa',
+        email: 'kierowca.solaris@interia.pl',
+        bio: 'Muzyka to moja codzienna towarzyszka podczas długich tras.',
+        password: 'S0laris2024!',
+    },
+    {
+        id: '775baed2-5f99-4b82-848f-77079683aee7',
+        nickname: 'DJPaprykarzSzczecinski',
+        email: 'djpaprykarz@gmail.com',
+        bio: 'DJ z pasją do miksowania nieoczywistych gatunków.',
+        password: 'P@pryk@rz1!',
+    },
+    {
+        id: '9ae5076c-0589-4164-b4fa-1b33702f2033',
+        nickname: 'LeoLoud',
+        email: 'leoloud@protonmail.com',
+        bio: 'Eksperymentuję z dźwiękiem i szukam nowych muzycznych wyzwań.',
+        password: 'L3oL0ud!2024',
+    },
+    {
+        id: 'a2976311-12c0-4ce1-a285-5a9d29288389',
+        nickname: 'JakeJam',
+        email: 'jakejam@icloud.com',
+        bio: 'Producent muzyczny z zamiłowaniem do groovy bitów.',
+        password: 'J@k3J@ms2024',
+    },
+    {
+        id: 'aed80a26-9a0e-4450-bc65-d6783afb5e12',
+        nickname: 'babanarowerze',
+        email: 'babanarowerze@gmail.com',
+        bio: 'Muzyka to mój najlepszy towarzysz podczas rowerowych przejażdżek!',
+        password: 'Bab@N@2024',
+    },
+    {
+        id: 'b76d847b-28be-4cb9-96f4-edec6c8a3394',
+        nickname: 'soundwave42',
+        email: 'soundwave42@gmail.com',
+        bio: 'Pasjonat nowych brzmień i eksperymentów w muzyce elektronicznej.',
+        password: 'S0undW@v3!2024',
+    },
+    {
+        id: 'fc3177d5-eac8-4653-bc28-6c98344fb891',
+        nickname: 'beatmasterx',
+        email: 'beatmasterx@yahoo.com',
+        bio: 'Tworzę hip-hopowe bity, zawsze w poszukiwaniu idealnego flow.',
+        password: 'B3@tM@st3rX',
+    },
+];
 
-    const usersWithHashedPasswords = await hashPasswords(users);
+const seedUsers = async function () {
+    const usersWithHashedPasswords = await hashPasswords(init_users);
     return usersWithHashedPasswords;
 };
 
 module.exports.test_users = seedUsers;
+
+const get_test_images = async function (Image) {
+    return Promise.all(init_users.map((user) => {
+        return new Promise(function(resolve, reject) {
+            fs.readFile('./assets/img/initial_avatars/' + user.nickname + '.png', null, async (err, data) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                    return
+                }
+                const img = await Image.create({ external_id: user.id, image: data});
+                resolve(img);
+            });
+        });
+    }));
+}
+
+module.exports.test_images =  get_test_images;
 
 module.exports.test_tags = "\
 INSERT INTO `tag` (`id`, `name`) VALUES\
