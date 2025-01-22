@@ -11,6 +11,8 @@ function UserProfile() {
   const [error, setError] = useState();
   const [userData, setUserData] = useState();
 
+  console.log(username);
+
   useEffect(() => {
     async function fetchUserData() {
       setIsLoading(true);
@@ -21,7 +23,9 @@ function UserProfile() {
         );
 
         if (!response.ok) {
-          throw new Error((await response.message) || 'Failed to fetch user.');
+          throw new Error(
+            (await response.statusText) || 'Failed to fetch user.'
+          );
         }
 
         const resData = await response.json();
@@ -41,7 +45,7 @@ function UserProfile() {
       {/*=============== USER PROFILE ===============*/}
       <section className='user section' id='user'>
         <div className='user__container container'>
-          {isLoading && <Loading></Loading>}
+          {isLoading && <Loading />}
 
           {error && <p>Error: {error.message}</p>}
 

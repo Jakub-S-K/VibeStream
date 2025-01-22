@@ -288,8 +288,6 @@ const Upload = () => {
       formData.append('description', albumData.description);
     }
 
-    console.log(formData.get('cover'));
-
     try {
       const response = await fetch('http://localhost:3001/api/album', {
         method: 'POST',

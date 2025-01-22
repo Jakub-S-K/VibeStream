@@ -64,7 +64,16 @@ function Home() {
           <div class='trending__container container'>
             {/* <p class='trending__text'>Trending albums here</p> */}
             <TrendingSlider albumsToShow='8' />
-            <TrendingSlider albumsToShow='6' />
+          </div>
+        </section>
+
+        {/*=============== ADDITIONAL ===============*/}
+        <section class='additional section' id='trending'>
+          <h2 class='section__title'></h2>
+
+          <div class='additional__container container'>
+            <p>Take the First Step Towards Your Music Career!</p>
+            {/* <p class='trending__text'>Trending albums here</p> */}
           </div>
         </section>
       </main>

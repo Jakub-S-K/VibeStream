@@ -2,53 +2,103 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useFetch } from '../hooks/useFetch.js';
 import './Album.css';
-import SongDisplay from '../components/SongDisplay';
-import SongPlayer from '../components/SongPlayer';
-
+import Loading from '../components/Loading.jsx';
+import { useSongPlayer } from '../context/SongPlayerContext.jsx';
+import defaultCover from '../assets/img/album.png';
 
 function Album() {
+  const { id } = useParams();
+  const { setPlaylist, playTrack, currentTrackIndex } = useSongPlayer();
+  const {
+    isLoading,
+    fetchedData: albumData,
+    error,
+  } = useFetch(`http://localhost:3001/api/albumpage/${id}`, []);
 
-	const { name } = useParams();
-	const { fetchedData: albumData, isLoading }
-	= useFetch(`http://localhost:3001/api/albumpage/${name}`, []);
+  if (!isLoading && !error) setPlaylist(albumData.songs || []);
 
-	const SongPlayerRef = React.useRef(null);
-	const SongPlayerText = React.useRef(null);
+  return (
+    <>
+      <main>
+        {/*=============== ALBUM PROFILE ===============*/}
+        <section className='album section' id='album'>
+          <div className='album__container container'>
+            {isLoading && <Loading />}
 
-	const SongClick = (song, index) => {
-		let songs = document.getElementsByClassName("song");
-		for (let i = 0; i < songs.length; i++) {
-    		songs[i].classList.remove("playing")
-		}
+            {!isLoading && albumData && (
+              <>
+                <div className='album__top'>
+                  <div
+                    className='album__banner'
+                    style={{
+                      backgroundImage:
+                        `url("http://localhost:3001/api/image/${albumData.id}")` ||
+                        defaultCover,
+                    }}
+                  ></div>
+                  <div className='album__top-info'>
+                    <span className='album__title'>{albumData.name}</span>
 
-		document.getElementById("song"+index).classList.add("playing");
-		SongPlayerRef.current.src = "http://localhost:3001/api/stream/"+song.id;
-		SongPlayerRef.current.play();
-		SongPlayerText.current.innerHTML = albumData.songs[index].title;
+                    {/*========== AUTHOR ==========*/}
+                    <Link
+                      to={`/user/${albumData.author}`}
+                      class='album__author'
+                    >
+                      <span>{albumData.author} </span>
+                    </Link>
 
-		let next = document.getElementById("song"+(index+1));
-		if (next) {
-			SongPlayerRef.current.addEventListener("ended", (event) => {
-				next.click();
-			}, {once : true});
-		}
-	}
+                    {/*========== DESCRIPTION ==========*/}
+                    {albumData.description && (
+                      <span className='album__description'>
+                        {albumData.description}
+                      </span>
+                    )}
 
-	return (
-    <main>
-	<h1>{!isLoading && albumData.name} {isLoading && "Loading"} </h1>
-	<img class="album-banner" src={!isLoading && "http://localhost:3001/api/image/"+albumData.image}></img>
-	<h2 class="album-author">By <Link to={"/user/"+albumData.author}> {!isLoading && albumData.author} </Link></h2>
-	
-	<ul>{!isLoading && typeof albumData.songs !== "undefined" && albumData.songs.map((song, index) => {
-		return (
-			<SongDisplay id={"song"+index} onClick={() => SongClick(song, index)} key={index} Song={song} />
-		);
-	})}</ul>
+                    {/*========== GENRE ==========*/}
+                    <span className='album__genre'>{albumData.genre}</span>
 
-	<SongPlayer ref1={SongPlayerRef} ref2={SongPlayerText} src=""/>
+                    {/*========== TAGS ==========*/}
+                    <div className='album__tags'>
+                      {albumData.tags &&
+                        albumData.tags.length > 0 &&
+                        albumData.tags.map((tag, index) => (
+                          <span key={index} className='album__tag'>
+                            #{tag}
+                          </span>
+                        ))}
+                    </div>
+                  </div>
+                </div>
 
-    </main>
+                <ul className='album__list'>
+                  {albumData.songs &&
+                    albumData.songs.map((song, index) => (
+                      <li
+                        key={index}
+                        className={`album__song ${
+                          currentTrackIndex === index
+                            ? 'album__song--playing'
+                            : ''
+                        }`}
+                        onClick={() =>
+                          playTrack(
+                            index,
+                            `http://localhost:3001/api/stream/${song.id}`,
+                            song.title
+                          )
+                        }
+                      >
+                        <span className='album__song-number'>{index + 1}</span>
+                        <span className='album__song-name'>{song.title}</span>
+                      </li>
+                    ))}
+                </ul>
+              </>
+            )}
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
 

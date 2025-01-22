@@ -1,4 +1,6 @@
 import './SongPlayer.css';
+import { useSongPlayer } from '../context/SongPlayerContext';
+import { useEffect } from 'react';
 import {
   MediaController,
   MediaControlBar,
@@ -6,29 +8,27 @@ import {
   MediaTimeDisplay,
   MediaVolumeRange,
   MediaPlayButton,
-  MediaSeekBackwardButton,
-  MediaSeekForwardButton,
+  // MediaSeekBackwardButton,
+  // MediaSeekForwardButton,
   MediaMuteButton,
   MediaTextDisplay,
 } from 'media-chrome/react';
 
-function SongPlayer({ src, ref1, ref2 }) {
+function SongPlayer() {
+  const { currentTrack, audioRef, titleRef } = useSongPlayer();
 
   return (
-<MediaController>
-  <audio ref={ref1}
-    slot="media"
-    src={src}
-  ></audio>
-  <MediaControlBar>
-    <MediaPlayButton></MediaPlayButton>
-    <MediaTimeDisplay showDuration></MediaTimeDisplay>
-    <MediaMuteButton></MediaMuteButton>
-    <MediaVolumeRange></MediaVolumeRange>
-    <MediaTimeRange></MediaTimeRange>
-	<MediaTextDisplay ref={ref2}></MediaTextDisplay>
-  </MediaControlBar>
-</MediaController>
+    <MediaController>
+      <audio ref={audioRef} slot='media' src={currentTrack}></audio>
+      <MediaControlBar>
+        <MediaPlayButton />
+        <MediaVolumeRange />
+        <MediaMuteButton />
+        <MediaTimeRange />
+        <MediaTimeDisplay showDuration />
+        <MediaTextDisplay ref={titleRef} />
+      </MediaControlBar>
+    </MediaController>
   );
 }
 
