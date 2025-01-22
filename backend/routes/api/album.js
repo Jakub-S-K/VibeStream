@@ -1,4 +1,4 @@
-const { Album, Image, Song, Genre, Album_like, User, Album_tags } = require('../../schema.js');
+const { Album, Image, Song, Genre, Album_like, User, Album_tags, Tag } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { Op } = require('sequelize');
 const { loadMusicMetadata } = require('music-metadata');
@@ -53,6 +53,17 @@ module.exports.albumpage_info = async function (req, res) {
         where: {
             id: _id,
         },
+        include: [
+            {
+                model: Album_tags,
+                include: [
+                    {
+                        model: Tag,
+                        attributes: ['name'], 
+                    }
+                ],
+            },
+        ],
     })
     if (!album) {
         console.log('Album not found');
@@ -60,6 +71,12 @@ module.exports.albumpage_info = async function (req, res) {
         return;
     }
     else {
+        const tags = album.album_tags.map(
+            (tagEntry) => tagEntry.tag.name);
+        album.dataValues.tags = tags;
+        delete album.dataValues.album_tags;
+        delete album.album_tags;
+
         const songs = await Song.findAll({
             raw: true,
             order: sequelize.literal('title ASC'),

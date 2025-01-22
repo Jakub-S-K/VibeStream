@@ -32,7 +32,7 @@ module.exports.get_user_username = async function(req, res) {
                 nickname: _name,
             },
             attributes: [
-                'id', 'nickname', 'creation_date', 'bio',
+                'id', 'nickname', 'email', 'creation_date', 'bio',
                 [sequelize.fn('COUNT', sequelize.col('albums.album_likes.id')), 'like_count'],
             ],
             include: [

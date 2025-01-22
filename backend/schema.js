@@ -196,7 +196,7 @@ const song = sequelize.define(
 );
 
 const tag = sequelize.define(
-	'tag',
+	'tag',	
 	{
 		id: {
 			type: DataTypes.UUID,
