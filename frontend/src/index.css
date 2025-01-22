@@ -547,6 +547,7 @@ h2 {
 
 .slider__album-name {
   display: block;
+  color: var(--white-color);
   font-size: var(--tiny-font-size);
   font-weight: var(--font-regular);
   text-overflow: ellipsis;

@@ -78,22 +78,32 @@ function TrendingSlider({ albumsToShow }) {
               return (
                 <div key={index} className='slider__card trending-card'>
                   <div className='slider__card-top'>
-                    <div
-                      className='slider__image trending-image'
-                      style={{
-                        backgroundImage: `url("${
-                          album.cover || defaultCover
-                        }")`,
-                      }}
-                    ></div>
+                    <Link to={`/album/${album.id}`}>
+                      <div
+                        className='slider__image trending-image'
+                        style={{
+                          backgroundImage: `url("${
+                            album.cover || defaultCover
+                          }")`,
+                        }}
+                      ></div>
+                    </Link>
                   </div>
                   <div className='slider__card-bottom'>
-                    <span className='slider__username trending-username'>
+                    <Link
+                      to={`/user/${album.user.nickname}`}
+                      className='slider__username trending-username'
+                    >
                       {album.user.nickname}
-                    </span>
+                    </Link>
                     <div className='slider__play'>
                       <i class='bx bx-play-circle'></i>
-                      <span className='slider__album-name'>{album.name}</span>
+                      <Link
+                        to={`/album/${album.id}`}
+                        className='slider__album-name'
+                      >
+                        {album.name}
+                      </Link>
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,8 @@ const { Tag, Genre, Image } = require('../../schema.js')
 
 module.exports.tags = async function (req, res) {
     const tags = await Tag.findAll({
-        attributes: ['id', 'name']
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']],
     })
     if (!tags || Object.keys(tags).length === 0) {
         res.status(500).send({ message: "Internal Server Error" });
