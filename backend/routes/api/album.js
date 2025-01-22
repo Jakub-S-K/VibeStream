@@ -112,7 +112,7 @@ module.exports.create = async function (req, res) {
         album = await Album.create({
             name: req.body.title,
             user_id: req.body.id,
-            description: req.body.description,
+            description: req.body?.description || "",
             genre_id: genre.dataValues.id
         });
         if (!album) {
