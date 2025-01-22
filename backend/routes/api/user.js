@@ -246,8 +246,6 @@ module.exports.get_user_albums = async function (req, res) {
 				        console.error(error);
 				        res.status(500).send({ message: 'Internal server error' });
 				    }
-}
-
     res.json(likedAlbums);
 }
 
