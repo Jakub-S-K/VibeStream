@@ -147,7 +147,7 @@ module.exports.test_users = seedUsers;
 const get_test_images = async function (Image) {
     return Promise.all(init_users.map((user) => {
         return new Promise(function(resolve, reject) {
-            fs.readFile('./assets/img/initial_avatars/' + user.nickname + '.png', 'utf8', async (err, data) => {
+            fs.readFile('./assets/img/initial_avatars/' + user.nickname + '.png', null, async (err, data) => {
                 if (err) {
                     console.error(err);
                     reject(err);
