@@ -18,8 +18,9 @@ module.exports = function (app) {
 
     //user
     api.get('/trending/users/:n', userApi.trending);
-    api.get('/user/:nickname', userApi.get_user_username);
+    api.get('/user/:username', userApi.get_user_username);
     api.get('/search/user/:search_string', userApi.get_search);
+    api.get('/useralbums/:id', userApi.get_user_albums);
 
     //TODO add token handling
     api.post('/login', upload.any(), authApi.login);

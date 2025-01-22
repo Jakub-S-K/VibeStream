@@ -19,11 +19,11 @@ module.exports.trending = async function (req, res) {
 }
 
 module.exports.get_user_username = async function(req, res) {
-	if(!req.params.nickname){
+	if(!req.params.username){
 		console.log('Bad request');
         return res.status(400).send({ message: "Name is required" });
 	}
-	_name = req.params.nickname;
+	_name = req.params.username;
 
 	try {
         const userLikes = await User.findOne({
@@ -31,7 +31,7 @@ module.exports.get_user_username = async function(req, res) {
                 nickname: _name,
             },
             attributes: [
-                'id', 'nickname', 'creation_date', 'bio',
+                'id', 'nickname', 'email', 'creation_date', 'bio',
                 [sequelize.fn('COUNT', sequelize.col('albums.album_likes.id')), 'like_count'],
             ],
             include: [
@@ -105,4 +105,37 @@ module.exports.get_search = async function (req, res) {
         res.status(500).send({ message: 'Internal server error' });
     }
 
+}
+
+module.exports.get_user_albums = async function (req, res) {
+	    if (!req.params.id) {
+		            console.log('No id in params');
+		            return res.status(500).send({ message: 'Internal server error' });
+		        }
+	    _id = req.params.id;
+	    try {
+		            const albumsWithLikes = await Album.findAll({
+				                where: {
+							                user_id: _id
+							            },
+				                attributes: [
+							                'id',
+							                'name',
+							                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
+							            ],
+				                include: [
+							                {
+										                    model: Album_like,
+										                    attributes: [],
+										                },
+							            ],
+				                group: ['album.id'],
+				                order: [[sequelize.literal('like_count'), 'DESC']],
+				            });
+
+		            res.json(albumsWithLikes);
+		        } catch (error) {
+				        console.error(error);
+				        res.status(500).send({ message: 'Internal server error' });
+				    }
 }

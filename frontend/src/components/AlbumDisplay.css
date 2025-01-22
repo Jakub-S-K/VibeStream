@@ -1,0 +1,21 @@
+div.AlbumDisplay {
+  background-color: var(--body-color-alt);
+  display: block;
+  width: 60vw;
+  max-width: 50rem;
+  border-radius: 2rem;
+  border: var(--first-color) 2px solid;
+  margin: auto;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+div.AlbumDisplay > a > h2 {
+  color: var(--first-color);
+}
+
+div.AlbumDisplay > a > img {
+  display: inline;
+  max-width: 60%;
+  padding: 1rem;
+}
