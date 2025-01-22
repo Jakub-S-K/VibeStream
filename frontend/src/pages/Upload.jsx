@@ -28,6 +28,8 @@ const Upload = () => {
     tags: '',
     description: '',
   });
+
+  const allowedMimeTypes = ['audio/mpeg', 'audio/wav', 'audio/flac'];
   // const MAX_TOTAL_SIZE = 300 * 1024 * 1024;
 
   const customTheme = (theme) => ({
@@ -99,8 +101,14 @@ const Upload = () => {
   const validateFiles = (newFiles) => {
     // Filter files to include only audio files.
     const audioFiles = newFiles.filter((file) =>
-      file.type.startsWith('audio/')
+      // file.type.startsWith('audio/')
+      allowedMimeTypes.includes(file.type)
     );
+
+    if (newFiles.length !== audioFiles.length) {
+      showAlert('Invalid file format. File was not added.', 'error');
+    }
+
     // const currentTotalSize = files.reduce((sum, file) => sum + file.size, 0);
     // const newFilesSize = audioFiles.reduce((sum, file) => sum + file.size, 0);
 
@@ -111,6 +119,7 @@ const Upload = () => {
 
     // Check if any new audio files are empty.
     const emptyFiles = audioFiles.filter((file) => file.size === 0);
+
     if (emptyFiles.length > 0) {
       showAlert('One or more files are empty and cannot be added!', 'error');
     }
@@ -145,10 +154,7 @@ const Upload = () => {
       setFiles((prevFiles) => [...prevFiles, ...audioFileObjects]);
       setStep(2);
     } else {
-      showAlert(
-        'File format not supported! Please upload a valid music file.',
-        'error'
-      );
+      showAlert('No valid files added.', 'error');
     }
   };
 
@@ -282,6 +288,8 @@ const Upload = () => {
       formData.append('description', albumData.description);
     }
 
+    console.log(formData.get('cover'));
+
     try {
       const response = await fetch('http://localhost:3001/api/album', {
         method: 'POST',
@@ -301,6 +309,7 @@ const Upload = () => {
       setStep(1);
       setFiles([]);
       setAlbumCover(null);
+      setAlbumCoverPreview(null);
       setAlbumData({
         title: '',
         genre: '',
@@ -378,7 +387,7 @@ const Upload = () => {
               >
                 <i class='bx bx-cloud-upload'></i>
                 <p>Drag and drop your songs to get started</p>
-                {/* <p>MP3 and WAV formats, up to X MB</p> */}
+                <p>MP3, WAV and FLAC formats</p>
                 <input
                   type='file'
                   multiple

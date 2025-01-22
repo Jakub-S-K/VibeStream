@@ -1,4 +1,4 @@
-const { Album, Image, Song, Genre, Album_like, User } = require('../../schema.js');
+const { Album, Image, Song, Genre, Album_like, User, Album_tags } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { Op } = require('sequelize');
 const { loadMusicMetadata } = require('music-metadata');
@@ -93,7 +93,7 @@ module.exports.albumpage_info = async function (req, res) {
 module.exports.create = async function (req, res) {
     const transaction = await sequelize.transaction();
 
-    if (!req.body.title || !req.body.id || !req.body.genre || !req.body.description) {
+    if (!req.body.title || !req.body.id || !req.body.genre) {
         res.status(400).send({ message: 'Bad request, fill out all the fields' });
         return;
     }
@@ -115,6 +115,20 @@ module.exports.create = async function (req, res) {
             console.error('Cannot create album');
             return;
         }
+
+        const tags = req.body.tags ? JSON.parse(req.body.tags) : [];
+
+        if (tags.length > 0) {
+            const tagIds = tags.map((tag) => tag.id);
+
+            const albumTagsData = tagIds.map((tagId) => ({
+                album_id: album.id,
+                tag_id: tagId,
+            }));
+
+            await Album_tags.bulkCreate(albumTagsData);
+        }
+
         for (const [index, element] of req.files.entries()) {
             if (element.fieldname === 'cover') {
                 img = await Image.create({

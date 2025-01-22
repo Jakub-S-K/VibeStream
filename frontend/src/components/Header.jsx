@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import vibestreamLogo from '../assets/img/logo.png';
-import perfil from '../assets/img/perfil.png';
 
 function Header() {
   const { user, logout } = useAuth();
@@ -108,14 +107,6 @@ function Header() {
                 </>
               ) : (
                 <>
-                  {/*=============== LOG IN ===============*/}
-                  <li className='nav__item'>
-                    <Link to='/login' className='nav__link'>
-                      <i class='bx bx-user nav__icon'></i>
-                      <span className='nav__name'>Log in</span>
-                    </Link>
-                  </li>
-
                   {/*=============== SIGN UP ===============*/}
                   <li className='nav__item'>
                     <Link to='/register' className='nav__link'>
@@ -123,12 +114,20 @@ function Header() {
                       <span className='nav__name'>Sign up</span>
                     </Link>
                   </li>
+
+                  {/*=============== LOG IN ===============*/}
+                  <li className='nav__item'>
+                    <Link to='/login' className='nav__link'>
+                      <i class='bx bx-user nav__icon'></i>
+                      <span className='nav__name'>Log in</span>
+                    </Link>
+                  </li>
                 </>
               )}
             </ul>
           </div>
 
-          <img src={perfil} className='nav__img' alt=''></img>
+          {/* <img src={perfil} className='nav__img' alt=''></img> */}
         </nav>
       </header>
     </>

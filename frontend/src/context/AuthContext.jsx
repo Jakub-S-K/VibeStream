@@ -1,10 +1,12 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../context/AlertContext';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const { setAlert } = useAlert();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -50,6 +52,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setAlert('You have successfully logged out.', 'success');
+    navigate('/');
   };
 
   return (
