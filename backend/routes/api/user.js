@@ -104,5 +104,38 @@ module.exports.get_search = async function (req, res) {
         console.error(error);
         res.status(500).send({ message: 'Internal server error' });
     }
+}
 
+module.exports.add_album_like = async function(req, res){
+    if(!req.body.album_id || !req.body.user_id){
+        console.log('Wrong params');
+        return res.status(500).send({message: 'Internal server error'});
+    }
+    const like_exist = await Album_like.findOne({
+        where: {
+            user_id: req.body.user_id,
+            album_id: req.body.album_id
+        }
+    })
+    if(like_exist) {
+        console.log('Like already exists');
+        return res.status(400).send({message: 'You already like this album'});
+    }
+    
+    const transaction = await sequelize.transaction();
+    try{
+        like = await Album_like.create({
+            user_id: req.body.user_id,
+            album_id: req.body.album_id,
+        })
+        if(!like){
+            return res.status(501).send({message: 'Internal Server Error'});
+        }
+        await transaction.commit();
+        res.status(201).send({ message: 'Album like added successfully'});
+    } catch(error){
+        await transaction.rollback();
+        console.error(error);
+        res.status(500).send({ message: 'Failed to add album like' });
+    }
 }

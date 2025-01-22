@@ -20,6 +20,7 @@ module.exports = function (app) {
     api.get('/trending/users/:n', userApi.trending);
     api.get('/user/:username', userApi.get_user_username);
     api.get('/search/user/:search_string', userApi.get_search);
+    api.post('/addlike', upload.any(), userApi.add_album_like);
 
     //TODO add token handling
     api.post('/login', upload.any(), authApi.login);

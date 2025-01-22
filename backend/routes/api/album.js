@@ -117,8 +117,6 @@ module.exports.albumpage_info = async function (req, res) {
 }
 
 module.exports.create = async function (req, res) {
-    const transaction = await sequelize.transaction();
-
     if (!req.body.title || !req.body.id || !req.body.genre) {
         res.status(400).send({ message: 'Bad request, fill out all the fields' });
         return;
@@ -128,7 +126,9 @@ module.exports.create = async function (req, res) {
         res.status(501).send({ message: 'Internal server error.' });
         return;
     }
+
     const mm = await loadMusicMetadata();
+    const transaction = await sequelize.transaction();
     try {
         album = await Album.create({
             name: req.body.title,
