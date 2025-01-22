@@ -26,27 +26,6 @@ module.exports.trending = async function (req, res) {
     res.json(album);
 }
 
-// module.exports.album_name = async function (req, res) {
-//     _name = req.params.name;
-//     const album = await Album.findOne({
-//         where: {
-//             name: _name,
-//         }
-//     })
-//     if (Object.keys(album).length === 0) {
-//         console.log('Album not found');
-//         res.status(404).send({ message: "Album not found." });
-//         return;
-//     }
-//     else if (!album) {
-//         console.log('Internal server error.');
-//         res.status(500).send({ message: "Internal server error." });
-//         return;
-//     }
-//     console.log(album);
-//     res.json(album);
-// }
-
 module.exports.albumpage_info = async function (req, res) {
     _id = req.params.id;
     const album = await Album.findOne({

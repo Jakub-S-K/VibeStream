@@ -1,4 +1,4 @@
-const { Album, User, Image, Album_like } = require('../../schema.js');
+const { Album, User, Image, Album_like, Album_tags } = require('../../schema.js');
 const sequelize = require('../../db_conn.js').conn;
 const { Op } = require('sequelize');
 
@@ -191,4 +191,27 @@ module.exports.get_user_albums = async function (req, res) {
         console.error(error);
         res.status(500).send({ message: 'Internal server error' });
     }
+}
+
+module.exports.get_user_likes = async function (req, res) {
+    if (!req.params.id) {
+        console.log('No id in params');
+        return res.status(500).send({ message: 'Internal server error' });
+    }
+    _id = req.params.id;
+
+    const userLikes = await Album_like.findAll({
+        where: {
+            user_id: _id,
+        },
+        include: [
+            {
+                model: Album
+            }
+        ],
+    })
+    const likedAlbums = userLikes.map(
+        (albumEntry) => albumEntry.album);
+
+    res.json(likedAlbums);
 }
