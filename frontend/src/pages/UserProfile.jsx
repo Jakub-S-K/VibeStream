@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
+import AlbumDisplay from '../components/AlbumDisplay';
 import './UserProfile.css';
 
 function UserProfile() {
@@ -30,6 +31,11 @@ function UserProfile() {
 
         const resData = await response.json();
         setUserData(resData);
+
+        const response2 = await fetch(`http://localhost:3001/api/useralbums/${resData.id}`);
+        const resData2 = await response2.json();
+        setUserAlbums(resData2);
+
       } catch (error) {
         setError({ message: error.message || 'Failed to fetch user data.' });
       }
@@ -39,6 +45,8 @@ function UserProfile() {
 
     fetchUserData();
   }, [username]);
+
+        const [emailShown, showEmail] = useState(false);
 
   return (
     <main>
@@ -51,12 +59,28 @@ function UserProfile() {
 
           {!isLoading && userData && (
             <>
-              <h2 className='section__title'>{userData.nickname}</h2>
-              <p>{userData.email}</p>
-              <p>{userData.bio}</p>
+              <div id="user_header">
+                <img id="user_avatar" src={"http://localhost:3001/api/image/"+userData.id}></img>
+                <div id="user_header_right">
+                  <h2>{userData.nickname}</h2>
+                  <p>{userData.bio}</p>
+                  <p>{"Likes: "+userData.like_count}</p>
+                  <p onClick={() => showEmail(true)}>{emailShown ? "E-mail: "+userData.email : "[Reveal e-mail]"}</p>
+                </div>
+              </div>
+
+              <h2> {"User's albums"} </h2>
+              <div id="album_column">
+                  {userAlbums && userAlbums.map((album) => {
+                    return(
+                      <AlbumDisplay album={album}/>
+                    );
+                  })}
+                  
+              </div>
+              
             </>
           )}
-        </div>
       </section>
     </main>
   );
