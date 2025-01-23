@@ -28,6 +28,7 @@ Docker is necessary to run the software, so make sure you have it installed.
 3. Create a `.env` file.
 Example .env file:
 
+```
 	#------ DB -------
 	DB_ROOT_PASSWORD=rootpassword
 	DB_USER=username
@@ -41,6 +42,7 @@ Example .env file:
 	
 	#---- FRONTEND ----
 	FRONTEND_PORT=3000
+```
 
 4. Start the Docker containers:
 `$ docker compose up --build`
