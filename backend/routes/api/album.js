@@ -59,6 +59,10 @@ module.exports.trending = async function (req, res) {
 }
 
 module.exports.albumpage_info = async function (req, res) {
+    if (!req.params.id || !req.params.user_id) {
+        res.status(400).send({ message: 'Bad request, fill out all the fields' });
+        return;
+    }
     _id = req.params.id;
     const album = await Album.findOne({
         where: {
@@ -141,7 +145,7 @@ module.exports.albumpage_info = async function (req, res) {
 
         const myLike = await Album_like.findOne({
             where: {
-                user_id: album.dataValues.user_id,
+                user_id: req.params.user_id,
             }});
         album.dataValues.liked_by_user = myLike ? 1 : 0;
         
