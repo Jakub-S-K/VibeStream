@@ -1,62 +1,59 @@
+VibeStream
+============
 
-  # VibeStream 🎸🎤🎶
-  Potężna strona internetowa dla piosenkaczy i grajków. 
+VibeStream is a **free social music-streaming network** where users can follow artists, build a music library and share their own works.
 
-# Table of contents  
-1. [Introduction](#introduction)  
-2. [Some paragraph](#paragraph1)  
-    1. [Sub paragraph](#subparagraph1)  
-3. [Another paragraph](#paragraph2)  
+![logo](frontend/src/assets/img/logo.png)
 
-## Screenshots  
+Features include:
+* A sleek, modern interface,
+* Fast and easy deployment,
+* Little necessary configuration,
+* Secure JSON Web Token authentication,
+* Ability to quickly share a music album,
+* An extensive search engine,
+* A simple way to find and contact like-minded artists.
 
-![App Screenshot](https://lanecdr.org/wp-content/uploads/2019/08/placeholder.png)
+Setup 
+---------------------------
 
-## Tech Stack  
+Docker is necessary to run the software, so make sure you have it installed.
 
-**Client:** React
+1. Clone the project:
+`$ git clone https://github.com/Jakub-S-K/VibeStream.git`
 
-**Server:** Node, Express, MariaDB
+2. Navigate into the project directory:
+`$ cd VibeStream`
 
-## Features  
+3. Create a `.env` file.
+Example .env file:
 
-- XYZ
-- XYZ
-- XYZ
+	#------ DB -------
+	DB_ROOT_PASSWORD=rootpassword
+	DB_USER=username
+	DB_USER_PASSWORD=password
+	DB_NAME=vibestream
+	
+	#---- BACKEND ----
+	BACKEND_PORT=3001
+	BACKEND_PORT_DOCKER=3001
+	JWT_SECRET=topsecretpassword
+	
+	#---- FRONTEND ----
+	FRONTEND_PORT=3000
 
-## Run Locally  
+4. Start the Docker containers:
+`$ docker compose up --build`
 
-Clone the project  
+Your server is now running, and you can access it by opening <http://localhost:3000/> in your web browser. The database's interface defaults to port 8081.
 
-~~~bash  
-$ https://github.com/Jakub-S-K/VibeStream
-~~~
+Screenshots
+-------------
+![screenshot](screenshots/ss1.png)
+![screenshot](screenshots/ss2.png)
 
-Go to the project directory  
-
-~~~bash  
-$ cd VibeStream
-~~~
-
-Start project  
-
-~~~bash  
-$ docker-compose up
-~~~
-
-## Environment Variables  
-
-To run this project, you will need to add the following environment variables to your .env file  
-
-`DB_ROOT_PASSWORD=my-secret-pw`  
-`DB_USER=db_user`   
-`DB_USER_PASSWORD=secret123`   
-`DB_NAME=vibestream`  
-`BACKEND_PORT=3001`
-
-## Feedback  
-
-If you have any feedback, please reach out to us at fake@fake.com
-
-## License  
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)  
+The tech stack
+--------------
+VibeStream currently uses React with Vite to dynamically serve the web client.
+On the backend, an extensive home-built API has been built utilizing Node.js and Express.js.
+MariaDB is used as the database software.
