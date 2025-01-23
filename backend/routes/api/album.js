@@ -145,6 +145,7 @@ module.exports.albumpage_info = async function (req, res) {
 
         const myLike = await Album_like.findOne({
             where: {
+                album_id: req.params.id,
                 user_id: req.params.user_id,
             }});
         album.dataValues.liked_by_user = myLike ? 1 : 0;
