@@ -56,6 +56,6 @@ Screenshots
 
 The tech stack
 --------------
-VibeStream currently uses React with Vite to dynamically serve the web client.
-On the backend, an extensive home-built API has been built utilizing Node.js and Express.js.
-MariaDB is used as the database software.
+* VibeStream currently uses React with Vite to dynamically serve the web client.
+* On the backend, an extensive home-built API has been built utilizing Node.js and Express.js.
+* MariaDB is used as the database software.
