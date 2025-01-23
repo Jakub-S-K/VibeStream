@@ -5,33 +5,25 @@ const { loadMusicMetadata } = require('music-metadata');
 
 module.exports.trending = async function (req, res) {
     _n = req.params.n;
-    try {
-        const albumsWithLikes = await Album.findAll({
-            attributes: [
-                'id',
-                'name',
-                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
-            ],
-            include: [
-                {
-                    model: Album_like,
-                    attributes: [],
-                },
-                {
-                    model: Image,
-                    attributes: [['id', 'avatar_id']],
-                }
-            ],
-            group: ['album.id', 'image.id'],
-            order: [[sequelize.literal('like_count'), 'DESC']],
-            limit: parseInt(_n),
-            subQuery: false
-        });
-        res.json(albumsWithLikes);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'Internal server error' });
+    const album = await Album.findAll({
+        order: sequelize.random(),
+        limit: parseInt(_n),
+        include: {
+            model: User,
+            attributes: ['nickname'],
+        },
+    })
+    if (Object.keys(album).length === 0) {
+        console.log('Album not found');
+        res.status(404).send({ message: "Album not found." });
+        return;
     }
+    else if (!album) {
+        console.log('Internal server error.');
+        res.status(500).send({ message: "Internal server error." });
+        return;
+    }
+    res.json(album);
 }
 
 module.exports.albumpage_info = async function (req, res) {
