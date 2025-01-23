@@ -5,28 +5,64 @@ const { loadMusicMetadata } = require('music-metadata');
 
 module.exports.trending = async function (req, res) {
     _n = req.params.n;
-    const album = await Album.findAll({
-        order: sequelize.random(),
-        limit: parseInt(_n),
-        include: {
-            model: User,
-            attributes: ['nickname'],
-        },
-    })
-    if (Object.keys(album).length === 0) {
-        console.log('Album not found');
-        res.status(404).send({ message: "Album not found." });
-        return;
+
+    try {
+        const albumsWithLikes = await Album.findAll({
+            attributes: [
+                'id',
+                'name',
+                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
+            ],
+            include: [
+                {
+                    model: Album_like,
+                    attributes: [],
+                },
+                {
+                    model: User,
+                    attributes: ['nickname']
+                },
+                {
+                    model: Image,
+                    attributes: [['id', 'avatar_id']],
+                }
+            ],
+            group: ['album.id', 'image.id'],
+            order: [[sequelize.literal('like_count'), 'DESC']],
+            limit: parseInt(_n),
+            subQuery: false
+        });
+        res.json(albumsWithLikes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
     }
-    else if (!album) {
-        console.log('Internal server error.');
-        res.status(500).send({ message: "Internal server error." });
-        return;
-    }
-    res.json(album);
+    // const album = await Album.findAll({
+    //     order: sequelize.random(),
+    //     limit: parseInt(_n),
+    //     include: {
+    //         model: User,
+    //         attributes: ['nickname'],
+    //     },
+    // })
+    // if (Object.keys(album).length === 0) {
+    //     console.log('Album not found');
+    //     res.status(404).send({ message: "Album not found." });
+    //     return;
+    // }
+    // else if (!album) {
+    //     console.log('Internal server error.');
+    //     res.status(500).send({ message: "Internal server error." });
+    //     return;
+    // }
+    // res.json(album);
 }
 
 module.exports.albumpage_info = async function (req, res) {
+    if (!req.params.id || !req.params.user_id) {
+        res.status(400).send({ message: 'Bad request, fill out all the fields' });
+        return;
+    }
     _id = req.params.id;
     const album = await Album.findOne({
         where: {
@@ -109,7 +145,8 @@ module.exports.albumpage_info = async function (req, res) {
 
         const myLike = await Album_like.findOne({
             where: {
-                user_id: album.dataValues.user_id,
+                album_id: req.params.id,
+                user_id: req.params.user_id,
             }});
         album.dataValues.liked_by_user = myLike ? 1 : 0;
         

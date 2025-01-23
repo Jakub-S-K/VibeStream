@@ -16,7 +16,7 @@ function Album() {
     isLoading,
     fetchedData: albumData,
     error,
-  } = useFetch(`http://localhost:3001/api/albumpage/${id}`, []);
+  } = useFetch(`http://localhost:3001/api/albumpage/${id}/${user.id}`, []);
 
   if (!isLoading && !error) setPlaylist(albumData.songs || []);
 

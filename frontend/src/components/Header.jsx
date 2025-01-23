@@ -57,13 +57,13 @@ function Header() {
                 </Link>
               </li>
 
-              {/*=============== DISCOVER ===============*/}
+              {/* =============== DISCOVER ===============
               <li className='nav__item'>
                 <Link to='/discover' className='nav__link'>
                   <i className='bx bx-star nav__icon'></i>
                   <span className='nav__name'>Discover</span>
                 </Link>
-              </li>
+              </li> */}
 
               {user ? (
                 <>
@@ -93,10 +93,10 @@ function Header() {
                         <span>Profile</span>
                       </Link>
 
-                      <Link to='/' className='dropdown__link'>
+                      {/* <Link to='/' className='dropdown__link'>
                         <i className='bx bxs-like'></i>
                         <span>Likes</span>
-                      </Link>
+                      </Link> */}
 
                       <Link onClick={logout} className='dropdown__link'>
                         <i className='bx bx-log-out'></i>
