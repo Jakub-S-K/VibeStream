@@ -107,6 +107,7 @@ module.exports.get_search = async function (req, res) {
 }
 
 module.exports.add_album_like = async function (req, res) {
+    console.log(req.body.album_id, req.body.user_id)
     if (!req.body.album_id || !req.body.user_id) {
         console.log('Wrong params');
         return res.status(500).send({ message: 'Internal server error' });

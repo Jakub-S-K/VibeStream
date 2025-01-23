@@ -245,6 +245,25 @@ h2 {
   box-shadow: 0 0 0.7rem rgb(37, 221, 0);
 }
 
+/*=============== LIKE ===============*/
+.like__container {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--medium-font-size);
+}
+
+.like {
+  color: var(--first-color);
+  font-size: var(--h2-font-size);
+  transition: 0.1s all ease-out;
+}
+
+.bx-like:hover {
+  color: var(--first-color-alt-light);
+}
+
 /*=============== HEADER ===============*/
 .l-header {
   position: fixed;

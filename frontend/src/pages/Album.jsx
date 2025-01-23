@@ -5,8 +5,11 @@ import './Album.css';
 import Loading from '../components/Loading.jsx';
 import { useSongPlayer } from '../context/SongPlayerContext.jsx';
 import defaultCover from '../assets/img/album.png';
+import LikeButton from '../components/LikeButton.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 function Album() {
+  const { user } = useAuth();
   const { id } = useParams();
   const { setPlaylist, playTrack, currentTrackIndex } = useSongPlayer();
   const {
@@ -69,6 +72,8 @@ function Album() {
                     </div>
 
                     {/*========== LIKE ==========*/}
+
+                    <LikeButton albumId={albumData.id} />
                   </div>
                 </div>
 
@@ -92,6 +97,9 @@ function Album() {
                       >
                         <span className='album__song-number'>{index + 1}</span>
                         <span className='album__song-name'>{song.title}</span>
+                        <span className='album__total-plays'>
+                          <i class='bx bx-headphone'></i>: {song.play_counter}
+                        </span>
                       </li>
                     ))}
                 </ul>

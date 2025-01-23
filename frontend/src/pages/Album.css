@@ -98,6 +98,11 @@
   background-color: var(--first-color-alt-dark);
 }
 
+.album__total-plays {
+  display: flex;
+  align-items: center;
+}
+
 .album__list {
   width: 100%;
   /* background-color: rgba(0, 0, 0, 0.1); */
