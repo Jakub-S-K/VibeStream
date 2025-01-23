@@ -20,27 +20,27 @@
 .album__top {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 4rem;
   margin-bottom: 1rem;
-  padding: 3rem;
+  padding: 1.5rem;
   background-color: var(--body-color-alt);
   border-radius: 2rem;
 }
 
 .album__banner {
-  min-width: 300px;
+  width: 100%;
+  max-width: 300px;
   aspect-ratio: 1 / 1;
   border-radius: 2rem;
   background-size: cover;
   background-color: var(--first-color);
   box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
 }
 
 .album__top-info {
-  width: 50%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,13 +95,18 @@
 }
 
 .album__tag:hover {
-  background-color: var(--first-color-alt-light);
+  background-color: var(--first-color-alt-dark);
+}
+
+.album__total-plays {
+  display: flex;
+  align-items: center;
 }
 
 .album__list {
   width: 100%;
   /* background-color: rgba(0, 0, 0, 0.1); */
-  padding: 2rem 4rem;
+  padding: 1rem;
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -109,7 +114,7 @@
 }
 
 .album__song {
-  width: 80%;
+  width: 100%;
   border-radius: 0.25rem;
   border-bottom: 1px solid var(--first-color);
   background-color: var(--body-color-alt);
@@ -138,6 +143,33 @@
 }
 
 @media screen and (min-width: 767px) {
+  .album__list {
+    width: 100%;
+    padding: 2rem 4rem;
+  }
+  .album__song {
+    width: 80%;
+  }
+  .album__banner {
+    margin-bottom: 0;
+  }
+  .album__top-info {
+    width: 50%;
+  }
+  .album__top {
+    padding: 3rem;
+  }
+
+  .album__top {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+  }
+  .album__banner {
+    min-width: 300px;
+  }
+
   /* .album__top {
     flex-direction: row;
     align-items: start;
