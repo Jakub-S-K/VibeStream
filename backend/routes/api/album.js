@@ -53,8 +53,6 @@ module.exports.albumpage_info = async function (req, res) {
         const tags = album.album_tags.map(
             (tagEntry) => tagEntry.tag.name);
         album.dataValues.tags = tags;
-        delete album.dataValues.album_tags;
-        delete album.album_tags;
 
         const songs = await Song.findAll({
             raw: true,
@@ -89,7 +87,35 @@ module.exports.albumpage_info = async function (req, res) {
             attributes: ['name'],
         })
         album.dataValues.genre = genre_name.name;
+
+        const albumLikes = await Album.findOne({
+            where: {
+                id: album.dataValues.id,
+            },
+            attributes: [
+                'id', 'name', 'user_id', 'description', 'genre_id',
+                [sequelize.fn('COUNT', sequelize.col('album_likes.id')), 'like_count'],
+            ],
+            include: [
+                {
+                    model: Album_like,
+                    attributes: [],
+                }
+            ],
+            group: ['album.id'],
+            order: [[sequelize.literal('like_count'), 'DESC']],
+        });
+        album.dataValues.like_count = albumLikes.dataValues.like_count;
+
+        const myLike = await Album_like.findOne({
+            where: {
+                user_id: album.dataValues.user_id,
+            }});
+        album.dataValues.liked_by_user = myLike ? 1 : 0;
+        
         delete album.dataValues.genre_id;
+        delete album.dataValues.album_tags;
+        delete album.album_tags;
     }
     console.log(album);
     res.json(album);
