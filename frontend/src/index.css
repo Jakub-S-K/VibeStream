@@ -260,7 +260,7 @@ h2 {
   transition: 0.1s all ease-out;
 }
 
-.bx-like:hover {
+.like:hover {
   color: var(--first-color-alt-light);
 }
 

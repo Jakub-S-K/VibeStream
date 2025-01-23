@@ -72,8 +72,11 @@ function Album() {
                     </div>
 
                     {/*========== LIKE ==========*/}
-
-                    <LikeButton albumId={albumData.id} />
+                    <LikeButton
+                      likesCount={albumData.like_count}
+                      isLiked={albumData.liked_by_user}
+                      albumId={albumData.id}
+                    />
                   </div>
                 </div>
 

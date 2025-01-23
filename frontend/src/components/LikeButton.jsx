@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useAlert } from '../context/AlertContext.jsx';
 
-const LikeButton = ({ userId, albumId }) => {
+const LikeButton = ({ likesCount, isLiked, userId, albumId }) => {
   const { user, token } = useAuth();
   const { setAlert } = useAlert();
-  const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(0);
+  const [isLikedState, setIsLikedState] = useState(isLiked);
+  const [likes, setLikes] = useState(likesCount);
 
   const handleLikeToggle = async () => {
+    console.log(isLikedState);
     try {
-      const endpoint = isLiked ? '/removelike' : '/addlike';
-      console.log(albumId, user.id);
+      const endpoint = isLikedState
+        ? 'http://localhost:3001/api/removelike'
+        : 'http://localhost:3001/api/addlike';
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -23,32 +26,37 @@ const LikeButton = ({ userId, albumId }) => {
 
       console.log(response.body);
 
-      if (response.ok) {
-        const data = await response.json();
-        setLikes(data.likes);
-        setIsLiked(!isLiked);
-      } else {
-        setAlert('Failed to update like status', 'error');
+      if (!response.ok) {
+        return;
+        // setAlert('Failed to update like status', 'error');
       }
+      if (isLikedState) {
+        setLikes(likes - 1);
+      } else {
+        setLikes(likes + 1);
+      }
+      const data = await response.json();
+      // setAlert(data.message, 'success');
+      setIsLikedState(!isLikedState);
     } catch (error) {
-      setAlert('Failed to update like status', 'error');
+      // setAlert('Failed to update like status', 'error');
     }
   };
 
   return (
     <div>
-      {user && (
-        <div className='like__container'>
-          <p>{likes}</p>{' '}
+      <div className='like__container'>
+        <p>Likes: {likes}</p>
+        {user && (
           <button onClick={handleLikeToggle}>
-            {isLiked ? (
+            {isLikedState ? (
               <i class='bx bxs-like like'></i>
             ) : (
               <i class='bx bx-like like'></i>
             )}
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
