@@ -35,7 +35,7 @@ module.exports = function (app) {
     // api.get('/album/:id', albumApi.get_album_id); //Temporary comment as Endpoint are duplicated. TODO: use only one endpoint
     api.get('/search/album/:search_string', albumApi.get_search_album);
     api.get('/search/song/:search_string', albumApi.get_search_song);
-    api.get('/albumpage/:id', albumApi.albumpage_info);
+    api.get('/albumpage/:id/:user_id', albumApi.albumpage_info);
 
     //api.post('/album', passport.('jwt', {session: false}), upload.any(), albumApi.create);
     api.post('/album', upload.any(), albumApi.create);
